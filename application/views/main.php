@@ -7,6 +7,7 @@
     <title>weplace</title>
 </head>
 <body>
-    this is main page
+    <div id="root"></div>
+    <script src="/public/dist/main.js" charset="utf-8"></script>
 </body>
 </html>
