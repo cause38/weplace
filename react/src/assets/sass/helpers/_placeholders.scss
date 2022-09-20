@@ -1,0 +1,118 @@
+// 공통 max-width 영역 지정
+%innerWrap {
+  padding: 0 $S_SPACING;
+  width: 100%;
+  box-sizing: border-box;
+  @include mq('m') {
+    max-width: $M_MAX_WIDTH;
+    margin: 0 auto;
+    padding: 0;
+  }
+  @include mq('L') {
+    max-width: $L_MAX_WIDTH;
+  }
+}
+
+// absolute를 지정하고 수평, 수직 중앙 정렬
+%absoluteCenter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// scrollBar style custom
+%scrollBar {
+  --scrollBarSize: 12px;
+
+  &::-webkit-scrollbar-button {
+    width: var(--scrollBarSize);
+    height: var(--scrollBarSize);
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 100px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--COLOR08);
+    border-radius: 100px;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    cursor: default;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--COLORHOVER);
+  }
+}
+
+%scrollBarY {
+  @extend %scrollBar;
+  &::-webkit-scrollbar {
+    width: var(--scrollBarSize);
+  }
+}
+
+%scrollBarX {
+  @extend %scrollBar;
+  &::-webkit-scrollbar {
+    height: var(--scrollBarSize);
+  }
+}
+
+%scrollBarX-thin {
+  @extend %scrollBarX;
+  --scrollBarSize: 8px;
+  padding-bottom: 3px;
+}
+
+%scrollBarY-thin {
+  @extend %scrollBarY;
+  --scrollBarSize: 8px;
+}
+
+// scrollGuide 아이콘
+%scrollGuideX {
+  @extend %scrollBarX;
+
+  &::before {
+    @extend %absoluteCenter;
+
+    content: '';
+    width: 76px;
+    height: 76px;
+    overflow: hidden;
+    border-radius: 100%;
+    z-index: 2;
+
+    @include bgImage('icon/process-cursor', 'png', null, '2x', 100%);
+  }
+
+  &.on::before {
+    display: none;
+  }
+}
+
+// image
+%imgGradient {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  background-image: linear-gradient(to bottom, rgba(154, 154, 154, 0.33), rgba(128, 128, 128, 0));
+}
+
+%fontReset {
+  font-size: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  text-align: inherit;
+}

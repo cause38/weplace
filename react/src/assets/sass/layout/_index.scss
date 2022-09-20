@@ -1,0 +1,88 @@
+.todo-box {
+  background-color: #fff;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #444;
+      color: #fff;
+    }
+  }
+
+  &__list {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px;
+      border-radius: 10px;
+      background-color: #f0f0f0;
+
+      &.active {
+        background: #dedede;
+      }
+
+      &.isEdit {
+      }
+
+      & > div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        span.on {
+          text-decoration: line-through;
+        }
+      }
+    }
+
+    button {
+      background-color: #fff;
+      text-align: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50px;
+      padding: 10px;
+    }
+  }
+
+  form[name='insert_frm'] {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+
+    input {
+      width: 80%;
+    }
+
+    button {
+      width: calc(20% - 10px);
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #444;
+      color: #fff;
+    }
+  }
+}

@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/dist/css/index.css">
     <title>weplace</title>
 </head>
 <body>
-    this is main page
+    <div id="root"></div>
+    <script src="/public/dist/main.js" charset="utf-8"></script>
 </body>
 </html>

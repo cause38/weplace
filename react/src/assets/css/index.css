@@ -1,0 +1,204 @@
+:root {
+  --COLOR01: #f4ecf1;
+  --COLOR02: #dfd5d7;
+  --COLOR03: #beb3b8;
+  --COLOR04: #88767b;
+  --COLOR05: #624f54;
+  --COLOR06: #482a32;
+  --COLOR07: #381f26;
+  --COLOR08: #9968a5;
+  --COLORHOVER: #8a5497;
+}
+
+* {
+  letter-spacing: 0;
+  outline: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  border: none;
+  width: 100%;
+  display: block;
+}
+
+html,
+body,
+ul,
+ol,
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+ul li,
+ol li {
+  list-style: none;
+  vertical-align: middle;
+}
+
+li > a {
+  display: block;
+}
+
+textarea {
+  resize: none;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+form * {
+  border: 0;
+  outline: 0;
+  margin: 0;
+  padding: 0;
+}
+
+input,
+button,
+textarea {
+  box-shadow: none;
+}
+
+svg {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+body {
+  background-color: #f0f0f0;
+}
+
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input {
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 60px 0;
+}
+
+.todo-box {
+  background-color: #fff;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+}
+.todo-box__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.todo-box__head button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #444;
+  color: #fff;
+}
+.todo-box__list {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+.todo-box__list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 15px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+}
+.todo-box__list li.active {
+  background: #dedede;
+}
+.todo-box__list li > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.todo-box__list li > div span.on {
+  text-decoration: line-through;
+}
+.todo-box__list button {
+  background-color: #fff;
+  text-align: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50px;
+  padding: 10px;
+}
+.todo-box form[name=insert_frm] {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+}
+.todo-box form[name=insert_frm] input {
+  width: 80%;
+}
+.todo-box form[name=insert_frm] button {
+  width: calc(20% - 10px);
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #444;
+  color: #fff;
+}
+
+/*# sourceMappingURL=index.css.map */
