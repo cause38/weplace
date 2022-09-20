@@ -7,7 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "sass --watch --error-css --color react/src/assets/sass:public/dist/css",
+    "dev-sass": "sass react/src/assets/sass:public/dist/css",
+    "build-sass": "sass --style compressed --no-source-map react/src/assets/sass:public/dist/css"
   },
   "repository": {
     "type": "git",
@@ -27,8 +30,10 @@
     "@babel/preset-react": "^7.18.6",
     "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
+    "node-sass": "^7.0.3",
     "path": "^0.12.7",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.0",
     "style-loader": "^3.3.1",
