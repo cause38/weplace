@@ -1,13 +1,21 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import "./styles/App.css";
 import Home from "./pages/Home";
+import Category from "./pages/Category";
 
-const Switch = () => {
-	<Router>
-		<Routes>
-			<Route path="/" element={<Home />} />
-		</Routes>
-	</Router>;
-};
+import Header from "./components/header";
 
-export default Switch;
+function Switchs() {
+	return (
+		<Router>
+			<Header />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/category" element={<Category />} />
+			</Routes>
+		</Router>
+	);
+}
+
+export default Switchs;
