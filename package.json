@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "sass --watch --error-css --color react/src/assets/sass:public/dist/css",
-    "dev-sass": "sass react/src/assets/sass:public/dist/css",
-    "build-sass": "sass --style compressed --no-source-map react/src/assets/sass:public/dist/css"
+    "watch": "sass --watch --error-css --color front/src/assets/sass:front/build/css",
+    "dev": "sass front/src/assets/sass:front/build/css",
+    "build": "sass --style compressed --no-source-map front/src/assets/sass:front/build/css"
   },
   "repository": {
     "type": "git",

@@ -1,9 +1,9 @@
 const path = require('path');
 
 module.exports = {
-    entry: './react/src/App.js',
+    entry: './front/src/App.js',
     output: {
-        path: path.resolve(__dirname, 'public/dist'),
+        path: path.resolve(__dirname, 'front/build'),
         filename: 'main.js'
     },
     module: {

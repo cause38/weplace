@@ -1,0 +1,107 @@
+:root {
+  --COLOR01: #f4ecf1;
+  --COLOR02: #dfd5d7;
+  --COLOR03: #beb3b8;
+  --COLOR04: #88767b;
+  --COLOR05: #624f54;
+  --COLOR06: #482a32;
+  --COLOR07: #381f26;
+  --COLOR08: #9968a5;
+  --COLORHOVER: #8a5497;
+}
+
+* {
+  letter-spacing: 0;
+  outline: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  border: none;
+  width: 100%;
+  display: block;
+}
+
+html,
+body,
+ul,
+ol,
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+ul li,
+ol li {
+  list-style: none;
+  vertical-align: middle;
+}
+
+li > a {
+  display: block;
+}
+
+textarea {
+  resize: none;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+form * {
+  border: 0;
+  outline: 0;
+  margin: 0;
+  padding: 0;
+}
+
+input,
+button,
+textarea {
+  box-shadow: none;
+}
+
+svg {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=index.css.map */
