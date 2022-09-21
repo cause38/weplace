@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import ReactDOM from "react-dom";
-import Routes from "./Routes";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Routes />);
-=======
 import logo from './logo.svg';
 import './App.css';
 
@@ -31,4 +23,3 @@ function App() {
 }
 
 export default App;
->>>>>>> test
