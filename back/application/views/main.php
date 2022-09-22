@@ -8,7 +8,8 @@
     <title>weplace</title>
 </head>
 <body>
-    <div id="root"></div>
-    <script src="front/build/main.js" charset="utf-8"></script>
+    This is Main Page With CI
+    <!-- <div id="root"></div>
+    <script src="front/build/main.js" charset="utf-8"></script> -->
 </body>
 </html>
