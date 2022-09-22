@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< front/src/pages/Login/index.js
 import Form from "components/form";
 import { useNavigate } from "../../../node_modules/react-router-dom/dist/index";
 
