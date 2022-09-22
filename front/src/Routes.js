@@ -11,6 +11,7 @@ import Detail from './pages/Detail';
 import Write from './pages/Write';
 
 import Header from './components/header';
+import Footer from './components/footer';
 
 function Switchs() {
   return (
@@ -25,6 +26,7 @@ function Switchs() {
         <Route path="/detail" element={<Detail />} />
         <Route path="/write" element={<Write />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
