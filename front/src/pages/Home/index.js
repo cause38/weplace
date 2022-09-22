@@ -26,6 +26,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       <div className='flex gap-4 bg-white shadow-lg rounded-lg p-10 mt-12 text-center'>
         <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
@@ -44,6 +45,8 @@ const Home = () => {
           <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>분식<p className='mt-6 text-5xl'>🥠</p></Link>
           <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>아시안 매장<p className='mt-6 text-5xl'>🍜</p></Link>
       </div>
+=======
+>>>>>>> 2082734... WEP-12 랜덤 추천 진행중
     </div>
   );
 };
