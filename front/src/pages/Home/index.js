@@ -1,13 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
 
 const Home = () => {
-	return (
-		<div>
-			<p>home</p>
-			<Link to="/category">Go to category</Link>
-		</div>
-	);
+  return (
+    <div>
+      <p>home</p>
+    </div>
+  );
 };
 
 export default Home;
