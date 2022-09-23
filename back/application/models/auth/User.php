@@ -15,5 +15,27 @@ class User extends CI_Model {
 
         return $q->row();
     }
+
+    function setCertCode($id, $type) {
+        $this->db->where('uid', $id);
+        $this->db->where('state', 'R');
+        $this->db->where('type', $type);
+        $this->db->update('T_code', [
+            'state' => 'F',
+            'wdate' => date('Y-m-d H:i:s')
+        ]);
+
+        $code = strtoupper(uniqid('we'));
+        $data = [
+            'uid'   => $id,
+            'code'  => $code,
+            'state' => 'R',
+            'type'  => $type
+        ];
+
+        $this->db->insert('T_code', $data);
+
+        return $code;
+    }
 }
 ?>
