@@ -91,5 +91,12 @@ class User extends CI_Model {
 
         $this->db->insert('T_user', $data);
     }
+
+    function setNewPassword($id, $pw) {
+        $this->db->where('uid', $id);
+        $this->db->update('T_user', [
+            'upw' => md5($pw)
+        ]);
+    }
 }
 ?>
