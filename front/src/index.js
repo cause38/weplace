@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles/index.css";
+import "./styles/font.css";
 import Switchs from "./Routes";
 import reportWebVitals from "./reportWebVitals";
 
