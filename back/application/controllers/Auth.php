@@ -23,21 +23,24 @@ class Auth extends RestController {
             
             if (!empty($data)) {
                 $this->response([
-                    'state' => 'OK',
-                    'data' => [
+                    'state' => 200,
+                    'msg'   => 'OK',
+                    'data'  => [
                         'id' => $data->unique_key,
                         'name' => $data->name
                     ]
-                ], 200);
+                ]);
             } else {
                 $this->response([
-                    'state' => '계정 정보가 확인되지 않습니다.'
-                ], 401);
+                    'state' => 401,
+                    'msg'   => '계정 정보가 확인되지 않습니다.'
+                ]);
             }
         } else {
             $this->response([
-                'state' => '아이디 또는 비밀번호를 입력해주세요.'
-            ], 400);
+                'state' => 400,
+                'msg'   => '아이디 또는 비밀번호를 입력해주세요.'
+            ]);
         }
     }
 }
