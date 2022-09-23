@@ -103,5 +103,36 @@ class Auth extends RestController {
             }
         }
     }
+
+    public function registerCode_get(){
+        $id = trim($this->get('id'));
+        $code = trim($this->get('code'));
+
+        if (!$id) {
+            $this->response([
+                'state' => 400,
+                'msg'   => '아이디를 입력해주세요.'
+            ]);
+        } elseif (!$code) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '인증번호를 입력해주세요.'
+            ]);
+        } else {
+            $isMatched = $this->user->getCertCode($id, $code, 'R'); // 'R' : Register
+
+            if (!$isMatched) {
+                $this->response([
+                    'state' => 402,
+                    'msg'   => '인증번호가 일치하지 않습니다.'
+                ]);
+            } else {
+                $this->response([
+                    'state' => 200,
+                    'msg'   => '인증이 완료되었습니다.'
+                ]);
+            }
+        }
+    }
 }
 ?>

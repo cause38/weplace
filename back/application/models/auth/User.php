@@ -37,5 +37,27 @@ class User extends CI_Model {
 
         return $code;
     }
+
+    function getCertCode($id, $code, $type) {
+        $this->db->select('code');
+        $this->db->from('T_code');
+        $this->db->where('uid', $id);
+        $this->db->where('code', $code);
+        $this->db->where('type', $type);
+
+        $q = $this->db->get();
+
+        if ($q->num_rows()) {
+            $this->db->where('uid', $id);
+            $this->db->where('code', $code);
+            $this->db->where('type', $type);
+            $this->db->update('T_code', [
+                'state' => 'S',
+                'wdate' => date('Y-m-d H:i:s')
+            ]);
+
+            return true;
+        } else return false;
+    }
 }
 ?>
