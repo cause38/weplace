@@ -12,6 +12,7 @@ import Write from './pages/Write';
 import FindPassword from 'pages/FindPassword/index';
 
 import Header from './components/header';
+import Footer from './components/footer';
 
 function Switchs() {
     return (
