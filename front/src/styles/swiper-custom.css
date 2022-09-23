@@ -1,0 +1,10 @@
+.swiper {
+  padding-bottom: 20px;
+}
+.swiper-button-prev, .swiper-button-next {
+  transform: translateY(-10px);
+}
+.swiper-button-next:after, .swiper-button-prev:after {
+  font-size: 30px;
+  color: #f97316
+}
