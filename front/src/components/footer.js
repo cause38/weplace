@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-      <footer className="flex flex-col items-center justify-between p-6 bg-gray-100 sm:flex-row">
-          <Link href="/" className="text-xl font-bold text-gray-600 transition-colors duration-300 hover:text-gray-700">
+      <footer className="flex flex-col gap-2 items-center justify-between p-6 bg-orange-400 sm:flex-row sm:gap-0">
+          <Link href="/" className="text-xl font-bold text-white transition-colors duration-300 hover:text-gray-800">
             Weplace
           </Link>
 
-          <p className="text-sm text-gray-600">weplace © Copyright 2022. All Rights Reserved.</p>
+          <p className="text-sm text-white">Weplace © Copyright 2022. All Rights Reserved.</p>
 
           <div className="flex -mx-2">
-              <a href="#" className="mx-2 text-gray-600 transition-colors duration-300 hover:text-orange-500" aria-label="Reddit">
+              <a href="#" className="mx-2 text-white transition-colors duration-300 hover:text-gray-800" aria-label="Reddit">
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -20,7 +20,7 @@ const Footer = () => {
                   </svg>
               </a>
 
-              <a href="#" className="mx-2 text-gray-600 transition-colors duration-300 hover:text-orange-500" aria-label="Facebook">
+              <a href="#" className="mx-2 text-white transition-colors duration-300 hover:text-gray-800" aria-label="Facebook">
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -29,7 +29,7 @@ const Footer = () => {
                   </svg>
               </a>
 
-              <a href="#" className="mx-2 text-gray-600 transition-colors duration-300 hover:text-orange-500" aria-label="Github">
+              <a href="#" className="mx-2 text-white transition-colors duration-300 hover:text-gray-800" aria-label="Github">
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <path
