@@ -79,5 +79,17 @@ class User extends CI_Model {
 
         return $q->num_rows();
     }
+
+    function setRegister($id, $pw, $name) {
+        $unique_key = md5(microtime().rand());
+        $data = [
+            'unique_key' => $unique_key,
+            'uid'        => $id,
+            'upw'        => md5($pw),
+            'name'       => $name
+        ];
+
+        $this->db->insert('T_user', $data);
+    }
 }
 ?>

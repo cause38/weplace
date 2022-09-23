@@ -168,5 +168,61 @@ class Auth extends RestController {
             }
         }
     }
+
+    public function register_post()
+    {
+        $id = trim($this->post('id'));
+        $pw = trim($this->post('pw'));
+        $pw2 = trim($this->post('pw2'));
+        $name = trim($this->post('name'));
+
+        if (!$id) {
+            $this->response([
+                'state' => 400,
+                'msg'   => '아이디를 입력해주세요.'
+            ]);
+        } elseif (!filter_var($id, FILTER_VALIDATE_EMAIL)) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '이메일 주소를 확인해주세요.'
+            ]);
+        } elseif (explode('@', $id)[1] !== 'weballin.com') {
+            $this->response([
+                'state' => 402,
+                'msg'   => '사용할 수 없는 이메일입니다.\n weballin 계정으로 가입해주세요.'
+            ]);
+        } elseif ($this->user->getSameId($id)) {
+            $this->response([
+                'state' => 403,
+                'msg'   => '이미 사용중인 이메일입니다.'
+            ]);
+        } elseif (!$pw) {
+            $this->response([
+                'state' => 404,
+                'msg'   => '비밀번호를 입력해주세요.'
+            ]);
+        } elseif ($pw !== $pw2) {
+            $this->response([
+                'state' => 405,
+                'msg'   => '비밀번호가 일치하지 않습니다.'
+            ]);
+        } elseif (!$name) {
+            $this->response([
+                'state' => 406,
+                'msg'   => '닉네임을 입력해주세요.'
+            ]);
+        } elseif ($this->user->getNickname($name)) {
+            $this->response([
+                'state' => 407,
+                'msg'   => '이미 사용중인 닉네임입니다.'
+            ]);
+        } else {
+            $this->user->setRegister($id, $pw, $name);
+            $this->response([
+                'state' => 200,
+                'msg'   => '회원가입이 완료되었습니다!'
+            ]);
+        }
+    }
 }
 ?>
