@@ -4,6 +4,21 @@
 
 @layer base {
   html {
+    min-width: 360px;
     font-family: 'Noto Sans CJK KR';
+  }
+  #root {
+    min-height: 100%;
+  }
+  .container-wb {
+    width: 100%;
+    max-width: 1024px;
+    margin: 80px auto;
+    padding: 0 20px;
+    padding-top: 80px;
+  }
+  @media screen (min-width: 1025px) {
+    padding-top: 80px;
+    
   }
 }
