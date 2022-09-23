@@ -24,10 +24,9 @@ const Login = () => {
     }, []);
 
     // 토큰생성
-    const handleToken = () => {
-        console.log('getToken', getToken);
+    const handleToken = id => {
         if (getToken === null) {
-            sessionStorage.setItem('token', true);
+            sessionStorage.setItem('token', id);
         }
     };
 
@@ -45,7 +44,7 @@ const Login = () => {
                 })
                 .then(response => {
                     if (response.data.state === 200) {
-                        handleToken();
+                        handleToken(response.data.data.id);
                         navigate('/');
                     } else if (response.data.state === 400) {
                         alert(response.data.msg);

@@ -3,20 +3,31 @@ import {Link} from 'react-router-dom';
 import Button from 'components/button';
 import InputBox from 'components/inputBox';
 import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
+import axios from '../../../node_modules/axios/index';
 
 const Join = () => {
     const navigate = useNavigate();
 
+    // 토큰
+    const getToken = sessionStorage.getItem('token');
+
+    // 토큰이 있으면 메인페이지로 이동
+    useEffect(() => {
+        if (getToken !== null) {
+            navigate('/');
+        }
+    }, []);
+
     // input value
     const [id, setId] = useState('');
-    const [verifyNum, setVerifyNum] = useState('');
-    const [nickName, setNickName] = useState('');
+    const [verifyId, setVerifyId] = useState('');
+    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [cfmPassword, setCfmPassword] = useState('');
 
     // check input value
     const [isIdValid, setIsIdValie] = useState(true);
-    const [isVerifyNumValid, setIsVerifyNumValid] = useState(true);
+    // const [isVerifyValid, setIsVerifyValid] = useState(true);
 
     // 뒤로가기
     const goBack = () => {
@@ -60,25 +71,71 @@ const Join = () => {
     // 인증번호 요청
     const handleVerifyNum = () => {
         const form = document.joinForm;
-
         if (form.id.value === '') {
             alert('이메일 주소를 입력해 주십시오.');
             form.id.focus();
+            console.log('입력없음 체크');
             return false;
         } else {
             if (!checkEmail(form.id.value)) {
                 alert('이메일 주소를 바르게 입력해 주십시오.');
                 form.id.focus();
+                console.log('제대로 입력안함');
                 return false;
+            } else {
+                console.log('api 호출시작', id);
+                axios
+                    .post('http://place-api.weballin.com/auth/registerCode', {
+                        id: id,
+                    })
+                    .then(response => {
+                        if (response.data.state === 200) {
+                            console.log('200', response.data.msg);
+                            alert(response.data.msg);
+                        } else if (response.data.state === 401) {
+                            alert(response.data.msg);
+                        } else if (response.data.state === 402) {
+                            alert(response.data.msg);
+                        } else if (response.data.state === 403) {
+                            alert(response.data.msg);
+                        } else if (response.data.state === 404) {
+                            alert(response.data.msg);
+                        }
+                    });
             }
         }
     };
 
     // 인증번호 확인
-    const handleConfirmNum = () => {};
+    const handleConfirmNum = () => {
+        console.log('id', id);
+        axios
+            .get('http://place-api.weballin.com/auth/registerCode', {
+                params: {
+                    id: id,
+                    code: 'WE632D77F70D98E',
+                },
+            })
+            .then(response => {
+                if (response.data.state === 200) {
+                    console.log('200', response.data.msg);
+                    alert(response.data.msg);
+                    // setIsVerifyNumValid(true);
+                } else if (response.data.state === 401) {
+                    alert(response.data.msg);
+                    // setIsVerifyNumValid(false);
+                } else if (response.data.state === 402) {
+                    alert(response.data.msg);
+                } else if (response.data.state === 403) {
+                    alert(response.data.msg);
+                } else if (response.data.state === 404) {
+                    alert(response.data.msg);
+                }
+            });
+    };
 
     // 닉네임 중복 확인
-    const handleNickname = () => {};
+    const handleName = () => {};
 
     // 회원가입 전송
     const submitJoinForm = () => {};
@@ -102,20 +159,20 @@ const Join = () => {
                                 />
                             </div>
                             <InputBox
-                                id="verifyNum"
-                                type="number"
-                                value={verifyNum}
-                                ariaLabel="verifyNum"
+                                id="verifyId"
+                                type="text"
+                                value={verifyId}
+                                ariaLabel="verifyId"
                                 name="인증번호"
-                                onChange={setVerifyNum}
+                                onChange={setVerifyId}
                             />
                             <InputBox
-                                id="nickName"
+                                id="name"
                                 type="text"
-                                value={nickName}
-                                ariaLabel="nickname"
+                                value={name}
+                                ariaLabel="name"
                                 name="닉네임"
-                                onChange={setNickName}
+                                onChange={setName}
                             />
                             <InputBox
                                 id="password"
@@ -136,13 +193,13 @@ const Join = () => {
                         </form>
                         <div className="mt-[1.5rem] w-1/4">
                             <div className="w-full pl-[10px] h-[38px]">
-                                <Button contents="인증 요청" onClick={handleVerifyNum} />
+                                {/* <Button contents="인증 요청" onClick={handleVerifyId} /> */}
                             </div>
                             <div className="w-full pl-[10px] mt-6  h-[38px]">
                                 <Button contents="인증 확인" onClick={handleConfirmNum} />
                             </div>
                             <div className="w-full pl-[10px] mt-6  h-[38px]">
-                                <Button contents="중복 확인" onClick={handleNickname} />
+                                <Button contents="중복 확인" onClick={handleName} />
                             </div>
                         </div>
                     </main>
