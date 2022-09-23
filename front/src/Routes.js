@@ -28,6 +28,7 @@ function Switchs() {
                 <Route path="/write" element={<Write />} />
                 <Route path="/find-password" element={<FindPassword />} />
             </Routes>
+            <Footer />
         </Router>
     );
 }
