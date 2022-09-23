@@ -16,6 +16,16 @@ class User extends CI_Model {
         return $q->row();
     }
 
+    function getSameId($id) {
+        $this->db->select('idx');
+        $this->db->from('T_user');
+        $this->db->where('uid', $id);
+
+        $q = $this->db->get();
+
+        return $q->num_rows();
+    }
+
     function setCertCode($id, $type) {
         $this->db->where('uid', $id);
         $this->db->where('state', 'R');

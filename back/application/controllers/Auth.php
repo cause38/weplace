@@ -62,44 +62,53 @@ class Auth extends RestController {
                 'msg'   => '사용할 수 없는 이메일입니다.\n weballin 계정으로 가입해주세요.'
             ]);
         } else {
-            $this->load->library('phpmailer_lib');
+            $isSameId = $this->user->getSameId($id);
 
-            $mail = $this->phpmailer_lib->load();
-            $code = $this->user->setCertCode($id, 'R'); // 'R' : Register
-
-            // SMTP configuration
-            $mail->isSMTP();
-            $mail->Host     = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->SMTPKeepAlive = true;
-            $mail->Username = 'enquire@weballin.com';
-            $mail->Password = 'fnfnetwork@0126';
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port     = 465;
-            $mail->CharSet    = "EUC-KR";
-            $mail->Encoding   = "base64";
-
-            $mail->setFrom('enquire@weballin.com', 'Weplace');
-            $mail->addAddress('tg.kim@weballin.com');
-
-            $mail->isHTML(true);
-
-            $mail->Subject = iconv('UTF-8', 'EUC-KR', 'Weplace - 인증 코드');
-            $mailContent = "<h2>Weplace 인증 코드</h2>
-                <p><strong>인증 코드</strong> : ".$code."</p>";
-            $mail->Body = $mailContent;
-
-            // Send email
-            if(!$mail->send()){
+            if ($isSameId) {
                 $this->response([
                     'state' => 403,
-                    'msg'   => '이메일을 발송하지 못했습니다.\n' . $mail->ErrorInfo
+                    'msg'   => '이미 사용중인 이메일입니다.'
                 ]);
-            }else{
-                $this->response([
-                    'state' => 200,
-                    'msg'   => '이메일이 발송되었습니다.\n인증번호를 입력해주세요.'
-                ]);;
+            } else {
+                $this->load->library('phpmailer_lib');
+
+                $mail = $this->phpmailer_lib->load();
+                $code = $this->user->setCertCode($id, 'R'); // 'R' : Register
+
+                // SMTP configuration
+                $mail->isSMTP();
+                $mail->Host     = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->SMTPKeepAlive = true;
+                $mail->Username = 'enquire@weballin.com';
+                $mail->Password = 'fnfnetwork@0126';
+                $mail->SMTPSecure = 'ssl';
+                $mail->Port     = 465;
+                $mail->CharSet    = "EUC-KR";
+                $mail->Encoding   = "base64";
+
+                $mail->setFrom('enquire@weballin.com', 'Weplace');
+                $mail->addAddress('tg.kim@weballin.com');
+
+                $mail->isHTML(true);
+
+                $mail->Subject = iconv('UTF-8', 'EUC-KR', 'Weplace - 인증 코드');
+                $mailContent = "<h2>Weplace 인증 코드</h2>
+                    <p><strong>인증 코드</strong> : ".$code."</p>";
+                $mail->Body = $mailContent;
+
+                // Send email
+                if(!$mail->send()){
+                    $this->response([
+                        'state' => 404,
+                        'msg'   => '이메일을 발송하지 못했습니다.\n' . $mail->ErrorInfo
+                    ]);
+                }else{
+                    $this->response([
+                        'state' => 200,
+                        'msg'   => '이메일이 발송되었습니다.\n인증번호를 입력해주세요.'
+                    ]);;
+                }
             }
         }
     }
