@@ -7,7 +7,7 @@ const Button = ({contents, onClick}) => {
                 'w-full h-full py-[5px] leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded hover:bg-gray-600 focus:outline-none'
             }
             type="button"
-            onClick={() => onClick()}
+            onClick={e => onClick(e)}
         >
             {contents}
         </button>

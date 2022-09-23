@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
 import {Link} from 'react-router-dom';
 
@@ -9,11 +9,30 @@ import axios from 'axios';
 const Login = () => {
     const navigate = useNavigate();
 
+    // 토큰
+    const getToken = sessionStorage.getItem('token');
+
+    // input value
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
 
+    // 토큰이 있으면 메인페이지로 이동
+    useEffect(() => {
+        if (getToken !== null) {
+            navigate('/');
+        }
+    }, []);
+
+    // 토큰생성
+    const handleToken = () => {
+        console.log('getToken', getToken);
+        if (getToken === null) {
+            sessionStorage.setItem('token', true);
+        }
+    };
+
+    // 로그인
     const setLogin = () => {
-        console.log(id, pw);
         if (id.length < 1) {
             alert(`아이디를 입력해 주세요.`);
         } else if (pw.length < 1) {
@@ -25,8 +44,8 @@ const Login = () => {
                     pw: pw,
                 })
                 .then(response => {
-                    console.log('res', response);
                     if (response.data.state === 200) {
+                        handleToken();
                         navigate('/');
                     } else if (response.data.state === 400) {
                         alert(response.data.msg);
@@ -35,44 +54,17 @@ const Login = () => {
                     }
                 });
         }
-        // if (id.length <= 0) {
-        //     return alert(`아이디를 입력해 주세요.`);
-        // } else if (pw.length <= 0) {
-        //     return alert(`비밀번호를 입력해 주세요.`);
-        // } else {
-        //     fetch(`http://place-api.weballin.com/auth/login`, {
-        //         method: 'POST',
-        //         mode: 'no-cors',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Access-Control-Allow-Origin': '*',
-        //             'Access-Control-Allow-Credentials': true,
-        //         },
-        //         body: JSON.stringify({
-        //             id: id,
-        //             pw: pw,
-        //         }),
-        //     })
-        //         .then(res => res.json())
-        //         .then(data => {
-        //             console.log('data', data);
-        //             if (data.state === 'OK') {
-        //                 navigate('/');
-        //             } else if (data.state !== 'OK') {
-        //                 alert('아이디와 비밀번호를 확인 해 주세요');
-        //             }
-        //         });
-        // }
     };
 
+    // 회원가입
     const setRegister = () => {
         navigate('/join');
     };
 
     return (
-        <div className="mt-40">
-            <div className="w-full max-w-sm mx-auto overflow-hidden ">
-                <div className="px-6 py-4">
+        <div className="container-wb">
+            <div className="w-full max-w-lg mx-auto overflow-hidden">
+                <div className="">
                     <h2 className="text-3xl font-bold text-center text-gray-700 ">Login</h2>
                     <form>
                         <InputBox
@@ -80,27 +72,27 @@ const Login = () => {
                             placeholder="user name"
                             ariaLabel="user-name"
                             value={id}
-                            onChange={e => setId(e.target.value)}
+                            onChange={setId}
                         />
                         <InputBox
                             type="password"
                             placeholder="password"
                             ariaLabel="password"
                             value={pw}
-                            onChange={e => setPw(e.target.value)}
+                            onChange={setPw}
                         />
                         <div className="flex items-center justify-between mt-4">
-                            <div className="w-[45%]">
-                                <Button contents="회원가입" onClick={() => setRegister()} />
+                            <div className="w-[45%] h-[40px]">
+                                <Button contents="회원가입" onClick={setRegister} />
                             </div>
-                            <div className="w-[45%]">
+                            <div className="w-[45%] h-[40px]">
                                 <Button contents="로그인" onClick={setLogin} />
                             </div>
                         </div>
                     </form>
                 </div>
 
-                <div className="flex items-center justify-center py-4 text-center bg-gray-50 ">
+                <div className="flex items-center justify-center py-4 text-center bg-gray-50 mt-7">
                     <Link to="/find-password" className="text-sm text-gray-600 hover:text-gray-500">
                         비밀번호 찾기
                     </Link>
