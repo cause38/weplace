@@ -1,10 +1,66 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, A11y } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'styles/swiper-custom.css';
 
 const Home = () => {
+  const examSlidearr = [
+    {
+      idx: 1,
+      category: '일반 돈까스',
+      title: '사흘카레',
+      desc: '웨이팅을 기다리는 이유가 있는 곳',
+      score: 4,
+      date: '2022-09-22'
+    },
+    {
+      idx: 2,
+      category: '일반 돈까스',
+      title: '미쁘동 서울숲',
+      desc: '웨이팅을 기다리는 이유가 있는 곳',
+      score: 4,
+      date: '2022-09-22'
+    },
+    {
+      idx: 3,
+      category: '일반 돈까스',
+      title: '대림국수 성수점',
+      desc: '웨이팅을 기다리는 이유가 있는 곳',
+      score: 3,
+      date: '2022-09-22'
+    },
+    {
+      idx: 4,
+      category: '일반 돈까스',
+      title: '부우이',
+      desc: '웨이팅을 기다리는 이유가 있는 곳',
+      score: 5,
+      date: '2022-09-22'
+    },
+    {
+      idx: 5,
+      category: '일반 돈까스',
+      title: '사흘카레',
+      desc: '웨이팅을 기다리는 이유가 있는 곳',
+      score: 2,
+      date: '2022-09-22'
+    }
+  ];
+
+  function storeScore(score) {
+    const arr = [];
+    for(let i = 0; i < score; i++){
+      arr.push(`⭐`)
+    }
+    return arr.join('')
+  }
   return (
     <div className='container-wb'>
-      <div className="flex flex-col justify-center items-center gap-10 w-full font-sans-g">
+      <div className="flex flex-col justify-center items-center gap-10 w-full font-sans-g mb-20">
         <h3 className='text-3xl font-semibold text-orange-500 mb-10'>🤔오늘의 메뉴는</h3>
         <div className='relative flex items-center w-6/12 w-lg:w-1/3'>
           <div className='w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md'>
@@ -13,6 +69,7 @@ const Home = () => {
             </div>
           </div>
           <div className='absolute right-0 bottom-2 w-2/12 h-3/5 bg-orange-500 rounded-r-lg'>
+            <span className='absolute left-1/2 -translate-x-1/2 block w-3 h-8 bg-orange-600'></span>
             <svg viewBox="0 0 114 355" version="1.1" className="absolute top-0 left-1/2 -translate-y-full -translate-x-1/2 w-2/4 cursor-pointer">
               <g id="lever">
                 <rect id="socket" fill="#3A6255" x="43" y="355" width="28" height="91.5"></rect>
@@ -27,12 +84,43 @@ const Home = () => {
         </div>
       </div>
 
-      <div className='flex gap-4 bg-white shadow-lg rounded-lg p-10 mt-12 text-center'>
-        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
-        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
-        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
-        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
-        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
+      <div className=''>
+        <div className='flex justify-between items-end mb-4'>
+          <h3 className='text-xl font-bold'>💖최신 리뷰</h3>
+          <Link to="/category" className='text-sm font-semibold text-gray-600 hover:text-orange-500'>더보기 +</Link>
+        </div>
+        <Swiper
+          modules={[Navigation, Pagination, A11y]}
+          spaceBetween={25}
+          slidesPerView={1.5}
+          navigation
+          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => console.log('slide change')}
+          breakpoints={{
+            768: {
+              width: 768,
+              slidesPerView: 2.5,
+            },
+          }}
+        >
+          {
+            examSlidearr.map((data) => (
+              <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={data.idx}>
+                <a href="#">
+                  <div className='flex justify-between items-center mb-3'>
+                    <span className='inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full'>{data.category}</span>
+                    <span className='text-sm'>{data.date}</span>
+                  </div>
+                  <div className='mt-6'>
+                    <span className='text-xs'>{storeScore(data.score)}</span>
+                    <h4 className='text-xl font-bold text-gray-900 truncate w-full'>{data.title}</h4>
+                    <p className='truncate w-full'>{data.desc}</p>
+                  </div>
+                </a>
+              </SwiperSlide>
+            ))
+          }
+        </Swiper>
       </div>
 
       <div className='grid grid-cols-4 gap-6 mt-12 text-center text-lg font-semibold text-orange-500'>
@@ -47,5 +135,7 @@ const Home = () => {
     </div>
   );
 };
+
+
 
 export default Home;
