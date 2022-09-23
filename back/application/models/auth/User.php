@@ -59,5 +59,15 @@ class User extends CI_Model {
             return true;
         } else return false;
     }
+
+    function getNickname($name) {
+        $this->db->select('name');
+        $this->db->from('T_user');
+        $this->db->where('name', $name);
+
+        $q = $this->db->get();
+
+        return $q->num_rows();
+    }
 }
 ?>

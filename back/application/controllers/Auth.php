@@ -134,5 +134,30 @@ class Auth extends RestController {
             }
         }
     }
+
+    public function nickname_get() {
+        $name = trim($this->get('name'));
+
+        if (!$name) {
+            $this->response([
+                'state' => 400,
+                'msg'   => '닉네임을 입력해주세요.'
+            ]);
+        } else {
+            $hasName = $this->user->getNickname($name);
+
+            if ($hasName) {
+                $this->response([
+                    'state' => 401,
+                    'msg'   => '이미 사용중인 닉네임입니다.'
+                ]);
+            } else {
+                $this->response([
+                    'state' => 200,
+                    'msg'   => '사용 가능한 닉네임입니다.'
+                ]);
+            }
+        }
+    }
 }
 ?>
