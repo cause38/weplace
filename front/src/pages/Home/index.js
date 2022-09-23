@@ -1,18 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className='bg-orange-100 p-2 lg:p-8'>
-      <div className="flex flex-col justify-center items-center gap-10 w-full px-10 py-12 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <h3 className='text-3xl font-bold text-orange-600 mb-10'>🤔오늘의 메뉴는</h3>
+    <div className='container-wb'>
+      <div className="flex flex-col justify-center items-center gap-10 w-full font-sans-g">
+        <h3 className='text-3xl font-semibold text-orange-500 mb-10'>🤔오늘의 메뉴는</h3>
         <div className='relative flex items-center w-6/12 w-lg:w-1/3'>
-          <div className='w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md dark:bg-gray-800'>
-            <div className='p-8 py-10 bg-white rounded-lg shadow-inner dark:bg-gray-800 text-4xl font-bold text-orange-500 text-center'>
+          <div className='w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md'>
+            <div className='p-8 py-10 bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center'>
               제육볶음
             </div>
           </div>
-          <div className='absolute right-0 bottom-2 w-2/12 h-3/5 bg-orange-500 rounded-r-lg dark:bg-gray-700'>
-            <svg viewBox="0 0 114 355" version="1.1" class="absolute top-0 left-1/2 -translate-y-full -translate-x-1/2 w-2/4 cursor-pointer">
+          <div className='absolute right-0 bottom-2 w-2/12 h-3/5 bg-orange-500 rounded-r-lg'>
+            <svg viewBox="0 0 114 355" version="1.1" className="absolute top-0 left-1/2 -translate-y-full -translate-x-1/2 w-2/4 cursor-pointer">
               <g id="lever">
                 <rect id="socket" fill="#3A6255" x="43" y="355" width="28" height="91.5"></rect>
                 <rect id="rod" fill="#D8D8D8" x="43" y="57" width="28" height="298"></rect>
@@ -24,6 +25,24 @@ const Home = () => {
             </svg>
           </div>
         </div>
+      </div>
+
+      <div className='flex gap-4 bg-white shadow-lg rounded-lg p-10 mt-12 text-center'>
+        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
+        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
+        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
+        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
+        <div className='w-1/3 bg-white shadow-lg rounded-lg p-10'>slide1</div>
+      </div>
+
+      <div className='grid grid-cols-4 gap-6 mt-12 text-center text-lg font-semibold text-orange-500'>
+          <Link to="/category" className='col-span-2 bg-white shadow-lg rounded-lg p-10'>전체 보기<p className='mt-6 text-5xl'>😋🍴</p></Link>
+          <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>한식<p className='mt-6 text-5xl'>🍚</p></Link>
+          <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>중식<p className='mt-6 text-5xl'>🥟</p></Link>
+          <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>일식<p className='mt-6 text-5xl'>🍣</p></Link>
+          <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>양식<p className='mt-6 text-5xl'>🍝</p></Link>
+          <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>분식<p className='mt-6 text-5xl'>🥠</p></Link>
+          <Link to="/category" className='bg-white shadow-lg rounded-lg p-10'>아시안 매장<p className='mt-6 text-5xl'>🍜</p></Link>
       </div>
     </div>
   );
