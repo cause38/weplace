@@ -1,5 +1,5 @@
 <?php
-class User extends CI_Model {
+class Auth_m extends CI_Model {
     function login($id, $pw) {
         $this->db->select('unique_key, name, thumb');
         $this->db->from('T_user');

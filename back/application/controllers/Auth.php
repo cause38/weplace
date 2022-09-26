@@ -10,14 +10,14 @@ class Auth extends RestController {
     function __construct()
     {
         parent::__construct();
-        $this->load->model('auth/user');
+        $this->load->model('auth_m');
     }
 
     public function login_post() {
         $id = trim($this->post('id'));
         $pw = trim($this->post('pw'));
         if ($id && $pw) {
-            $data = $this->user->login($id, $pw);
+            $data = $this->auth_m->login($id, $pw);
             
             if (!empty($data)) {
                 $this->response([
@@ -61,7 +61,7 @@ class Auth extends RestController {
                 'msg'   => '사용할 수 없는 이메일입니다.\n weballin 계정으로 가입해주세요.'
             ]);
         } else {
-            $isSameId = $this->user->getSameId($id);
+            $isSameId = $this->auth_m->getSameId($id);
 
             if ($isSameId) {
                 $this->response([
@@ -72,7 +72,7 @@ class Auth extends RestController {
                 $this->load->library('phpmailer_lib');
 
                 $mail = $this->phpmailer_lib->load();
-                $code = $this->user->setCertCode($id, 'R'); // 'R' : Register
+                $code = $this->auth_m->setCertCode($id, 'R'); // 'R' : Register
 
                 // SMTP configuration
                 $mail->isSMTP();
@@ -127,7 +127,7 @@ class Auth extends RestController {
                 'msg'   => '인증번호를 입력해주세요.'
             ]);
         } else {
-            $isMatched = $this->user->getCertCode($id, $code, 'R'); // 'R' : Register
+            $isMatched = $this->auth_m->getCertCode($id, $code, 'R'); // 'R' : Register
 
             if (!$isMatched) {
                 $this->response([
@@ -152,7 +152,7 @@ class Auth extends RestController {
                 'msg'   => '닉네임을 입력해주세요.'
             ]);
         } else {
-            $hasName = $this->user->getNickname($name);
+            $hasName = $this->auth_m->getNickname($name);
 
             if ($hasName) {
                 $this->response([
@@ -189,7 +189,7 @@ class Auth extends RestController {
                 'state' => 402,
                 'msg'   => '사용할 수 없는 이메일입니다.\n weballin 계정으로 가입해주세요.'
             ]);
-        } elseif ($this->user->getSameId($id)) {
+        } elseif ($this->auth_m->getSameId($id)) {
             $this->response([
                 'state' => 403,
                 'msg'   => '이미 사용중인 이메일입니다.'
@@ -209,13 +209,13 @@ class Auth extends RestController {
                 'state' => 406,
                 'msg'   => '닉네임을 입력해주세요.'
             ]);
-        } elseif ($this->user->getNickname($name)) {
+        } elseif ($this->auth_m->getNickname($name)) {
             $this->response([
                 'state' => 407,
                 'msg'   => '이미 사용중인 닉네임입니다.'
             ]);
         } else {
-            $this->user->setRegister($id, $pw, $name);
+            $this->auth_m->setRegister($id, $pw, $name);
             $this->response([
                 'state' => 200,
                 'msg'   => '회원가입이 완료되었습니다!'
@@ -242,7 +242,7 @@ class Auth extends RestController {
                 'msg'   => 'weballin 계정이 아닙니다.'
             ]);
         } else {
-            $isSameId = $this->user->getSameId($id);
+            $isSameId = $this->auth_m->getSameId($id);
 
             if (!$isSameId) {
                 $this->response([
@@ -253,7 +253,7 @@ class Auth extends RestController {
                 $this->load->library('phpmailer_lib');
 
                 $mail = $this->phpmailer_lib->load();
-                $code = $this->user->setCertCode($id, 'P'); // 'P' : Password
+                $code = $this->auth_m->setCertCode($id, 'P'); // 'P' : Password
 
                 // SMTP configuration
                 $mail->isSMTP();
@@ -308,7 +308,7 @@ class Auth extends RestController {
                 'msg'   => '인증번호를 입력해주세요.'
             ]);
         } else {
-            $isMatched = $this->user->getCertCode($id, $code, 'P'); // 'P' : Password
+            $isMatched = $this->auth_m->getCertCode($id, $code, 'P'); // 'P' : Password
 
             if (!$isMatched) {
                 $this->response([
@@ -344,7 +344,7 @@ class Auth extends RestController {
                 'state' => 402,
                 'msg'   => 'weballin 계정이 아닙니다.'
             ]);
-        } elseif (!$this->user->getSameId($id)) {
+        } elseif (!$this->auth_m->getSameId($id)) {
             $this->response([
                 'state' => 403,
                 'msg'   => '등록되지 않은 아이디입니다.'
@@ -360,7 +360,7 @@ class Auth extends RestController {
                 'msg'   => '비밀번호가 일치하지 않습니다.'
             ]);
         } else {
-            $this->user->setNewPassword($id, $pw);
+            $this->auth_m->setNewPassword($id, $pw);
             $this->response([
                 'state' => 200,
                 'msg'   => '비밀번호 변경이 완료되었습니다.\n변경 된 비밀번호로 로그인해주세요.'
