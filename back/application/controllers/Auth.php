@@ -24,7 +24,7 @@ class Auth extends RestController {
                     'state' => 200,
                     'msg'   => 'OK',
                     'data'  => [
-                        'id' => $data->unique_key,
+                        'id' => $data->token,
                         'name' => $data->name
                     ]
                 ]);

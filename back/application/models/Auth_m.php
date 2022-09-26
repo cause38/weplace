@@ -1,7 +1,7 @@
 <?php
 class Auth_m extends CI_Model {
     function login($id, $pw) {
-        $this->db->select('unique_key, name, thumb');
+        $this->db->select('token, name, thumb');
         $this->db->from('T_user');
         $this->db->where('uid', $id);
         $this->db->where('upw', md5($pw));
@@ -9,7 +9,7 @@ class Auth_m extends CI_Model {
         $q = $this->db->get();
         
         if ($q->num_rows()) {
-            $this->db->where('unique_key', $q->row()->unique_key);
+            $this->db->where('token', $q->row()->token);
             $this->db->update('T_user', ['last_login' => date('Y-m-d H:i:s')]);
         }
 
@@ -81,9 +81,9 @@ class Auth_m extends CI_Model {
     }
 
     function setRegister($id, $pw, $name) {
-        $unique_key = md5(microtime().rand());
+        $token = md5(microtime().rand());
         $data = [
-            'unique_key' => $unique_key,
+            'token' => $token,
             'uid'        => $id,
             'upw'        => md5($pw),
             'name'       => $name
