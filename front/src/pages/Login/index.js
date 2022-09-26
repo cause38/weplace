@@ -45,7 +45,7 @@ const Login = () => {
                 .then(response => {
                     if (response.data.state === 200) {
                         handleToken(response.data.data.id);
-                        navigate('/');
+                        navigate(-1);
                     } else if (response.data.state === 400) {
                         alert(response.data.msg);
                     } else if (response.data.state === 401) {
