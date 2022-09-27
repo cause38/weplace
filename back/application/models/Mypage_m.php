@@ -68,5 +68,11 @@ class Mypage_m extends CI_Model {
         $this->db->where('idx', $ridx);
         $this->db->delete('T_review');
     }
+
+    function deleteFavorite($uidx, $sidx) {
+        $this->db->where('uidx', $uidx);
+        $this->db->where('sidx', $sidx);
+        $this->db->delete('T_favorite');
+    }
 }
 ?>

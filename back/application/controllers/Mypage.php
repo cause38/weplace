@@ -132,5 +132,22 @@ class Mypage extends RestController {
             'msg'   => '리뷰가 삭제되었습니다.'
         ]);
     }
+
+    public function deleteFavorite_delete() {
+        $sidx = trim($this->delete('idx'));
+
+        if (!$sidx) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '매장을 선택해주세요.'
+            ]);
+        }
+
+        $this->mypage_m->deleteFavorite($this->idx, $sidx);
+        $this->response([
+            'state' => 200,
+            'msg'   => '찜 목록에서 삭제되었습니다.'
+        ]);
+    }
 }
 ?>
