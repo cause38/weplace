@@ -6,5 +6,12 @@ class Mypage_m extends CI_Model {
             'thumb' => UPLOAD_PATH . $fileName
         ]);
     }
+
+    function setName($idx, $name) {
+        $this->db->where('idx', $idx);
+        $this->db->update('T_user', [
+            'name' => $name
+        ]);
+    }
 }
 ?>

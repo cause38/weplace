@@ -57,5 +57,33 @@ class Mypage extends RestController {
             ]);
         }
     }
+
+    public function changeName_post() {
+        $this->load->model('auth_m');
+
+        $name = trim($this->post('name'));
+
+        if (!$name) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '닉네임을 입력해주세요.'
+            ]);
+        }
+        
+        $hasName = $this->auth_m->getNickname($name);
+
+        if ($hasName) {
+            $this->response([
+                'state' => 402,
+                'msg'   => '이미 사용중인 닉네임입니다.'
+            ]);
+        } else {
+            $this->mypage_m->setName($this->idx, $name);
+            $this->response([
+                'state' => 200,
+                'msg'   => '닉네임이 변경되었습니다.'
+            ]);
+        }
+    }
 }
 ?>
