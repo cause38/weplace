@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
+import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import {Link} from 'react-router-dom';
 
 import Button from 'components/button';
@@ -45,7 +45,7 @@ const Login = () => {
                 .then(response => {
                     if (response.data.state === 200) {
                         handleToken(response.data.data.id);
-                        navigate(-1);
+                        navigate('/');
                     } else if (response.data.state === 400) {
                         alert(response.data.msg);
                     } else if (response.data.state === 401) {

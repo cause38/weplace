@@ -26,7 +26,7 @@ const MyPage = () => {
 
     return (
         <Fragment>
-            {getToken !== null ? (
+            {getToken ? (
                 <main className="container-wb">
                     <h2 className="text-[24px] font-bold">마이페이지</h2>
                     <section className="mt-[20px]">
@@ -41,17 +41,17 @@ const MyPage = () => {
                                 </div>
                             </div>
                             <div className="flex ml-[10%] mb-[50px] items-end w-[85%] justify-between">
-                                <div className="flex flex-col justify-center ">
+                                <div className="flex flex-col justify-center w-[80%]">
                                     <div className="flex">
-                                        <div className="min-w-[70px]">아이디</div>
-                                        <div>sy.park@weballin.com</div>
+                                        <div className="min-w-[70px] w-[20%]">아이디</div>
+                                        <div className="w-[80%]">sy.park@weballin.com</div>
                                     </div>
                                     <div className="flex mt-[20px]">
-                                        <div className="min-w-[70px]">닉네임</div>
-                                        <input className="h-[40px]" />
+                                        <div className="min-w-[70px] w-[20%]">닉네임</div>
+                                        <input className="h-[40px] w-[80%]" />
                                     </div>
                                 </div>
-                                <div className="h-[40px]">
+                                <div className="h-[40px] w-[20%] ml-[5%] min-w-[100px]">
                                     <Button contents="닉네임 변경" />
                                 </div>
                             </div>
