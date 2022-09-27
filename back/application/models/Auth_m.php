@@ -84,9 +84,9 @@ class Auth_m extends CI_Model {
         $token = md5(microtime().rand());
         $data = [
             'token' => $token,
-            'uid'        => $id,
-            'upw'        => md5($pw),
-            'name'       => $name
+            'uid'   => $id,
+            'upw'   => md5($pw),
+            'name'  => $name
         ];
 
         $this->db->insert('T_user', $data);
