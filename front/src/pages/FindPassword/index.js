@@ -54,7 +54,7 @@ const FindPassword = () => {
                     fetch(`http://place-api.weballin.com/auth/passwordCode`, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json;charset=utf-8',
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({id: id}),
                     })
@@ -151,7 +151,7 @@ const FindPassword = () => {
             fetch(`http://place-api.weballin.com/auth/changePassword`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({id: id, pw: newPw, pw2: checkPw}),
             })

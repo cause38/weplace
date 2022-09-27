@@ -71,7 +71,7 @@ const Join = () => {
                     fetch(`http://place-api.weballin.com/auth/registerCode`, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json;charset=utf-8',
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({id: id}),
                     })
@@ -208,7 +208,7 @@ const Join = () => {
             fetch(`http://place-api.weballin.com/auth/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
+                    'Content-type': 'application/json',
                 },
                 body: JSON.stringify({id: id, pw: password, pw2: cfmPassword, name: nickName}),
             })
