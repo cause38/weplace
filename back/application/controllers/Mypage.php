@@ -32,6 +32,24 @@ class Mypage extends RestController {
         }
     }
 
+    public function myInfo_post() {
+        $basic = $this->mypage_m->getBasicInfo($this->idx);
+        $reviews = $this->mypage_m->getReviewsInfo($this->idx);
+        $favorites = $this->mypage_m->getFavoritesInfo($this->idx);
+
+        $data = [
+            'basic'     => $basic,
+            'reviews'   => $reviews,
+            'favorites' => $favorites
+        ];
+
+        $this->response([
+            'state' => 200,
+            'msg'   => 'OK',
+            'data'  => $data 
+        ]);
+    }
+
     public function changeProfileImg_post() {
         $this->load->helper(array('form', 'url'));
 
