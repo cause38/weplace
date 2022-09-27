@@ -15,7 +15,14 @@ class Mypage extends RestController {
         $this->load->model('mypage_m');
         $this->load->model('common/user_m');
 
-        $token = trim($this->post('token'));
+        $method = $this->input->server('REQUEST_METHOD');
+        switch($method) {
+            case 'POST': $token = trim($this->post('token')); break;
+            case 'GET': $token = trim($this->get('token')); break;
+            case 'PUT': $token = trim($this->put('token')); break;
+            case 'DELETE': $token = trim($this->delete('token')); break;
+        }
+        
         if (!$token) {
             $this->response([
                 'state' => 400,
@@ -32,7 +39,7 @@ class Mypage extends RestController {
         }
     }
 
-    public function myInfo_post() {
+    public function myInfo_get() {
         $data = [
             'basic'     => $this->mypage_m->getBasicInfo($this->idx),
             'reviews'   => $this->mypage_m->getReviewsInfo($this->idx),
@@ -72,10 +79,10 @@ class Mypage extends RestController {
         }
     }
 
-    public function changeName_post() {
+    public function changeName_put() {
         $this->load->model('auth_m');
 
-        $name = trim($this->post('name'));
+        $name = trim($this->put('name'));
 
         if (!$name) {
             $this->response([
