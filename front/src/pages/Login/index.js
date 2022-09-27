@@ -66,20 +66,24 @@ const Login = () => {
                 <div className="">
                     <h2 className="text-3xl font-bold text-center text-gray-700 ">Login</h2>
                     <form>
-                        <InputBox
-                            type="email"
-                            placeholder="user name"
-                            ariaLabel="user-name"
-                            value={id}
-                            onChange={setId}
-                        />
-                        <InputBox
-                            type="password"
-                            placeholder="password"
-                            ariaLabel="password"
-                            value={pw}
-                            onChange={setPw}
-                        />
+                        <div className="mt-4">
+                            <InputBox
+                                type="email"
+                                placeholder="user name"
+                                ariaLabel="user-name"
+                                value={id}
+                                onChange={setId}
+                            />
+                        </div>
+                        <div className="mt-2">
+                            <InputBox
+                                type="password"
+                                placeholder="password"
+                                ariaLabel="password"
+                                value={pw}
+                                onChange={setPw}
+                            />
+                        </div>
                         <div className="flex items-center justify-between mt-4">
                             <div className="w-[45%] h-[40px]">
                                 <Button contents="회원가입" onClick={setRegister} />
