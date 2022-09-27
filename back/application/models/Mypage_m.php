@@ -22,7 +22,7 @@ class Mypage_m extends CI_Model {
 
     function getFavoritesInfo($idx) {
         $q = $this->db->query("
-            SELECT c.name AS category, s.name, ROUND(sc.star, 1) AS star, sc.review, fc.favorite, DATE(f.wdate) AS wdate
+            SELECT s.idx, c.name AS category, s.name, ROUND(sc.star, 1) AS star, sc.review, fc.favorite, DATE(f.wdate) AS wdate
             FROM T_favorite AS f
                 LEFT JOIN T_shop AS s ON f.sidx = s.idx
                 LEFT JOIN T_category AS c ON s.cidx = c.idx
