@@ -33,14 +33,10 @@ class Mypage extends RestController {
     }
 
     public function myInfo_post() {
-        $basic = $this->mypage_m->getBasicInfo($this->idx);
-        $reviews = $this->mypage_m->getReviewsInfo($this->idx);
-        $favorites = $this->mypage_m->getFavoritesInfo($this->idx);
-
         $data = [
-            'basic'     => $basic,
-            'reviews'   => $reviews,
-            'favorites' => $favorites
+            'basic'     => $this->mypage_m->getBasicInfo($this->idx),
+            'reviews'   => $this->mypage_m->getReviewsInfo($this->idx),
+            'favorites' => $this->mypage_m->getFavoritesInfo($this->idx)
         ];
 
         $this->response([
