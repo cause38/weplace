@@ -106,5 +106,31 @@ class Mypage extends RestController {
             ]);
         }
     }
+
+    public function deleteReview_delete() {
+        $ridx = trim($this->delete('idx'));
+
+        if (!$ridx) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '리뷰를 선택해주세요.'
+            ]);
+        }
+
+        $isMyReview = $this->mypage_m->checkReview($this->idx, $ridx);
+
+        if (!$isMyReview) {
+            $this->response([
+                'state' => 402,
+                'msg'   => '비정상적인 접근입니다.'
+            ]);
+        }
+
+        $this->mypage_m->deleteReview($ridx);
+        $this->response([
+            'state' => 200,
+            'msg'   => '리뷰가 삭제되었습니다.'
+        ]);
+    }
 }
 ?>
