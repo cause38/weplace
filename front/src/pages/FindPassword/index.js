@@ -192,55 +192,65 @@ const FindPassword = () => {
                         <form className="w-3/4" name="setPwForm">
                             <div className="flex ">
                                 {isSendVerifyEmail ? (
-                                    <InputBox
-                                        id="id"
-                                        type="email"
-                                        value={id}
-                                        ariaLabel="user-id"
-                                        name="아이디"
-                                        onChange={setId}
-                                        readOnly="readOnly"
-                                    />
+                                    <div className="mt-4 w-full">
+                                        <InputBox
+                                            id="id"
+                                            type="email"
+                                            value={id}
+                                            ariaLabel="user-id"
+                                            name="아이디"
+                                            onChange={setId}
+                                            readOnly="readOnly"
+                                        />
+                                    </div>
                                 ) : (
-                                    <InputBox
-                                        id="id"
-                                        type="email"
-                                        value={id}
-                                        onChange={setId}
-                                        placeholder="example@weballin.com"
-                                        ariaLabel="user-id"
-                                        name="아이디"
-                                    />
+                                    <div className="mt-4 w-full">
+                                        <InputBox
+                                            id="id"
+                                            type="email"
+                                            value={id}
+                                            onChange={setId}
+                                            placeholder="example@weballin.com"
+                                            ariaLabel="user-id"
+                                            name="아이디"
+                                        />
+                                    </div>
                                 )}
                             </div>
                             {isIdValid ? (
-                                <InputBox
-                                    id="verifyId"
-                                    type="text"
-                                    value={verifyId}
-                                    ariaLabel="verifyId"
-                                    name="인증번호"
-                                    onChange={setVerifyId}
-                                    readOnly="readOnly"
-                                />
+                                <div className="mt-4 w-full">
+                                    <InputBox
+                                        id="verifyId"
+                                        type="text"
+                                        value={verifyId}
+                                        ariaLabel="verifyId"
+                                        name="인증번호"
+                                        onChange={setVerifyId}
+                                        readOnly="readOnly"
+                                    />
+                                </div>
                             ) : (
-                                <InputBox
-                                    id="verifyId"
-                                    type="text"
-                                    value={verifyId}
-                                    ariaLabel="verifyId"
-                                    name="인증번호"
-                                    onChange={setVerifyId}
-                                />
+                                <div className="mt-4 w-full">
+                                    <InputBox
+                                        id="verifyId"
+                                        type="text"
+                                        value={verifyId}
+                                        ariaLabel="verifyId"
+                                        name="인증번호"
+                                        onChange={setVerifyId}
+                                    />
+                                </div>
                             )}
-                            <InputBox
-                                id="newPw"
-                                type="password"
-                                value={newPw}
-                                ariaLabel="password"
-                                name="신규 비밀번호"
-                                onChange={setNewPw}
-                            />
+                            <div className="mt-4 w-full">
+                                <InputBox
+                                    id="newPw"
+                                    type="password"
+                                    value={newPw}
+                                    ariaLabel="password"
+                                    name="신규 비밀번호"
+                                    onChange={setNewPw}
+                                />
+                            </div>
                             <div className="w-full mt-4 flex ">
                                 <label
                                     htmlFor="비밀번호 확인"
@@ -266,7 +276,7 @@ const FindPassword = () => {
                                 </p>
                             )}
                         </form>
-                        <div className="mt-[1.5rem] w-1/4">
+                        <div className="mt-4 w-1/4">
                             {isSendVerifyEmail ? (
                                 isIdValid ? (
                                     <div className="w-full pl-[10px] h-[38px]">
@@ -287,11 +297,11 @@ const FindPassword = () => {
                                 </div>
                             )}
                             {isIdValid ? (
-                                <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                <div className="w-full pl-[10px] mt-4  h-[38px]">
                                     <Button contents="인증 완료" onClick={handleConfirmId} disAbled="disabled" />
                                 </div>
                             ) : (
-                                <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                <div className="w-full pl-[10px] mt-4  h-[38px]">
                                     <Button contents="인증 확인" onClick={handleConfirmId} />
                                 </div>
                             )}
