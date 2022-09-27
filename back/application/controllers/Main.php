@@ -13,10 +13,14 @@ class Main extends RestController {
     }
 
     public function index_get() {
+        $data = [
+            'reviews' => $this->main_m->getRecentReviews()
+        ];
+
         $this->response([
             'state' => 200,
             'msg'   => 'OK',
-            'data'  => $this->main_m->getRecentReviews()
+            'data'  => $data
         ]);
     }
 }
