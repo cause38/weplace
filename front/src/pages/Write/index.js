@@ -287,7 +287,7 @@ const Write = () => {
                             <span className="inline-block text-gray-700 mb-3" htmlFor="addrDetail">
                                 태그
                             </span>
-                            <div className="flex flex-wrap justify-center gap-2 gap-y-6 bg-orange-100 rounded-lg px-4 py-6">
+                            <div className="relative flex flex-wrap justify-center gap-2 gap-y-6 h-20 overflow-hidden bg-orange-100 rounded-lg px-4 py-6">
                                 {tagData.map(item => (
                                     <span key={item.idx}>
                                         <label
@@ -300,6 +300,7 @@ const Write = () => {
                                         <input type="checkbox" name="tags" id={`tag_${item.idx}`} className="hidden" />
                                     </span>
                                 ))}
+                                <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-orange-400 to-trasparent"></div>
                             </div>
                         </div>
                     </div>
