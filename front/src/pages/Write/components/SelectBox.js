@@ -11,8 +11,8 @@ const SelectBox = ({label, id, arr}) => {
                     id={id}
                     className="w-full rounded border appearance-none border-gray-200 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 text-base pl-3 pr-10"
                 >
-                    {arr.map(item => (
-                        <option>{item}</option>
+                    {arr.map((item, idx) => (
+                        <option key={idx}>{item}</option>
                     ))}
                 </select>
                 <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
