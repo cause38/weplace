@@ -58,7 +58,7 @@ class Mypage extends RestController {
 
         $config = array(
             'upload_path' => "./uploads/profile/",
-            'allowed_types' => "gif|jpg|png|jpeg|pdf",
+            'allowed_types' => "gif|jpg|png|jpeg|webp",
             'overwrite' => FALSE,
             'max_size' => "10240000"
         );
