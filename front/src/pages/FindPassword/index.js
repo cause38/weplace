@@ -191,8 +191,8 @@ const FindPassword = () => {
         <div className="container-wb">
             <div className="w-full max-w-lg mx-auto overflow-hidden ">
                 <div className="">
-                    <h2 className="text-3xl font-bold text-center text-gray-700 ">비밀번호 찾기</h2>
-                    <main className="flex">
+                    <h2 className="text-3xl font-bold text-center text-orange-600 ">비밀번호 찾기</h2>
+                    <main className="flex mt-[10px]">
                         <form className="w-3/4" name="setPwForm">
                             <div className="flex ">
                                 {isSendVerifyEmail ? (
