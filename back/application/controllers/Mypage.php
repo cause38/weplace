@@ -57,7 +57,7 @@ class Mypage extends RestController {
         $this->load->helper(array('form', 'url'));
 
         $config = array(
-            'upload_path' => "./uploads/",
+            'upload_path' => "./uploads/profile/",
             'allowed_types' => "gif|jpg|png|jpeg|pdf",
             'overwrite' => FALSE,
             'max_size' => "10240000"
