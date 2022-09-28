@@ -1,6 +1,6 @@
 {
 	"name": "front",
-	"homepage": "http://weplace.test/",
+	"homepage": "http://place.weballin.com/",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {

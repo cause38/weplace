@@ -71,7 +71,7 @@ const Join = () => {
                     fetch(`http://place-api.weballin.com/auth/registerCode`, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json;charset=utf-8',
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({id: id}),
                     })
@@ -208,7 +208,7 @@ const Join = () => {
             fetch(`http://place-api.weballin.com/auth/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
+                    'Content-type': 'application/json',
                 },
                 body: JSON.stringify({id: id, pw: password, pw2: cfmPassword, name: nickName}),
             })
@@ -255,75 +255,89 @@ const Join = () => {
                         <form className="w-3/4" name="joinForm">
                             <div className="flex ">
                                 {isSendVerifyEmail ? (
-                                    <InputBox
-                                        id="id"
-                                        type="email"
-                                        value={id}
-                                        ariaLabel="user-id"
-                                        name="아이디"
-                                        onChange={setId}
-                                        readOnly="readOnly"
-                                    />
+                                    <div className="mt-2 w-full">
+                                        <InputBox
+                                            id="id"
+                                            type="email"
+                                            value={id}
+                                            ariaLabel="user-id"
+                                            name="아이디"
+                                            onChange={setId}
+                                            readOnly="readOnly"
+                                        />
+                                    </div>
                                 ) : (
-                                    <InputBox
-                                        id="id"
-                                        type="email"
-                                        value={id}
-                                        onChange={setId}
-                                        placeholder="example@weballin.com"
-                                        ariaLabel="user-id"
-                                        name="아이디"
-                                    />
+                                    <div className="mt-2 w-full">
+                                        <InputBox
+                                            id="id"
+                                            type="email"
+                                            value={id}
+                                            onChange={setId}
+                                            placeholder="example@weballin.com"
+                                            ariaLabel="user-id"
+                                            name="아이디"
+                                        />
+                                    </div>
                                 )}
                             </div>
                             {isIdValid ? (
-                                <InputBox
-                                    id="verifyId"
-                                    type="text"
-                                    value={verifyId}
-                                    ariaLabel="verifyId"
-                                    name="인증번호"
-                                    onChange={setVerifyId}
-                                    readOnly="readOnly"
-                                />
+                                <div className="mt-2 w-full">
+                                    <InputBox
+                                        id="verifyId"
+                                        type="text"
+                                        value={verifyId}
+                                        ariaLabel="verifyId"
+                                        name="인증번호"
+                                        onChange={setVerifyId}
+                                        readOnly="readOnly"
+                                    />
+                                </div>
                             ) : (
-                                <InputBox
-                                    id="verifyId"
-                                    type="text"
-                                    value={verifyId}
-                                    ariaLabel="verifyId"
-                                    name="인증번호"
-                                    onChange={setVerifyId}
-                                />
+                                <div className="mt-2 w-full">
+                                    <InputBox
+                                        id="verifyId"
+                                        type="text"
+                                        value={verifyId}
+                                        ariaLabel="verifyId"
+                                        name="인증번호"
+                                        onChange={setVerifyId}
+                                    />
+                                </div>
                             )}
                             {isDoubleChecked ? (
-                                <InputBox
-                                    id="nickName"
-                                    type="text"
-                                    value={nickName}
-                                    ariaLabel="name"
-                                    name="닉네임"
-                                    onChange={setNickName}
-                                    readOnly="readOnly"
-                                />
+                                <div className="mt-2 w-full">
+                                    <InputBox
+                                        id="nickName"
+                                        type="text"
+                                        value={nickName}
+                                        ariaLabel="name"
+                                        name="닉네임"
+                                        onChange={setNickName}
+                                        readOnly="readOnly"
+                                    />
+                                </div>
                             ) : (
-                                <InputBox
-                                    id="nickName"
-                                    type="text"
-                                    value={nickName}
-                                    ariaLabel="name"
-                                    name="닉네임"
-                                    onChange={setNickName}
-                                />
+                                <div className="mt-2 w-full">
+                                    <InputBox
+                                        id="nickName"
+                                        type="text"
+                                        value={nickName}
+                                        ariaLabel="name"
+                                        name="닉네임"
+                                        onChange={setNickName}
+                                    />
+                                </div>
                             )}
-                            <InputBox
-                                id="password"
-                                type="password"
-                                value={password}
-                                ariaLabel="password"
-                                name="비밀번호"
-                                onChange={setPassword}
-                            />
+                            <div className="mt-2 w-full">
+                                <InputBox
+                                    id="password"
+                                    type="password"
+                                    value={password}
+                                    ariaLabel="password"
+                                    name="비밀번호"
+                                    onChange={setPassword}
+                                />
+                            </div>
                             {/* <InputBox
                                 id="cfmPassword"
                                 type="password"
@@ -333,7 +347,7 @@ const Join = () => {
                                 onChange={handlePwMatch}
                             />
                              */}
-                            <div className="w-full mt-4 flex ">
+                            <div className="w-full mt-2 flex ">
                                 <label
                                     htmlFor="비밀번호 확인"
                                     className="w-2/5 pl-1 py-2 mt-2 text-slate-600 text-sm font-semibold placeholder-gray-500 bg-slate-200 border rounded-md focus:border-blue-400  focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
@@ -358,7 +372,7 @@ const Join = () => {
                                 </p>
                             )}
                         </form>
-                        <div className="mt-[1.5rem] w-1/4">
+                        <div className="mt-2 w-1/4">
                             {isSendVerifyEmail ? (
                                 isIdValid ? (
                                     <div className="w-full pl-[10px] h-[38px]">
@@ -379,26 +393,26 @@ const Join = () => {
                                 </div>
                             )}
                             {isIdValid ? (
-                                <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                <div className="w-full pl-[10px] mt-2  h-[38px]">
                                     <Button contents="인증 완료" onClick={handleConfirmId} disAbled="disabled" />
                                 </div>
                             ) : (
-                                <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                <div className="w-full pl-[10px] mt-2  h-[38px]">
                                     <Button contents="인증 확인" onClick={handleConfirmId} />
                                 </div>
                             )}
                             {isDoubleChecked ? (
                                 isResetNickName ? (
-                                    <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                    <div className="w-full pl-[10px] mt-2 h-[38px]">
                                         <Button contents="확인 완료" onClick={handleResetName} disAbled="disabled" />
                                     </div>
                                 ) : (
-                                    <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                    <div className="w-full pl-[10px] mt-2  h-[38px]">
                                         <Button contents="재확인" onClick={handleResetName} />
                                     </div>
                                 )
                             ) : (
-                                <div className="w-full pl-[10px] mt-6  h-[38px]">
+                                <div className="w-full pl-[10px] mt-2  h-[38px]">
                                     <Button contents="중복 확인" onClick={handleName} />
                                 </div>
                             )}

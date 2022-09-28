@@ -15,7 +15,14 @@ class Mypage extends RestController {
         $this->load->model('mypage_m');
         $this->load->model('common/user_m');
 
-        $token = trim($this->post('token'));
+        $method = $this->input->server('REQUEST_METHOD');
+        switch($method) {
+            case 'POST': $token = trim($this->post('token')); break;
+            case 'GET': $token = trim($this->get('token')); break;
+            case 'PUT': $token = trim($this->put('token')); break;
+            case 'DELETE': $token = trim($this->delete('token')); break;
+        }
+        
         if (!$token) {
             $this->response([
                 'state' => 400,
@@ -30,6 +37,20 @@ class Mypage extends RestController {
                 'msg' => '비정상적인 접근입니다.'
             ]);
         }
+    }
+
+    public function myInfo_get() {
+        $data = [
+            'basic'     => $this->mypage_m->getBasicInfo($this->idx),
+            'reviews'   => $this->mypage_m->getReviewsInfo($this->idx),
+            'favorites' => $this->mypage_m->getFavoritesInfo($this->idx)
+        ];
+
+        $this->response([
+            'state' => 200,
+            'msg'   => 'OK',
+            'data'  => $data 
+        ]);
     }
 
     public function changeProfileImg_post() {
@@ -58,10 +79,10 @@ class Mypage extends RestController {
         }
     }
 
-    public function changeName_post() {
+    public function changeName_put() {
         $this->load->model('auth_m');
 
-        $name = trim($this->post('name'));
+        $name = trim($this->put('name'));
 
         if (!$name) {
             $this->response([
@@ -84,6 +105,49 @@ class Mypage extends RestController {
                 'msg'   => '닉네임이 변경되었습니다.'
             ]);
         }
+    }
+
+    public function deleteReview_delete() {
+        $ridx = trim($this->delete('idx'));
+
+        if (!$ridx) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '리뷰를 선택해주세요.'
+            ]);
+        }
+
+        $isMyReview = $this->mypage_m->checkReview($this->idx, $ridx);
+
+        if (!$isMyReview) {
+            $this->response([
+                'state' => 402,
+                'msg'   => '비정상적인 접근입니다.'
+            ]);
+        }
+
+        $this->mypage_m->deleteReview($ridx);
+        $this->response([
+            'state' => 200,
+            'msg'   => '리뷰가 삭제되었습니다.'
+        ]);
+    }
+
+    public function deleteFavorite_delete() {
+        $sidx = trim($this->delete('idx'));
+
+        if (!$sidx) {
+            $this->response([
+                'state' => 401,
+                'msg'   => '매장을 선택해주세요.'
+            ]);
+        }
+
+        $this->mypage_m->deleteFavorite($this->idx, $sidx);
+        $this->response([
+            'state' => 200,
+            'msg'   => '찜 목록에서 삭제되었습니다.'
+        ]);
     }
 }
 ?>
