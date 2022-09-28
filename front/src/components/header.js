@@ -5,14 +5,38 @@ import profile from '../assets/sample_profile.png';
 
 const Header = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const getToken = sessionStorage.getItem('token');
 
     const [isLogin, setisLogin] = useState(true);
     const [isMenuOn, setIsMenuOn] = useState(true);
 
+    // logout
+    const goLogOut = () => {
+        const isHome = location.pathname === '/';
+        const msg = !isHome ? '\n메인페이지로 이동하시겠습니까?' : '';
+
+        sessionStorage.removeItem('token');
+        if (window.confirm('로그아웃 되었습니다.' + msg)) {
+            navigate('/');
+        }
+    };
+
+    // 프로필 메뉴 제외 클릭시 메뉴 숨김
+    const handleBodyClick = e => {
+        if (!e.target.classList.contains('profileBtn')) {
+            setIsMenuOn(true);
+        }
+    };
+
     useEffect(() => {
         getToken !== null ? setisLogin(true) : setisLogin(false);
-    }, []);
+        document.addEventListener('click', e => handleBodyClick(e));
+
+        return () => {
+            document.removeEventListener('click', e => handleBodyClick(e));
+        };
+    }, [getToken]);
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
@@ -47,10 +71,10 @@ const Header = () => {
                         <button
                             onClick={() => setIsMenuOn(!isMenuOn)}
                             type="button"
-                            className={(isLogin ? '' : 'hidden ') + 'flex items-center focus:outline-none'}
+                            className={(isLogin ? '' : 'hidden ') + 'profileBtn flex items-center focus:outline-none'}
                         >
-                            <div className="w-11 h-11 overflow-hidden border-2 p-1 border-orange-400 rounded-full">
-                                <img src={profile} className="object-cover w-full h-full" alt="avatar" />
+                            <div className="profileBtn w-11 h-11 overflow-hidden border-2 p-1 border-orange-400 rounded-full">
+                                <img src={profile} className="profileBtn object-cover w-full h-full" alt="avatar" />
                             </div>
                         </button>
                     </div>
@@ -63,7 +87,9 @@ const Header = () => {
                             <Link to="/mypage" className="block pb-2 px-4 border-b hover:text-orange-500">
                                 마이페이지
                             </Link>
-                            <button className="block w-full pt-3 px-4 hover:text-orange-500">로그아웃</button>
+                            <button onClick={goLogOut} className="block w-full pt-3 px-4 hover:text-orange-500">
+                                로그아웃
+                            </button>
                         </div>
                     </div>
                 </div>
