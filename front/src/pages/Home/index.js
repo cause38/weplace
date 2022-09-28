@@ -24,7 +24,9 @@ const Home = () => {
     useEffect(() => {
         // get 최신리뷰 데이터
         axios.get('http://place-api.weballin.com/main').then(response => {
-            setNewReviewData(response.data.data.reviews);
+            if (response.state === 200) {
+                setNewReviewData(response.data.data.reviews);
+            }
         });
     }, []);
 
