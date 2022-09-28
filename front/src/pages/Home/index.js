@@ -1,63 +1,33 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation, Pagination, A11y} from 'swiper';
+import axios from 'axios';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'styles/swiper-custom.css';
 
 const Home = () => {
-    const examSlidearr = [
-        {
-            idx: 1,
-            category: '일반 돈까스',
-            title: '사흘카레',
-            desc: '웨이팅을 기다리는 이유가 있는 곳',
-            score: 4,
-            date: '2022-09-22',
-        },
-        {
-            idx: 2,
-            category: '일반 돈까스',
-            title: '미쁘동 서울숲',
-            desc: '웨이팅을 기다리는 이유가 있는 곳',
-            score: 4,
-            date: '2022-09-22',
-        },
-        {
-            idx: 3,
-            category: '일반 돈까스',
-            title: '대림국수 성수점',
-            desc: '웨이팅을 기다리는 이유가 있는 곳',
-            score: 3,
-            date: '2022-09-22',
-        },
-        {
-            idx: 4,
-            category: '일반 돈까스',
-            title: '부우이',
-            desc: '웨이팅을 기다리는 이유가 있는 곳',
-            score: 5,
-            date: '2022-09-22',
-        },
-        {
-            idx: 5,
-            category: '일반 돈까스',
-            title: '사흘카레',
-            desc: '웨이팅을 기다리는 이유가 있는 곳',
-            score: 2,
-            date: '2022-09-22',
-        },
-    ];
+    const [newReviewData, setNewReviewData] = useState([]);
 
-    function storeScore(score) {
+    // set 최신 리뷰 별점
+    const storeScore = score => {
         const arr = [];
         for (let i = 0; i < score; i++) {
             arr.push(`⭐`);
         }
         return arr.join('');
-    }
+    };
+
+    useEffect(() => {
+        // get 최신리뷰 데이터
+        axios.get('http://place-api.weballin.com/main').then(response => {
+            setNewReviewData(response.data.data.reviews);
+        });
+    }, []);
+
     return (
         <div className="container-wb">
             <div className="flex flex-col justify-center items-center gap-10 w-full font-sans-g mb-20">
@@ -105,28 +75,26 @@ const Home = () => {
                     spaceBetween={25}
                     slidesPerView={1.5}
                     navigation
-                    onSwiper={swiper => console.log(swiper)}
-                    onSlideChange={() => console.log('slide change')}
                     breakpoints={{
                         768: {
                             width: 768,
-                            slidesPerView: 2.5,
+                            slidesPerView: 2.1,
                         },
                     }}
                 >
-                    {examSlidearr.map(data => (
+                    {newReviewData.map(data => (
                         <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={data.idx}>
                             <a href="#">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
-                                        {data.category}
+                                        {data.menu}
                                     </span>
-                                    <span className="text-sm">{data.date}</span>
+                                    <span className="text-sm">{data.wdate}</span>
                                 </div>
                                 <div className="mt-6">
-                                    <span className="text-xs">{storeScore(data.score)}</span>
-                                    <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.title}</h4>
-                                    <p className="truncate w-full">{data.desc}</p>
+                                    <span className="text-xs">{storeScore(data.star)}</span>
+                                    <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.name}</h4>
+                                    <p className="truncate w-full">{data.comment}</p>
                                 </div>
                             </a>
                         </SwiperSlide>
