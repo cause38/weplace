@@ -3,17 +3,23 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    min-width: 360px;
-    font-family: 'Noto Sans CJK KR';
-  }
-  #root {
-    min-height: 100vh;
-  }
-  .container-wb {
-    width: 100%;
-    max-width: 1024px;
-    margin: 80px auto;
-    padding: 80px 20px 0;
-  }
+    html {
+        min-width: 360px;
+        font-family: 'Noto Sans CJK KR';
+    }
+    #root {
+        min-height: 100vh;
+    }
+    .container-wb {
+        width: 100%;
+        max-width: 1024px;
+        margin: 40px auto;
+        padding: 80px 20px 0;
+    }
+
+    @media screen (min-width 768px) {
+        .container-wb {
+            margin: 80px auto;
+        }
+    }
 }
