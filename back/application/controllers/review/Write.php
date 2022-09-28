@@ -52,14 +52,14 @@ class Write extends RestController {
         $address      = trim($this->post('address'));
         $distance     = trim($this->post('distance'));
         $url          = trim($this->post('url'));
-        $base         = trim($this->post('base'))         ?: $this->response(['state' => 403, 'msg' => '지상/지하를 선택해주세요.']);
-        $floor        = trim($this->post('floor'))        ?: $this->response(['state' => 404, 'msg' => '층수를 선택해주세요.']);
-        $category     = trim($this->post('category'))     ?: $this->response(['state' => 405, 'msg' => '카테고리를 선택해주세요.']);
-        $menu         = trim($this->post('menu'))         ?: $this->response(['state' => 406, 'msg' => '메뉴명을 입력해주세요.']);
-        $star         = trim($this->post('star'))         ?: $this->response(['state' => 407, 'msg' => '별점을 선택해주세요.']);
-        $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 408, 'msg' => '한줄평을 입력해주세요.']);
-        $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 409, 'msg' => '장점을 입력해주세요.']);
-        $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 410, 'msg' => '단점을 입력해주세요.']);
+        $base         = trim($this->post('base'))         ?: $this->response(['state' => 402, 'msg' => '지상/지하를 선택해주세요.']);
+        $floor        = trim($this->post('floor'))        ?: $this->response(['state' => 403, 'msg' => '층수를 선택해주세요.']);
+        $category     = trim($this->post('category'))     ?: $this->response(['state' => 404, 'msg' => '카테고리를 선택해주세요.']);
+        $menu         = trim($this->post('menu'))         ?: $this->response(['state' => 405, 'msg' => '메뉴명을 입력해주세요.']);
+        $star         = trim($this->post('star'))         ?: $this->response(['state' => 406, 'msg' => '별점을 선택해주세요.']);
+        $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 407, 'msg' => '한줄평을 입력해주세요.']);
+        $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 408, 'msg' => '장점을 입력해주세요.']);
+        $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 409, 'msg' => '단점을 입력해주세요.']);
         $tag          = trim($this->post('tag')); // option
 
         
@@ -79,7 +79,7 @@ class Write extends RestController {
             foreach ($this->upload->get_multi_upload_data() as $data) unlink($data['full_path']);
             if ($this->upload->error_msg !== []) {
                 $this->response([
-                    'state' => 411,
+                    'state' => 410,
                     'msg' => $this->upload->error_msg
                 ]);
             }
