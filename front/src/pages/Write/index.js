@@ -17,13 +17,30 @@ const Write = () => {
         y: '37.5464770743083',
     };
 
+    // 매장검색 모달
     const [modalVisible, setModalVisible] = useState(false);
+
+    // 카테고리 목록
     const [categoryData, setCategoryData] = useState([]);
+
+    // 태그 목록
     const [tagData, setTagData] = useState([]);
+
+    // 매장검색 - 지역
     const [searhStoreLocation, setSearhStoreLocation] = useState('성동구');
+
+    // 매장검색 - 매장명
     const [searhStoreName, setSearhStoreName] = useState();
+
+    // 이미지 미리보기
     const [showImages, setShowImages] = useState([]);
+
     const searchBtn = useRef(null);
+
+    const tagBox = useRef();
+
+    // 태그 목록 세로 사이즈
+    const [tagBoxH, setTagBoxH] = useState(0);
 
     useEffect(() => {
         if (getToken === null) {
@@ -34,19 +51,23 @@ const Write = () => {
                 if (response.status === 200) {
                     setCategoryData(response.data.data.category);
                     setTagData(response.data.data.tag);
+                    setTimeout(() => {
+                        setTagBoxH(tagBox.current.offsetHeight);
+                        tagBox.current.style.height = '100px';
+                    }, 100);
                 }
             });
         }
     }, []);
 
-    // modal 오픈 시 바디 스크롤 제어
+    // 모달 오픈 시 바디 스크롤 제어
     if (modalVisible) {
         document.body.classList.add('overflow-y-hidden');
     } else {
         document.body.classList.remove('overflow-y-hidden');
     }
 
-    // tag toggle css 제어
+    // 태글 토글 시 스타일 제어
     const handleTag = e => {
         e.target.classList.toggle('on');
 
@@ -63,12 +84,14 @@ const Write = () => {
     const handleStoreSearch = e => {
         e.preventDefault();
 
+        // 매장검색 지역 & 매장명
         const data = `${searhStoreLocation} ${searhStoreName}`;
 
-        // 검색 버튼 진행현황 반영
+        // 검색 버튼 비활성화
         searchBtn.current.innerText = '검색중...';
         searchBtn.current.setAttribute('disabled', true);
 
+        // 파라미터 x, y => 현 위치 좌표(현재 회사주소)
         axios
             .get(
                 `https://dapi.kakao.com/v2/local/search/keyword.json?query=${data}&x=${myLocation.x}&y=${myLocation.y}`,
@@ -77,6 +100,7 @@ const Write = () => {
                 }
             )
             .then(res => {
+                // 검색 버튼 활성화
                 searchBtn.current.innerText = '검색';
                 searchBtn.current.removeAttribute('disabled');
 
@@ -94,6 +118,7 @@ const Write = () => {
 
     const handleSubmit = e => {};
 
+    // 이미지 미리보기
     const handleAddImage = e => {
         const imageLists = e.target.files;
         let imageUrlLists = [...showImages];
@@ -110,8 +135,29 @@ const Write = () => {
         setShowImages(imageUrlLists);
     };
 
+    // 이미지 미리보기 삭제
     const handleDeleteImage = id => {
         setShowImages(showImages.filter((_, index) => index !== id));
+    };
+
+    const handleTagMore = e => {
+        const button = tagBox.current.querySelector('button');
+        let height = tagBox.current.offsetHeight;
+
+        console.log(height);
+        console.log(tagBoxH);
+
+        if (height < tagBoxH) {
+            tagBox.current.style.height = height + 100 + 'px';
+            if (height === tagBoxH - 100) {
+                button.textContent = '-';
+            } else {
+                button.textContent = '+';
+            }
+        } else {
+            tagBox.current.style.height = '100px';
+            button.textContent = '+';
+        }
     };
 
     return (
@@ -287,7 +333,10 @@ const Write = () => {
                             <span className="inline-block text-gray-700 mb-3" htmlFor="addrDetail">
                                 태그
                             </span>
-                            <div className="relative flex flex-wrap justify-center gap-2 gap-y-6 h-20 overflow-hidden bg-orange-100 rounded-lg px-4 py-6">
+                            <div
+                                ref={tagBox}
+                                className="relative flex flex-wrap justify-center gap-2 gap-y-6 overflow-hidden bg-orange-100 rounded-lg px-4 py-6"
+                            >
                                 {tagData.map(item => (
                                     <span key={item.idx}>
                                         <label
@@ -300,7 +349,15 @@ const Write = () => {
                                         <input type="checkbox" name="tags" id={`tag_${item.idx}`} className="hidden" />
                                     </span>
                                 ))}
-                                <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-orange-400 to-trasparent"></div>
+                                <div className="absolute bottom-0 flex flex-col justify-center items-center w-full h-12 bg-gradient-to-t from-orange-400 to-trasparent">
+                                    <button
+                                        type="button"
+                                        onClick={handleTagMore}
+                                        className="w-5 h-5 bg-white rounded-full text-center leading-5 bg-opacity-70 text-orange-500 hover:bg-opacity-100 transition-colors"
+                                    >
+                                        +
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
