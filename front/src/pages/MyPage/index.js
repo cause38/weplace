@@ -1,5 +1,5 @@
 import Button from 'components/button';
-import React, {Fragment, useEffect, useState, useRef} from 'react';
+import React, {Fragment, useEffect, useState, useRef, startTransition} from 'react';
 import InputBox from 'components/inputBox';
 import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
@@ -7,6 +7,11 @@ import axios from '../../../node_modules/axios/index';
 const MyPage = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
+
+    const [isYellow, setIsYellow] = useState(false);
+
+    const qs = require('qs');
+
     //  토큰
     const [token, setToken] = useState(0);
     // 유저 이미지
@@ -22,10 +27,10 @@ const MyPage = () => {
     const [isChangeNickName, setIsChangeNickName] = useState(false);
 
     // 리뷰박스
-    const [reviews, setReviews] = useState([]);
+    const [reviews, setReviews] = useState(MY_REVIEW);
 
     // 찜목록
-    const [favoriteList, setFavoriteList] = useState([]);
+    const [favoriteList, setFavoriteList] = useState(MY_FAVORITE);
 
     const imageInput = useRef(null);
 
@@ -49,14 +54,14 @@ const MyPage = () => {
                         setNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
-                        setReviews(res.data.data.reviews);
-                        setFavoriteList(res.data.data.favorites);
+                        // setReviews(res.data.data.reviews);
+                        // setFavoriteList(res.data.data.favorites);
                     } else if (res.data.state === 400) {
                         alert(res.data.data.msg);
                     }
                 });
         }
-    }, [token]);
+    }, []);
 
     // 닉네임 인풋창 활성화
     const handleNickName = e => {
@@ -101,11 +106,12 @@ const MyPage = () => {
         }
     };
 
-    // 유저 이미지 수정
+    // 유저 이미지 수정 영역 클릭
     const handleProfileImg = () => {
         imageInput.current.click();
     };
 
+    // 유저 이미지 수정 완료
     const onImgChange = e => {
         e.preventDefault();
         const file = e.target.files[0];
@@ -139,22 +145,94 @@ const MyPage = () => {
     const handleDeleteReview = (e, idx) => {
         e.preventDefault();
 
-        axios.delete(`http://place-api.weballin.com/mypage/deleteReview`, {
-            data: {
-                token: token,
-                idx: idx,
-            },
-            withCredentials: true,
+        const data = {token: token, idx: parseInt(idx)};
+        const url = 'http://place-api.weballin.com/mypage/deleteReview';
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+
+        axios.delete(url, options).then(response => {
+            if (response.data.state === 200) {
+                alert(response.data.msg);
+                axios
+                    .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                        params: {
+                            token: token,
+                        },
+                    })
+                    .then(res => {
+                        if (res.data.state === 200) {
+                            setNickName(res.data.data.basic.name);
+                            setUserId(res.data.data.basic.uid);
+                            setUserImg(res.data.data.basic.thumb);
+                            setReviews(res.data.data.reviews);
+                            setFavoriteList(res.data.data.favorites);
+                        } else if (res.data.state === 400) {
+                            alert(res.data.data.msg);
+                        }
+                    });
+            } else if (response.data.state === 400) {
+                alert(response.data.msg);
+            } else if (response.data.state === 401) {
+                alert(response.data.msg);
+            } else if (response.data.state === 402) {
+                alert(response.data.msg);
+            }
         });
     };
 
+    // 찜목록 삭제
+    const handleDeleteFavorite = (e, idx) => {
+        e.preventDefault();
+
+        const data = {token: token, idx: parseInt(idx)};
+        const url = 'http://place-api.weballin.com/mypage/deleteFavorite';
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+        // axios(options);
+        axios.delete(url, options).then(response => {
+            if (response.data.state === 200) {
+                alert(response.data.msg);
+                axios
+                    .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                        params: {
+                            token: token,
+                        },
+                    })
+                    .then(res => {
+                        if (res.data.state === 200) {
+                            setNickName(res.data.data.basic.name);
+                            setUserId(res.data.data.basic.uid);
+                            setUserImg(res.data.data.basic.thumb);
+                            setReviews(res.data.data.reviews);
+                            setFavoriteList(res.data.data.favorites);
+                        } else if (res.data.state === 400) {
+                            alert(res.data.data.msg);
+                        }
+                    });
+            } else if (response.data.state === 400) {
+                alert(response.data.msg);
+            } else if (response.data.state === 401) {
+                alert(response.data.msg);
+            } else if (response.data.state === 402) {
+                alert(response.data.msg);
+            }
+        });
+    };
+
+    const goToWrite = () => {
+        navigate('/write');
+    };
     return (
         <Fragment>
             {token !== 0 ? (
                 <main className="container-wb">
-                    <h1 className="text-[24px] font-bold">마이페이지</h1>
+                    <h1 className="text-[25px] font-bold">마이페이지</h1>
                     <section className="mt-9">
-                        <h2 className="text-[15px] font-semibold">기본 정보</h2>
+                        <h2 className="text-[20px] font-semibold">기본 정보</h2>
                         <div className="flex mt-[20px]">
                             <div className="min-w-[120px] w-[15%]">
                                 <img
@@ -226,25 +304,55 @@ const MyPage = () => {
                         </div>
                     </section>
                     <section className="mt-14">
-                        <h2 className="text-[15px] font-semibold">내 리뷰✍</h2>
+                        <h2 className="text-[20px] font-semibold">내 리뷰✍</h2>
                         {reviews?.length > 0 ? (
-                            <div className="bg-slate-300 mt-[20px] flex flex-col">
-                                <div className="flex">
+                            <div className=" mt-[20px] flex flex-col">
+                                <div className="flex h-[185px] overflow-hidden grow">
                                     {reviews?.map(data => {
-                                        const {idx, content} = data;
+                                        const {idx, menu, star, name, comment, wdate} = data;
                                         return (
                                             <Fragment key={idx}>
                                                 <div
                                                     className={
                                                         idx > 1
-                                                            ? 'h-[170px] bg-orange-300 ml-[10px] w-full'
-                                                            : 'h-[170px] bg-orange-300 w-full'
+                                                            ? 'h-[170px] w-[280px] min-w-[280px] bg-white ml-[10px]  rounded-[20px] shadow-md overflow-hidden'
+                                                            : 'h-[170px] w-[280px] min-w-[280px] bg-white rounded-[20px] shadow-md overflow-hidden'
                                                     }
                                                 >
-                                                    <p>{content}</p>
-                                                    <div className="flex justify-between p-[40px] items-end">
-                                                        <button>수정</button>
-                                                        <button onClick={e => handleDeleteReview(e, idx)}>삭제</button>
+                                                    <div className="p-[10px] h-[70%]">
+                                                        <div className="flex justify-between ">
+                                                            <h3 className="w-fit p-[5px] rounded-[20px] bg-green-700 text-white text-[14px]">
+                                                                {menu}
+                                                            </h3>
+                                                            <p className="flex items-center text-[14px]">{wdate}</p>
+                                                        </div>
+                                                        <span className="star pl-[5px]">
+                                                            {[1, 2, 3, 4, 5].map(el => (
+                                                                <i
+                                                                    key={el}
+                                                                    className={`fas fa-star ${
+                                                                        el <= star && 'yellowStar'
+                                                                    }`}
+                                                                />
+                                                            ))}
+                                                        </span>
+
+                                                        <p className="pl-[5px] font-medium">{name}</p>
+                                                        <p className="pl-[5px] text-2xl font-bold ">{comment}</p>
+                                                    </div>
+                                                    <div className="flex justify-between h-[30%] pt-[15px]">
+                                                        <button
+                                                            className="w-[50%] bg-slate-300 h-[100%]"
+                                                            onClick={goToWrite}
+                                                        >
+                                                            수정
+                                                        </button>
+                                                        <button
+                                                            className="w-[50%] bg-slate-300 h-[100%] bg-red-700 text-white"
+                                                            onClick={e => handleDeleteReview(e, idx)}
+                                                        >
+                                                            삭제
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </Fragment>
@@ -262,12 +370,12 @@ const MyPage = () => {
                         )}
                     </section>
                     <section className="mt-14">
-                        <h2 className="text-[15px] font-semibold">찜 목록&#128150;</h2>
+                        <h2 className="text-[20px] font-semibold">찜 목록&#128150;</h2>
                         {favoriteList?.length > 0 ? (
                             <div className="bg-slate-300 mt-[20px] flex flex-col">
                                 <div className="flex">
                                     {favoriteList?.map(data => {
-                                        const {idx, content} = data;
+                                        const {idx, favorite, category, name, review, star, wdate} = data;
                                         return (
                                             <Fragment key={idx}>
                                                 <div
@@ -277,10 +385,12 @@ const MyPage = () => {
                                                             : 'h-[170px] bg-orange-300 w-full'
                                                     }
                                                 >
-                                                    <p>{content}</p>
+                                                    <p>{category}</p>
                                                     <div className="flex justify-between p-[40px] items-end">
                                                         <button>수정</button>
-                                                        <button onClick={e => handleDeleteReview(e, idx)}>삭제</button>
+                                                        <button onClick={e => handleDeleteFavorite(e, idx)}>
+                                                            삭제
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </Fragment>
@@ -306,13 +416,57 @@ const MyPage = () => {
 export default MyPage;
 
 const MY_REVIEW = [
-    {id: 1, content: '내리뷰1'},
-    {id: 2, content: '내리뷰2'},
-    {id: 3, content: '내리뷰3'},
+    {
+        idx: '1',
+        menu: '뚝배기 불고기',
+        star: '2',
+        name: '일차돌 뚝섬역점',
+        comment: '짜다',
+        wdate: '2022-09-27',
+    },
+    {
+        idx: '2',
+        menu: '뚝배기 불고기',
+        star: '4',
+        name: '일차돌 뚝섬역점',
+        comment: '짜다',
+        wdate: '2022-09-27',
+    },
+    {
+        idx: '3',
+        menu: '뚝배기 불고기',
+        star: '3',
+        name: '일차돌 뚝섬역점',
+        comment: '짜다',
+        wdate: '2022-09-27',
+    },
+    {
+        idx: '4',
+        menu: '뚝배기 불고기',
+        star: '3',
+        name: '일차돌 뚝섬역점',
+        comment: '짜다',
+        wdate: '2022-09-27',
+    },
 ];
 
 const MY_FAVORITE = [
-    {id: 1, content: '찜가게1'},
-    {id: 2, content: '찜가게2'},
-    {id: 3, content: '찜가게3'},
+    {
+        idx: 1,
+        category: '한식',
+        name: '일차돌 뚝섬역점',
+        star: '4.0',
+        review: '1',
+        favorite: '1',
+        wdate: '2022-09-27',
+    },
+    {
+        idx: 2,
+        category: '한식',
+        name: '일차돌 뚝섬역점',
+        star: '4.0',
+        review: '1',
+        favorite: '1',
+        wdate: '2022-09-27',
+    },
 ];
