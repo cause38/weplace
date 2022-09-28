@@ -11,11 +11,18 @@ const Write = () => {
     const storeScoreArr = ['⭐⭐⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐', '⭐⭐', '⭐'];
     const locationArr = ['성동구'];
 
+    // 거리계산을 위한 현재 위치 좌표
+    const myLocation = {
+        x: '127.048455023259',
+        y: '37.5464770743083',
+    };
+
     const [modalVisible, setModalVisible] = useState(false);
     const [categoryData, setCategoryData] = useState([]);
     const [tagData, setTagData] = useState([]);
     const [searhStoreLocation, setSearhStoreLocation] = useState('성동구');
     const [searhStoreName, setSearhStoreName] = useState();
+    const [showImages, setShowImages] = useState([]);
     const searchBtn = useRef(null);
 
     useEffect(() => {
@@ -52,7 +59,7 @@ const Write = () => {
         }
     };
 
-    // 매장 검색
+    // 매장 검색 api
     const handleStoreSearch = e => {
         e.preventDefault();
 
@@ -63,17 +70,18 @@ const Write = () => {
         searchBtn.current.setAttribute('disabled', true);
 
         axios
-            .get(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${data}`, {
-                headers: {Authorization: 'KakaoAK 940b8053d629afc997a3a283dd999724'},
-            })
+            .get(
+                `https://dapi.kakao.com/v2/local/search/keyword.json?query=${data}&x=${myLocation.x}&y=${myLocation.y}`,
+                {
+                    headers: {Authorization: 'KakaoAK 940b8053d629afc997a3a283dd999724'},
+                }
+            )
             .then(res => {
                 searchBtn.current.innerText = '검색';
                 searchBtn.current.removeAttribute('disabled');
 
                 if (res.status === 200) {
-                    console.log(res);
                     if (res.data.documents.length > 0) {
-                        console.log(res.data.documents);
                     } else {
                         alert('검색된 데이터가 없습니다');
                     }
@@ -86,7 +94,6 @@ const Write = () => {
 
     const handleSubmit = e => {};
 
-    const [showImages, setShowImages] = useState([]);
     const handleAddImage = e => {
         const imageLists = e.target.files;
         let imageUrlLists = [...showImages];
@@ -117,7 +124,7 @@ const Write = () => {
                     <>
                         <form onSubmit={handleStoreSearch} className="flex flex-col gap-6">
                             <div className="w-full flex flex-col sm:flex-row gap-4 bg-gray-100 p-4 rounded-lg">
-                                <div className="w-2/4">
+                                <div className="w-full sm:w-2/4">
                                     <div className="relative w-full">
                                         <select
                                             id="storeSearch"
