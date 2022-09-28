@@ -4,7 +4,7 @@ const Modal = ({visible, setModalVisible, contents, title}) => {
     return (
         <div className={!visible ? 'hidden' : ''}>
             <div className={'fixed top-0 left-0 w-full h-full z-[100] bg-gray-400 opacity-70'}></div>
-            <div className="absolute w-full max-w-xl p-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg z-[101]">
+            <div className="absolute w-11/12 max-w-md p-6 md:p-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg z-[101]">
                 <div className="flex justify-between mb-6">
                     <h3 className="text-xl font-semibold">{title}</h3>
                     <button onClick={() => setModalVisible(false)} className="relative w-5 h-5 hover:opacity-75">
