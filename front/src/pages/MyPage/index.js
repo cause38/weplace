@@ -1,15 +1,14 @@
 import Button from 'components/button';
 import React, {Fragment, useEffect, useState, useRef} from 'react';
 import InputBox from 'components/inputBox';
-import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
+import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
 
 const MyPage = () => {
     const navigate = useNavigate();
-
+    const {pathname} = useLocation();
     //  토큰
-    const getToken = sessionStorage.getItem('token').toString();
-
+    const [token, setToken] = useState(0);
     // 유저 이미지
     const [userImg, setUserImg] = useState();
 
@@ -32,10 +31,13 @@ const MyPage = () => {
 
     // 토큰이 없으면 메인페이지로 이동, 있으면 유저데이터 불러오기
     useEffect(() => {
+        let getToken = sessionStorage.getItem('token');
         if (getToken === null) {
-            alert('로그인 후 이동 바랍니다.');
-            navigate('/login');
+            setToken(0);
+            alert('로그인 후 이용 바랍니다.');
+            navigate('/login', {state: {pathname: pathname}});
         } else {
+            setToken(getToken);
             axios
                 .get(`http://place-api.weballin.com/mypage/myInfo`, {
                     params: {
@@ -43,7 +45,6 @@ const MyPage = () => {
                     },
                 })
                 .then(res => {
-                    console.log('res', res.data);
                     if (res.data.state === 200) {
                         setNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
@@ -55,7 +56,7 @@ const MyPage = () => {
                     }
                 });
         }
-    }, []);
+    }, [token]);
 
     // 닉네임 인풋창 활성화
     const handleNickName = e => {
@@ -76,7 +77,7 @@ const MyPage = () => {
             fetch(`http://place-api.weballin.com/mypage/changeName`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({token: getToken, name: name}),
+                body: JSON.stringify({token: token, name: name}),
             })
                 .then(res => res.json())
                 .then(response => {
@@ -115,7 +116,7 @@ const MyPage = () => {
 
         const formData = new FormData();
         formData.append('profileImg', file);
-        formData.append('token', getToken);
+        formData.append('token', token);
 
         axios
             .post('http://place-api.weballin.com/mypage/changeProfileImg', formData, {
@@ -137,10 +138,10 @@ const MyPage = () => {
     // 리뷰삭제
     const handleDeleteReview = (e, idx) => {
         e.preventDefault();
-        console.log('idx', idx);
+
         axios.delete(`http://place-api.weballin.com/mypage/deleteReview`, {
             data: {
-                token: getToken,
+                token: token,
                 idx: idx,
             },
             withCredentials: true,
@@ -149,7 +150,7 @@ const MyPage = () => {
 
     return (
         <Fragment>
-            {getToken ? (
+            {token !== 0 ? (
                 <main className="container-wb">
                     <h1 className="text-[24px] font-bold">마이페이지</h1>
                     <section className="mt-9">
