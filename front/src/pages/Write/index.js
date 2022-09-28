@@ -271,6 +271,7 @@ const Write = () => {
                                             style={{background: `url(${image}) no-repeat center/cover`}}
                                         >
                                             <button
+                                                type="button"
                                                 className="block absolute flex justify-center items-center right-0 top-0 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-gray-400 font-bold text-center rounded-full z-10 hover:bg-gray-400"
                                                 onClick={() => handleDeleteImage(id)}
                                             >
