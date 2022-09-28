@@ -8,6 +8,10 @@ import axios from 'axios';
 
 const Login = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const pathname = location.state?.pathname;
+    console.log('referrer', pathname);
 
     // 토큰
     const getToken = sessionStorage.getItem('token');
@@ -45,7 +49,17 @@ const Login = () => {
                 .then(response => {
                     if (response.data.state === 200) {
                         handleToken(response.data.data.id);
-                        navigate('/');
+
+                        if (
+                            pathname === null ||
+                            pathname === '/join' ||
+                            pathname === '/find-password' ||
+                            pathname === undefined
+                        ) {
+                            window.location.href = '/';
+                        } else {
+                            navigate(pathname);
+                        }
                     } else if (response.data.state === 400) {
                         alert(response.data.msg);
                     } else if (response.data.state === 401) {

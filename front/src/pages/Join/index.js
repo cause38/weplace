@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import Button from 'components/button';
 import InputBox from 'components/inputBox';
-import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
+import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
 
 const Join = () => {
     const navigate = useNavigate();
-
+    const {pathname} = useLocation();
     // 토큰
     const getToken = sessionStorage.getItem('token');
 
@@ -35,9 +35,10 @@ const Join = () => {
     // 닉네임변경
     const [isResetNickName, setIsResetNickName] = useState(false);
 
+    console.log('pathNameJoin', pathname);
     // 뒤로가기
     const goBack = () => {
-        navigate(-1);
+        navigate('/login', {state: {pathname: pathname}});
     };
 
     //   이메일 유효성 검사
@@ -217,7 +218,7 @@ const Join = () => {
                     if (response.state === 200) {
                         alert(response.msg);
                         form.id.focus();
-                        navigate('/login');
+                        navigate('/login', {state: {pathname: pathname}});
                     } else if (response.state === 400) {
                         alert(response.msg);
                     } else if (response.state === 401) {
