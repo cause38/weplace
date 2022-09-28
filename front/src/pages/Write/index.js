@@ -11,7 +11,6 @@ const Write = () => {
     const storeScoreArr = ['⭐⭐⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐', '⭐⭐', '⭐'];
     const locationArr = ['성동구'];
 
-    // 매장검색 modal
     const [modalVisible, setModalVisible] = useState(false);
     const [categoryData, setCategoryData] = useState([]);
     const [tagData, setTagData] = useState([]);
@@ -84,7 +83,29 @@ const Write = () => {
                 }
             });
     };
+
     const handleSubmit = e => {};
+
+    const [showImages, setShowImages] = useState([]);
+    const handleAddImage = e => {
+        const imageLists = e.target.files;
+        let imageUrlLists = [...showImages];
+
+        for (let i = 0; i < imageLists.length; i++) {
+            const currentImageUrl = URL.createObjectURL(imageLists[i]);
+            imageUrlLists.push(currentImageUrl);
+        }
+
+        if (imageUrlLists.length > 3) {
+            imageUrlLists = imageUrlLists.slice(0, 3);
+        }
+
+        setShowImages(imageUrlLists);
+    };
+
+    const handleDeleteImage = id => {
+        setShowImages(showImages.filter((_, index) => index !== id));
+    };
 
     return (
         <div className="container-wb">
@@ -201,6 +222,7 @@ const Write = () => {
                                             type="number"
                                             min={1}
                                             step="1"
+                                            placeholder="층수를 입력해주세요."
                                             className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                                         />
                                     </>
@@ -220,6 +242,37 @@ const Write = () => {
                         <div className="grid grid-rows-2 sm:grid-rows-none sm:grid-cols-2 gap-4">
                             <InputBox label="장점" id="reviewGood" />
                             <InputBox label="단점" id="reviewBad" />
+                        </div>
+
+                        <div>
+                            <div>
+                                <label className="block text-gray-700 mb-2" htmlFor="image">
+                                    이미지 첨부
+                                </label>
+
+                                <input
+                                    type="file"
+                                    onChange={handleAddImage}
+                                    multiple
+                                    className="text-sm text-grey-500 file:mr-5 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-orange-500 file:text-white file:transition-colors hover:file:cursor-pointer hover:file:bg-orange-400 active:file:bg-orange-500 "
+                                />
+                                <div className="flex gap-4 mt-6">
+                                    {showImages.map((image, id) => (
+                                        <div
+                                            className="relative w-24 h-24 border"
+                                            key={id}
+                                            style={{background: `url(${image}) no-repeat center/cover`}}
+                                        >
+                                            <button
+                                                className="block absolute flex justify-center items-center right-0 top-0 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-gray-400 font-bold text-center rounded-full z-10 hover:bg-gray-400"
+                                                onClick={() => handleDeleteImage(id)}
+                                            >
+                                                <span className="block w-2/5 h-[1.5px] rounded-full bg-white"></span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
                         <div>
