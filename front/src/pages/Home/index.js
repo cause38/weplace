@@ -32,7 +32,7 @@ const Home = () => {
         <div className="container-wb">
             <div className="flex flex-col justify-center items-center gap-10 w-full font-sans-g mb-20">
                 <h3 className="text-3xl font-semibold text-orange-500 mb-10">🤔오늘의 메뉴는</h3>
-                <div className="relative flex items-center w-6/12 w-lg:w-1/3">
+                <div className="relative flex items-center w-full w-lg:w-1/3 max-w-[500px]">
                     <div className="w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md">
                         <div className="p-8 py-10 bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center">
                             제육볶음
@@ -73,7 +73,7 @@ const Home = () => {
                 <Swiper
                     modules={[Navigation, Pagination, A11y]}
                     spaceBetween={25}
-                    slidesPerView={1.5}
+                    slidesPerView={1.2}
                     navigation
                     breakpoints={{
                         768: {
@@ -94,7 +94,7 @@ const Home = () => {
                                 <div className="mt-6">
                                     <span className="text-xs">{storeScore(data.star)}</span>
                                     <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.name}</h4>
-                                    <p className="truncate w-full">{data.comment}</p>
+                                    <p className="truncate w-full text-gray-800">{data.comment}</p>
                                 </div>
                             </a>
                         </SwiperSlide>
@@ -102,7 +102,7 @@ const Home = () => {
                 </Swiper>
             </div>
 
-            <div className="grid grid-cols-4 gap-6 mt-12 text-center text-lg font-semibold text-orange-500">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 text-center text-lg font-semibold text-orange-500">
                 <Link to="/category" className="col-span-2 bg-white shadow-lg rounded-lg p-10">
                     전체 보기<p className="mt-6 text-5xl">😋🍴</p>
                 </Link>
