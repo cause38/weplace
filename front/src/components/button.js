@@ -7,7 +7,7 @@ const Button = ({contents, onClick, disAbled}) => {
             {disAbled ? (
                 <button
                     className={
-                        'w-full h-full py-[5px] leading-5 text-white transition-colors duration-300 transform bg-gray-300 rounded hover:bg-gray-600 focus:outline-none'
+                        'w-full h-full py-[5px] leading-5 text-white transition-colors duration-300 transform bg-gray-500 rounded hover:bg-gray-400 focus:outline-none'
                     }
                     type="button"
                     onClick={e => onClick(e)}
@@ -18,7 +18,7 @@ const Button = ({contents, onClick, disAbled}) => {
             ) : (
                 <button
                     className={
-                        'w-full h-full py-[5px] leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded hover:bg-gray-600 focus:outline-none'
+                        'w-full h-full py-[5px] leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded hover:bg-orange-400 focus:outline-none'
                     }
                     type="button"
                     onClick={e => onClick(e)}

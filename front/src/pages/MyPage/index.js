@@ -1,5 +1,5 @@
 import Button from 'components/button';
-import React, {Fragment, useEffect, useState, useRef, startTransition} from 'react';
+import React, {Fragment, useEffect, useState, useRef} from 'react';
 import InputBox from 'components/inputBox';
 import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
@@ -27,10 +27,10 @@ const MyPage = () => {
     const [isChangeNickName, setIsChangeNickName] = useState(false);
 
     // 리뷰박스
-    const [reviews, setReviews] = useState(MY_REVIEW);
+    const [reviews, setReviews] = useState();
 
     // 찜목록
-    const [favoriteList, setFavoriteList] = useState(MY_FAVORITE);
+    const [favoriteList, setFavoriteList] = useState();
 
     const imageInput = useRef(null);
 
@@ -54,8 +54,8 @@ const MyPage = () => {
                         setNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
-                        // setReviews(res.data.data.reviews);
-                        // setFavoriteList(res.data.data.favorites);
+                        setReviews(res.data.data.reviews);
+                        setFavoriteList(res.data.data.favorites);
                     } else if (res.data.state === 400) {
                         alert(res.data.data.msg);
                     }
@@ -223,20 +223,26 @@ const MyPage = () => {
         });
     };
 
+    // 리뷰 수정
     const goToWrite = () => {
         navigate('/write');
+    };
+
+    // 가게 상세 페이지
+    const goToDetail = () => {
+        navigate('/detail');
     };
     return (
         <Fragment>
             {token !== 0 ? (
                 <main className="container-wb">
-                    <h1 className="text-[25px] font-bold">마이페이지</h1>
+                    <h1 className="text-3xl font-bold text-orange-600">마이페이지</h1>
                     <section className="mt-9">
-                        <h2 className="text-[20px] font-semibold">기본 정보</h2>
+                        <h2 className="text-[20px] font-semibold text-orange-700">기본 정보</h2>
                         <div className="flex mt-[20px]">
                             <div className="min-w-[120px] w-[15%]">
                                 <img
-                                    className="min-w-[100%] max-h-[130px] min-h-[130px] rounded-[50%] overflow-hidden border-2 border-solid border-orange-400"
+                                    className="min-w-[100%] max-h-[130px] min-h-[130px] rounded-[50%] overflow-hidden "
                                     src={userImg}
                                 />
 
@@ -296,7 +302,7 @@ const MyPage = () => {
                                         <Button contents="중복 확인" onClick={handleCheckedName} />
                                     </div>
                                 ) : (
-                                    <div className="h-[40px] w-[20%] ml-[5%] min-w-[100px]">
+                                    <div className="h-[40px] w-[20%] ml-[10px] min-w-[100px]">
                                         <Button contents="닉네임 변경" onClick={handleNickName} />
                                     </div>
                                 )}
@@ -304,7 +310,7 @@ const MyPage = () => {
                         </div>
                     </section>
                     <section className="mt-14">
-                        <h2 className="text-[20px] font-semibold">내 리뷰✍</h2>
+                        <h2 className="text-[20px] font-semibold text-orange-700">내 리뷰✍</h2>
                         {reviews?.length > 0 ? (
                             <div className=" mt-[20px] flex flex-col">
                                 <div className="flex h-[185px] overflow-hidden grow">
@@ -321,7 +327,7 @@ const MyPage = () => {
                                                 >
                                                     <div className="p-[10px] h-[70%]">
                                                         <div className="flex justify-between ">
-                                                            <h3 className="w-fit p-[5px] rounded-[20px] bg-green-700 text-white text-[14px]">
+                                                            <h3 className="w-fit p-[5px] rounded-[20px] bg-orange-600 text-white text-[14px]">
                                                                 {menu}
                                                             </h3>
                                                             <p className="flex items-center text-[14px]">{wdate}</p>
@@ -330,25 +336,24 @@ const MyPage = () => {
                                                             {[1, 2, 3, 4, 5].map(el => (
                                                                 <i
                                                                     key={el}
-                                                                    className={`fas fa-star ${
+                                                                    className={`fas fa-star fa-light ${
                                                                         el <= star && 'yellowStar'
                                                                     }`}
                                                                 />
                                                             ))}
                                                         </span>
-
                                                         <p className="pl-[5px] font-medium">{name}</p>
                                                         <p className="pl-[5px] text-2xl font-bold ">{comment}</p>
                                                     </div>
                                                     <div className="flex justify-between h-[30%] pt-[15px]">
                                                         <button
-                                                            className="w-[50%] bg-slate-300 h-[100%]"
+                                                            className="w-[50%] h-[100%] text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:bg-gray-600"
                                                             onClick={goToWrite}
                                                         >
                                                             수정
                                                         </button>
                                                         <button
-                                                            className="w-[50%] bg-slate-300 h-[100%] bg-red-700 text-white"
+                                                            className="w-[50%] h-[100%] bg-orange-500 text-white hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                                             onClick={e => handleDeleteReview(e, idx)}
                                                         >
                                                             삭제
@@ -370,10 +375,10 @@ const MyPage = () => {
                         )}
                     </section>
                     <section className="mt-14">
-                        <h2 className="text-[20px] font-semibold">찜 목록&#128150;</h2>
+                        <h2 className="text-[20px] font-semibold text-orange-700">찜 목록&#128150;</h2>
                         {favoriteList?.length > 0 ? (
-                            <div className="bg-slate-300 mt-[20px] flex flex-col">
-                                <div className="flex">
+                            <div className=" mt-[20px] flex flex-col">
+                                <div className="flex overflow-hidden grow mb-[5px]">
                                     {favoriteList?.map(data => {
                                         const {idx, favorite, category, name, review, star, wdate} = data;
                                         return (
@@ -381,23 +386,39 @@ const MyPage = () => {
                                                 <div
                                                     className={
                                                         idx > 1
-                                                            ? 'h-[170px] bg-orange-300 ml-[10px] w-full '
-                                                            : 'h-[170px] bg-orange-300 w-full'
+                                                            ? ' flex w-[280px] min-w-[280px] mb-[10px] ml-[10px] bg-white rounded-[20px] shadow-md overflow-hidden'
+                                                            : ' flex w-[280px] min-w-[280px] mb-[10px] bg-white rounded-[20px] shadow-md overflow-hidden'
                                                     }
                                                 >
-                                                    <p>{category}</p>
-                                                    <div className="flex justify-between p-[40px] items-end">
-                                                        <button>수정</button>
-                                                        <button onClick={e => handleDeleteFavorite(e, idx)}>
-                                                            삭제
-                                                        </button>
+                                                    <div
+                                                        className="absolute cursor-pointer hover:opacity-50"
+                                                        onClick={e => handleDeleteFavorite(e, idx)}
+                                                    >
+                                                        <span className="text-red-600 text-[60px]">&#128150; </span>
+                                                    </div>
+                                                    <div
+                                                        className="w-full ml-[80px] p-[10px] cursor-pointer hover:bg-orange-400 hover:text-white"
+                                                        onClick={goToDetail}
+                                                    >
+                                                        <div className="flex justify-between">
+                                                            <span>{category}</span>
+                                                            <span>{wdate}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-2xl font-bold">{name}</span>
+                                                        </div>
+                                                        <div className="flex justify-between">
+                                                            <span>⭐{star}</span>
+                                                            <span>&#128221;{review}</span>
+                                                            <span>💘{favorite}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </Fragment>
                                         );
                                     })}
                                 </div>
-                                <div className="flex justify-end">
+                                <div className="flex justify-end mt-[10px]">
                                     <p>페이지 네이션</p>
                                 </div>
                             </div>
