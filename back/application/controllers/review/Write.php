@@ -118,7 +118,8 @@ class Write extends RestController {
         $json = trim($this->get('json')) ?: $this->response(['state' => 400, 'msg' => '데이터를 확인할 수 없습니다.']);
         $json = json_decode($json, true);
 
-        $result = [];
+        $main = [];
+        $sub = [];
         foreach($json as $shop) {
             $_data = $this->shop_m->getShopByShopId($shop['id']);
             $data = [
@@ -127,8 +128,18 @@ class Write extends RestController {
                 'name' => $shop['place_name'],
                 'url' => $shop['place_url']
             ];
-            $result[] = $data + $_data;
+
+            if ($_data) {
+                $main[] = $_data + $data;
+            } else {
+                $sub[] = $data;
+            }
         }
+
+        $result = [
+            'main' => $main,
+            'sub'  => $sub
+        ];
 
         $this->response([
             'state' => 200,
