@@ -52,6 +52,7 @@ class Write extends RestController {
         $address      = trim($this->post('address'));
         $distance     = trim($this->post('distance'));
         $url          = trim($this->post('url'));
+        $shopId       = end(explode('/', $url));
         $base         = trim($this->post('base'))         ?: $this->response(['state' => 402, 'msg' => '지상/지하를 선택해주세요.']);
         $floor        = trim($this->post('floor'))        ?: $this->response(['state' => 403, 'msg' => '층수를 선택해주세요.']);
         $category     = trim($this->post('category'))     ?: $this->response(['state' => 404, 'msg' => '카테고리를 선택해주세요.']);
@@ -91,7 +92,7 @@ class Write extends RestController {
 
         if (!$shopIdx) {
             // shop 등록
-            $shopIdx = $this->shop_m->setShop($category, $shop, $address, $base, $floor, $distance, $tag, $url);
+            $shopIdx = $this->shop_m->setShop($category, $shop, $address, $base, $floor, $distance, $tag, $url, $shopId);
         } else {
             // shop tag 병합
             $tag += $this->shop_m->getTags($shopIdx);
@@ -108,6 +109,31 @@ class Write extends RestController {
         $this->response([
             'state' => 200,
             'msg' => '리뷰가 등록되었습니다.'
+        ]);
+    }
+
+    public function mapInfo_get() {
+        $this->load->model('common/shop_m');
+
+        $json = trim($this->get('json')) ?: $this->response(['state' => 400, 'msg' => '데이터를 확인할 수 없습니다.']);
+        $json = json_decode($json, true);
+
+        $result = [];
+        foreach($json as $shop) {
+            $_data = $this->shop_m->getShopByShopId($shop['id']);
+            $data = [
+                'address' => $shop['road_address_name'],
+                'distance' => round((int)$shop['distance'] / 70) ?: 1,
+                'name' => $shop['place_name'],
+                'url' => $shop['place_url']
+            ];
+            $result[] = $data + $_data;
+        }
+
+        $this->response([
+            'state' => 200,
+            'msg'   => 'OK',
+            'data'  => $result
         ]);
     }
 }
