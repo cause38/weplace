@@ -3,11 +3,14 @@ import React, {useState} from 'react';
 import InputBox from 'components/inputBox';
 import Button from 'components/button';
 
-import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
+import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
 
 const FindPassword = () => {
     const navigate = useNavigate();
+    const {pathname} = useLocation();
+
+    console.log('pathnameFind', pathname);
 
     // input value
     const [id, setId] = useState(''); // 아이디
@@ -22,7 +25,7 @@ const FindPassword = () => {
 
     // 뒤로가기
     const goBack = () => {
-        navigate(-1);
+        navigate('/login', {state: {pathname: pathname}});
     };
 
     //   이메일 유효성 검사
@@ -98,6 +101,7 @@ const FindPassword = () => {
                     alert(response.data.msg);
                     setIsIdValid(true);
                     setIsSendVerifyEmail(true);
+                    navigate('/');
                 } else if (response.data.state === 401) {
                     alert(response.data.msg);
                 } else if (response.data.state === 402) {
@@ -160,7 +164,7 @@ const FindPassword = () => {
                     if (response.state === 200) {
                         alert(response.msg);
                         form.id.focus();
-                        navigate('/login');
+                        navigate('/login', {state: {pathname: pathname}});
                     } else if (response.state === 400) {
                         alert(response.msg);
                     } else if (response.state === 401) {
