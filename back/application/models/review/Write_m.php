@@ -16,5 +16,36 @@ class Write_m extends CI_Model {
 
         return $this->db->get()->result();
     }
+
+    function setUsedTags($tag) {
+        $tag = json_decode($tag, true);
+        foreach ($tag as $idx) {
+            $this->db->set('used', 'used+1', FALSE);
+            $this->db->where('idx', $idx);
+            $this->db->update('T_tag');
+        }
+    }
+
+    function setReveiw($uidx, $sidx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
+        $this->db->insert('T_review', [
+            'uidx'          => $uidx,
+            'sidx'          => $sidx,
+            'menu'          => $menu,
+            'star'          => $star,
+            'comment'       => $comment,
+            'comment_good'  => $comment_good,
+            'comment_bad'   => $comment_bad,
+            'tag'           => json_encode($tag)
+        ]);
+
+        return $this->db->insert_id();
+    }
+
+    function setReviewImg($idx, $fileName) {
+        $this->db->insert('T_image', [
+            'ridx' => $idx,
+            'image' => UPLOAD_PATH . 'review/' . $fileName
+        ]);
+    }
 }
 ?>
