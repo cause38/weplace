@@ -5,7 +5,7 @@ import profile from '../assets/sample_profile.png';
 
 const Header = () => {
     const navigate = useNavigate();
-    const location = useLocation();
+    const {pathname} = useLocation();
     const getToken = sessionStorage.getItem('token');
 
     const [isLogin, setisLogin] = useState(true);
@@ -13,7 +13,7 @@ const Header = () => {
 
     // logout
     const goLogOut = () => {
-        const isHome = location.pathname === '/';
+        const isHome = pathname === '/';
         const msg = !isHome ? '\n메인페이지로 이동하시겠습니까?' : '';
 
         sessionStorage.removeItem('token');
@@ -54,7 +54,7 @@ const Header = () => {
                     </div>
                     <div className="flex items-end gap-3">
                         <button
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate('/login', {state: {pathname: pathname}})}
                             className={
                                 (isLogin ? 'hidden ' : '') +
                                 'flex items-center px-3 py-1 sm:px-4 sm:py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-orange-400 rounded-full hover:bg-orange-500 focus:outline-none focus:ring focus:ring-orange-300 focus:ring-opacity-80'
