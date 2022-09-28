@@ -77,10 +77,12 @@ class Write extends RestController {
 
         if(!$this->upload->do_multi_upload('reviewImg')) {
             foreach ($this->upload->get_multi_upload_data() as $data) unlink($data['full_path']);
-            $this->response([
-                'state' => 411,
-                'msg' => $this->upload->error_msg
-            ]);
+            if ($this->upload->error_msg !== []) {
+                $this->response([
+                    'state' => 411,
+                    'msg' => $this->upload->error_msg
+                ]);
+            }
         }
 
 
