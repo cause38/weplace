@@ -1,7 +1,13 @@
 import React, {Fragment, useEffect, useState, useRef} from 'react';
+
 import Button from 'components/button';
 import InputBox from 'components/inputBox';
+
 import Pagination from './components/Pagination';
+import UserInfo from './components/UserInfo';
+import Reviews from './components/Reviews';
+import Favorites from './components/Favorites';
+
 import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
 
@@ -39,7 +45,7 @@ const MyPage = () => {
     const nameInput = useRef(null);
 
     // 화면에 보여줄 티켓 수
-    const [limit, setLimit] = useState(3);
+    const limit = 3;
 
     // 페이지
     const [page, setPage] = useState(1);
@@ -130,8 +136,6 @@ const MyPage = () => {
 
         const ImageUrl = URL.createObjectURL(file);
 
-        setUserImg(ImageUrl);
-
         const formData = new FormData();
         formData.append('profileImg', file);
         formData.append('token', token);
@@ -145,6 +149,7 @@ const MyPage = () => {
             .then(res => {
                 if (res.data.state === 200) {
                     alert(res.data.msg);
+                    setUserImg(ImageUrl);
                 } else if (res.data.state === 400) {
                     alert(res.data.msg);
                 } else if (res.data.state === 401) {
@@ -244,76 +249,19 @@ const MyPage = () => {
                     <h1 className="text-3xl font-bold text-orange-600">마이페이지</h1>
                     <section className="mt-9">
                         <h2 className="text-[20px] font-semibold text-orange-700">기본 정보</h2>
-                        <div className="flex mt-[20px] max-w-[890px]">
-                            <div className="min-w-[120px] w-[15%]">
-                                <img
-                                    className="min-w-[100%] max-h-[130px] min-h-[130px] rounded-[50%] overflow-hidden "
-                                    src={userImg}
-                                />
-
-                                <form className="h-[30px] mt-[10px]" encType="multipart.form-data">
-                                    <input
-                                        id="file"
-                                        type="file"
-                                        style={{display: 'none'}}
-                                        ref={imageInput}
-                                        accept="image/*"
-                                        name="file"
-                                        onChange={e => onImgChange(e)}
-                                        multiple="multiple"
-                                    />
-                                    <Button contents="프로필 사진 변경" onClick={handleProfileImg} />
-                                </form>
-                            </div>
-                            <div className="flex ml-[10%] mb-[50px] items-end w-[85%] justify-between">
-                                <div className="flex flex-col justify-center w-[80%]">
-                                    <div className="flex items-center">
-                                        <div className="min-w-[70px] w-[20%]">아이디</div>
-                                        <div className="w-full">
-                                            <p className="ml-[5px]">{userId}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex mt-[20px] items-center">
-                                        <div className="min-w-[70px] w-[20%]">
-                                            <p>닉네임</p>
-                                        </div>
-                                        {isChangeNickName ? (
-                                            <div className="w-full">
-                                                <InputBox
-                                                    id="nickName"
-                                                    type="text"
-                                                    value={nickName || ''}
-                                                    ariaLabel="name"
-                                                    placeholder={nickName}
-                                                    onChange={setNickName}
-                                                    ref={nameInput}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className="w-full">
-                                                <InputBox
-                                                    id="nickName"
-                                                    type="text"
-                                                    value={nickName || ''}
-                                                    ariaLabel="name"
-                                                    onChange={setNickName}
-                                                    readOnly="readOnly"
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                {isChangeNickName ? (
-                                    <div className="h-[40px] w-[20%] ml-[5%] min-w-[100px]">
-                                        <Button contents="중복 확인" onClick={handleCheckedName} />
-                                    </div>
-                                ) : (
-                                    <div className="h-[40px] w-[20%] ml-[10px] min-w-[100px]">
-                                        <Button contents="닉네임 변경" onClick={handleNickName} />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <UserInfo
+                            userImg={userImg}
+                            imageInput={imageInput}
+                            onImgChange={onImgChange}
+                            handleProfileImg={handleProfileImg}
+                            userId={userId}
+                            isChangeNickName={isChangeNickName}
+                            nickName={nickName}
+                            setNickName={setNickName}
+                            nameInput={nameInput}
+                            handleCheckedName={handleCheckedName}
+                            handleNickName={handleNickName}
+                        />
                     </section>
                     <section className="mt-14">
                         <h2 className="text-[20px] font-semibold text-orange-700">내 리뷰✍</h2>
