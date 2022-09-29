@@ -34,6 +34,24 @@ const Login = () => {
         }
     };
 
+    // 유저정보 가져와서 세션저장
+    const handleUser = id => {
+        axios
+            .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                params: {
+                    token: id,
+                },
+            })
+            .then(res => {
+                if (res.data.state === 200) {
+                    let name = res.data.data.basic.name;
+                    let url = res.data.data.basic.thumb;
+                    sessionStorage.setItem('profileImg', url);
+                    sessionStorage.setItem('name', name);
+                }
+            });
+    };
+
     // 로그인
     const setLogin = () => {
         if (id.length < 1) {
@@ -49,7 +67,7 @@ const Login = () => {
                 .then(response => {
                     if (response.data.state === 200) {
                         handleToken(response.data.data.id);
-
+                        handleUser(response.data.data.id);
                         if (
                             pathname === null ||
                             pathname === '/join' ||
