@@ -1,6 +1,7 @@
-import Button from 'components/button';
 import React, {Fragment, useEffect, useState, useRef} from 'react';
+import Button from 'components/button';
 import InputBox from 'components/inputBox';
+import Pagination from './components/Pagination';
 import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
 
@@ -8,12 +9,11 @@ const MyPage = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
 
-    const [isYellow, setIsYellow] = useState(false);
-
     const qs = require('qs');
 
     //  토큰
     const [token, setToken] = useState(0);
+
     // 유저 이미지
     const [userImg, setUserImg] = useState();
 
@@ -32,7 +32,19 @@ const MyPage = () => {
     // 찜목록
     const [favoriteList, setFavoriteList] = useState();
 
+    // 이미지 인풋창
     const imageInput = useRef(null);
+
+    // 닉네임 인풋창
+    const nameInput = useRef(null);
+
+    // 화면에 보여줄 티켓 수
+    const [limit, setLimit] = useState(3);
+
+    // 페이지
+    const [page, setPage] = useState(1);
+
+    const offset = (page - 1) * limit;
 
     // 토큰이 없으면 메인페이지로 이동, 있으면 유저데이터 불러오기
     useEffect(() => {
@@ -54,8 +66,10 @@ const MyPage = () => {
                         setNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
-                        setReviews(res.data.data.reviews);
-                        setFavoriteList(res.data.data.favorites);
+                        setReviews(MY_REVIEW);
+                        setFavoriteList(MY_FAVORITE);
+                        // setReviews(res.data.data.reviews);
+                        // setFavoriteList(res.data.data.favorites);
                     } else if (res.data.state === 400) {
                         alert(res.data.data.msg);
                     }
@@ -67,14 +81,12 @@ const MyPage = () => {
     const handleNickName = e => {
         setIsChangeNickName(true);
         setNickName(e.target.value);
-        const inputFocus = document.getElementById('nickName').focus;
-        return inputFocus;
+        nameInput.current?.focus();
     };
 
     // 닉네임 변경
     const handleCheckedName = () => {
         const name = nickName.toString();
-        const inputFocus = document.getElementById('nickName').focus;
 
         if (nickName.length <= 0) {
             alert('닉네임을 입력 해 주세요.');
@@ -92,15 +104,15 @@ const MyPage = () => {
                     } else if (response.state === 400) {
                         alert(response.msg);
                         setIsChangeNickName(true);
-                        return inputFocus;
+                        return nameInput.current?.focus();
                     } else if (response.state === 401) {
                         alert(response.msg);
                         setIsChangeNickName(true);
-                        return inputFocus;
+                        return nameInput.current?.focus();
                     } else if (response.state === 402) {
                         alert(response.msg);
                         setIsChangeNickName(true);
-                        return inputFocus;
+                        return nameInput.current?.focus();
                     }
                 });
         }
@@ -163,11 +175,7 @@ const MyPage = () => {
                     })
                     .then(res => {
                         if (res.data.state === 200) {
-                            setNickName(res.data.data.basic.name);
-                            setUserId(res.data.data.basic.uid);
-                            setUserImg(res.data.data.basic.thumb);
                             setReviews(res.data.data.reviews);
-                            setFavoriteList(res.data.data.favorites);
                         } else if (res.data.state === 400) {
                             alert(res.data.data.msg);
                         }
@@ -204,10 +212,6 @@ const MyPage = () => {
                     })
                     .then(res => {
                         if (res.data.state === 200) {
-                            setNickName(res.data.data.basic.name);
-                            setUserId(res.data.data.basic.uid);
-                            setUserImg(res.data.data.basic.thumb);
-                            setReviews(res.data.data.reviews);
                             setFavoriteList(res.data.data.favorites);
                         } else if (res.data.state === 400) {
                             alert(res.data.data.msg);
@@ -232,6 +236,7 @@ const MyPage = () => {
     const goToDetail = () => {
         navigate('/detail');
     };
+
     return (
         <Fragment>
             {token !== 0 ? (
@@ -239,7 +244,7 @@ const MyPage = () => {
                     <h1 className="text-3xl font-bold text-orange-600">마이페이지</h1>
                     <section className="mt-9">
                         <h2 className="text-[20px] font-semibold text-orange-700">기본 정보</h2>
-                        <div className="flex mt-[20px]">
+                        <div className="flex mt-[20px] max-w-[890px]">
                             <div className="min-w-[120px] w-[15%]">
                                 <img
                                     className="min-w-[100%] max-h-[130px] min-h-[130px] rounded-[50%] overflow-hidden "
@@ -281,6 +286,7 @@ const MyPage = () => {
                                                     ariaLabel="name"
                                                     placeholder={nickName}
                                                     onChange={setNickName}
+                                                    ref={nameInput}
                                                 />
                                             </div>
                                         ) : (
@@ -312,9 +318,9 @@ const MyPage = () => {
                     <section className="mt-14">
                         <h2 className="text-[20px] font-semibold text-orange-700">내 리뷰✍</h2>
                         {reviews?.length > 0 ? (
-                            <div className=" mt-[20px] flex flex-col">
+                            <div className=" mt-[20px] flex flex-col max-w-[890px] w-fit">
                                 <div className="flex h-[185px] overflow-hidden grow">
-                                    {reviews?.map(data => {
+                                    {reviews?.slice(offset, offset + limit).map(data => {
                                         const {idx, menu, star, name, comment, wdate} = data;
                                         return (
                                             <Fragment key={idx}>
@@ -327,7 +333,7 @@ const MyPage = () => {
                                                 >
                                                     <div className="p-[10px] h-[70%]">
                                                         <div className="flex justify-between ">
-                                                            <h3 className="w-fit p-[5px] rounded-[20px] bg-orange-600 text-white text-[14px]">
+                                                            <h3 className="w-fit p-[5px] rounded-[20px] bg-orange-400 text-white text-[14px]">
                                                                 {menu}
                                                             </h3>
                                                             <p className="flex items-center text-[14px]">{wdate}</p>
@@ -364,9 +370,7 @@ const MyPage = () => {
                                         );
                                     })}
                                 </div>
-                                <div className="flex justify-end">
-                                    <p>페이지 네이션</p>
-                                </div>
+                                <Pagination total={reviews.length} limit={limit} page={page} setPage={setPage} />
                             </div>
                         ) : (
                             <div className="flex items-center h-[50px] justify-center">
@@ -377,7 +381,7 @@ const MyPage = () => {
                     <section className="mt-14">
                         <h2 className="text-[20px] font-semibold text-orange-700">찜 목록&#128150;</h2>
                         {favoriteList?.length > 0 ? (
-                            <div className=" mt-[20px] flex flex-col">
+                            <div className=" mt-[20px] flex flex-col max-w-[890px] w-fit">
                                 <div className="flex overflow-hidden grow mb-[5px]">
                                     {favoriteList?.map(data => {
                                         const {idx, favorite, category, name, review, star, wdate} = data;
@@ -401,7 +405,9 @@ const MyPage = () => {
                                                         onClick={goToDetail}
                                                     >
                                                         <div className="flex justify-between">
-                                                            <span>{category}</span>
+                                                            <span className="w-fit px-[6px] py-[1px] rounded-[20px] bg-orange-400 text-white">
+                                                                {category}
+                                                            </span>
                                                             <span>{wdate}</span>
                                                         </div>
                                                         <div>
