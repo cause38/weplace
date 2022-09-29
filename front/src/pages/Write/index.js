@@ -17,20 +17,11 @@ const Write = () => {
         y: '37.5464770743083',
     };
 
-    // 매장검색 모달
-    const [modalVisible, setModalVisible] = useState(false);
-
     // 카테고리 목록
     const [categoryData, setCategoryData] = useState([]);
 
     // 태그 목록
     const [tagData, setTagData] = useState([]);
-
-    // 매장검색 - 지역
-    const [searhStoreLocation, setSearhStoreLocation] = useState('성동구');
-
-    // 매장검색 - 매장명
-    const [searhStoreName, setSearhStoreName] = useState();
 
     // 이미지 미리보기
     const [showImages, setShowImages] = useState([]);
@@ -43,6 +34,19 @@ const Write = () => {
 
     // 첨부이미지 -> base64 파일로 변환
     const [Base64s, setBase64s] = useState([]);
+
+    // 매장검색 모달
+    const [modalVisible, setModalVisible] = useState(false);
+
+    // 매장검색 - 지역
+    const [searhStoreLocation, setSearhStoreLocation] = useState('성동구');
+
+    // 매장검색 - 매장명
+    const [searhStoreName, setSearhStoreName] = useState();
+
+    // 매장검색 - 결과
+    const [searhStoreListMain, setSearhStoreListMain] = useState([]);
+    const [searhStoreListSub, setSearhStoreListSub] = useState([]);
 
     const searchBtn = useRef(null);
     const tagBox = useRef();
@@ -72,12 +76,6 @@ const Write = () => {
             });
         }
     }, [files]);
-
-    useEffect(() => {
-        modalVisible
-            ? document.body.classList.add('overflow-y-hidden')
-            : document.body.classList.remove('overflow-y-hidden');
-    }, [modalVisible]);
 
     const encodeFileToBase64 = image => {
         return new Promise((resolve, reject) => {
@@ -128,7 +126,20 @@ const Write = () => {
         }
     };
 
-    // 매장 검색 api
+    // 매장검색 - 모달 오픈 시 바디 스크롤 숨김 처리
+    useEffect(() => {
+        modalVisible
+            ? document.body.classList.add('overflow-y-hidden')
+            : document.body.classList.remove('overflow-y-hidden');
+    }, [modalVisible]);
+
+    // 매장검색 - 버튼 활성화
+    const handleSearchBtn = () => {
+        searchBtn.current.innerText = '검색';
+        searchBtn.current.removeAttribute('disabled');
+    };
+
+    // 매장검색 - api
     const handleStoreSearch = e => {
         e.preventDefault();
 
@@ -148,20 +159,37 @@ const Write = () => {
                 }
             )
             .then(res => {
-                // 검색 버튼 활성화
-                searchBtn.current.innerText = '검색';
-                searchBtn.current.removeAttribute('disabled');
-
                 if (res.status === 200) {
                     if (res.data.documents.length > 0) {
+                        // 재가공 데이터 get
+                        getReviewData(JSON.stringify(res.data.documents));
                     } else {
                         alert('검색된 데이터가 없습니다');
+                        handleSearchBtn();
                     }
                 } else {
                     alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                    handleSearchBtn();
                     setModalVisible(false);
                 }
             });
+    };
+
+    // 매장검색 재가공 데이터
+    const getReviewData = data => {
+        axios.get(`http://place-api.weballin.com/review/write/mapInfo?json=${data}`).then(res => {
+            handleSearchBtn();
+
+            if (res.status === 200) {
+                setSearhStoreListMain(res.data.data.main);
+                setSearhStoreListSub(res.data.data.sub);
+            } else if (res.status === 400) {
+                alert(res.msg);
+            } else {
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                setModalVisible(false);
+            }
+        });
     };
 
     const handleSubmit = e => {};
@@ -209,6 +237,25 @@ const Write = () => {
                                     onChange={e => setSearhStoreName(e.target.value)}
                                     className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                                 />
+                            </div>
+                            <div className="bg-gray-100 p-6 rounded-lg">
+                                {searhStoreListMain.length <= 0 && searhStoreListSub.length <= 0 && (
+                                    <p className="flex justify-center items-center w-full h-full  text-gray-500 font-light text-center cursor-pointer">
+                                        리뷰하실 매장을 검색해주세요.
+                                    </p>
+                                )}
+                                {searhStoreListMain.length > 0 &&
+                                    searhStoreListMain.map((item, id) => (
+                                        <div key={`main_${item.idx}`} className="">
+                                            {item.name}
+                                        </div>
+                                    ))}
+                                {searhStoreListSub.length > 0 &&
+                                    searhStoreListSub.map((item, id) => (
+                                        <div key={`sub_${item.idx}`} className="">
+                                            {item.name}
+                                        </div>
+                                    ))}
                             </div>
                             <button
                                 ref={searchBtn}
@@ -318,7 +365,7 @@ const Write = () => {
                                     multiple
                                     className="text-sm text-grey-500 file:mr-5 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-orange-500 file:text-white file:transition-colors hover:file:cursor-pointer hover:file:bg-orange-400 active:file:bg-orange-500 "
                                 />
-                                <div className="flex gap-4 mt-6 h-[96px] border border-dashed rounded-lg">
+                                <div className="flex gap-4 mt-6 h-[96px] p-4 border border-dashed rounded-lg">
                                     {Base64s.length > 0 ? (
                                         Base64s.map((item, id) => (
                                             <div
