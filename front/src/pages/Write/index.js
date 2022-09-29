@@ -10,6 +10,7 @@ const Write = () => {
     const getToken = sessionStorage.getItem('token');
     const storeScoreArr = ['⭐⭐⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐', '⭐⭐', '⭐'];
     const locationArr = ['성동구'];
+    const qs = require('qs');
 
     // 거리계산을 위한 현재 위치 좌표(현재 회사 위치로 설정)
     const myLocation = {
@@ -22,12 +23,6 @@ const Write = () => {
 
     // 태그 목록
     const [tagData, setTagData] = useState([]);
-
-    // 이미지 미리보기
-    const [showImages, setShowImages] = useState([]);
-
-    // 태그 목록 세로 사이즈
-    const [tagBoxH, setTagBoxH] = useState(0);
 
     // 이미지 첨부
     const [files, setFiles] = useState();
@@ -159,10 +154,13 @@ const Write = () => {
                 }
             )
             .then(res => {
+                console.log(res);
+
                 if (res.status === 200) {
                     if (res.data.documents.length > 0) {
                         // 재가공 데이터 get
-                        getReviewData(JSON.stringify(res.data.documents));
+                        console.log(res.data.documents);
+                        getReviewData(res.data.documents);
                     } else {
                         alert('검색된 데이터가 없습니다');
                         handleSearchBtn();
@@ -177,21 +175,31 @@ const Write = () => {
 
     // 매장검색 재가공 데이터
     const getReviewData = data => {
-        axios.get(`http://place-api.weballin.com/review/write/mapInfo?json=${data}`).then(res => {
-            handleSearchBtn();
+        const url = 'http://place-api.weballin.com/review/write/mapInfo';
 
-            if (res.status === 200) {
-                setSearhStoreListMain(res.data.data.main);
-                setSearhStoreListSub(res.data.data.sub);
-            } else if (res.status === 400) {
-                alert(res.msg);
-            } else {
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-                setModalVisible(false);
-            }
-        });
+        axios
+            .get(url, {
+                params: {
+                    json: JSON.stringify(data),
+                },
+            })
+            .then(res => {
+                handleSearchBtn();
+
+                console.log(res);
+                if (res.data.state === 200) {
+                    setSearhStoreListMain(res.data.data.main);
+                    setSearhStoreListSub(res.data.data.sub);
+                } else if (res.data.state === 400) {
+                    alert(res.data.msg);
+                } else {
+                    alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                    setModalVisible(false);
+                }
+            });
     };
 
+    const setStoreData = e => {};
     const handleSubmit = e => {};
 
     return (
@@ -248,22 +256,29 @@ const Write = () => {
                                     searhStoreListMain.map((item, id) => (
                                         <div
                                             key={`main_${item.idx}`}
-                                            className="flex justify-between gap-2 items-center w-full p-4 bg-white rounded-lg"
+                                            className="flex justify-between gap-2 items-center w-full p-4 pr-5 pb-5 bg-white rounded-lg shadow-md"
                                         >
                                             <div>
-                                                <p>⭐ {item.star}</p>
-                                                <p>
-                                                    {item.name}
-                                                    <a src={item.url} className="bg-orange-100 p-2">
-                                                        링크
-                                                    </a>
-                                                </p>
-                                                <p>{item.address}</p>
-                                                <p>
+                                                <p className="flex items-center mb-1">⭐ {item.star}</p>
+                                                <p className="text-xl font-bold">{item.name}</p>
+                                                <p className="mb-4 text-gray-600">{item.address}</p>
+                                                <span className="text-xs p-1 px-3 bg-gray-400 text-white rounded-full mr-2">
                                                     {item.base} {item.floor}층
-                                                </p>
+                                                </span>
+                                                <a
+                                                    href={item.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs p-1 px-3 bg-orange-500 text-white rounded-full hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                                >
+                                                    지도 바로가기
+                                                </a>
                                             </div>
-                                            <button className="block h-full min-w-[100px] w-full sm:w-1/5 h-full px-8 py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600">
+                                            <button
+                                                onClick={setStoreData}
+                                                type="button"
+                                                className="block h-full min-w-[80px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                            >
                                                 선택
                                             </button>
                                         </div>
@@ -272,47 +287,28 @@ const Write = () => {
                                     searhStoreListSub.map((item, id) => (
                                         <div
                                             key={`sub_${item.idx}`}
-                                            className="flex justify-between gap-2 items-center w-full p-4 bg-white rounded-lg shadow-md"
+                                            className="flex justify-between gap-2 items-center w-full p-4 pr-5 pb-5 bg-white rounded-lg shadow-md"
                                         >
                                             <div>
-                                                <p>⭐ 3.5</p>
-                                                <p>
-                                                    {item.name}
-                                                    <a src={item.url} className="bg-orange-100 p-2">
-                                                        링크
-                                                    </a>
-                                                </p>
-                                                <p>{item.address}</p>
-                                                <p>지상 1층</p>
+                                                <p className="text-xl font-bold">{item.name}</p>
+                                                <p className="mb-4 text-gray-600">{item.address}</p>
+                                                <a
+                                                    href={item.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs p-1 px-3 bg-orange-500 text-white rounded-full hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                                >
+                                                    지도 바로가기
+                                                </a>
                                             </div>
-                                            <button className="block h-full min-w-[100px] w-full sm:w-1/5 h-full px-8 py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600">
+                                            <button
+                                                type="button"
+                                                className="block h-full min-w-[80px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                            >
                                                 선택
                                             </button>
                                         </div>
                                     ))}
-                                <div className="flex justify-between gap-2 items-center w-full p-4 bg-white rounded-lg shadow-md">
-                                    <div>
-                                        <p className="flex items-center mb-1">⭐ 3.5</p>
-                                        <p className="text-xl font-bold">사흘카레</p>
-                                        <p className="mb-4">서울특별시 마천로22길</p>
-                                        <span className="text-xs p-1 px-3 bg-gray-400 text-white rounded-full mr-2">
-                                            지상 4층
-                                        </span>
-                                        <a
-                                            href="/"
-                                            target="_blank"
-                                            className="text-xs p-1 px-3 bg-orange-500 text-white rounded-full hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
-                                        >
-                                            지도 바로가기
-                                        </a>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        className="block h-full min-w-[100px] w-full sm:w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
-                                    >
-                                        선택
-                                    </button>
-                                </div>
                             </div>
                             <button
                                 ref={searchBtn}
