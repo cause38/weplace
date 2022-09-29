@@ -11,7 +11,6 @@ const Login = () => {
     const location = useLocation();
 
     const pathname = location.state?.pathname;
-    console.log('referrer', pathname);
 
     // 토큰
     const getToken = sessionStorage.getItem('token');
