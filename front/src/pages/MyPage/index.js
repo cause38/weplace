@@ -100,6 +100,19 @@ const MyPage = () => {
                     if (response.state === 200) {
                         alert(response.msg);
                         setIsChangeNickName(false);
+                        axios
+                            .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                                params: {
+                                    token: token,
+                                },
+                            })
+                            .then(res => {
+                                if (res.data.state === 200) {
+                                    sessionStorage.setItem('name', res.data.data.basic.name);
+                                } else if (res.data.state === 400) {
+                                    alert(res.data.data.msg);
+                                }
+                            });
                     } else if (response.state === 400) {
                         alert(response.msg);
                         setIsChangeNickName(true);
@@ -142,7 +155,20 @@ const MyPage = () => {
             .then(res => {
                 if (res.data.state === 200) {
                     alert(res.data.msg);
-                    setUserImg(ImageUrl);
+                    axios
+                        .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                            params: {
+                                token: token,
+                            },
+                        })
+                        .then(res => {
+                            if (res.data.state === 200) {
+                                setUserImg(res.data.data.basic.thumb);
+                                sessionStorage.setItem('profileImg', res.data.data.basic.thumb);
+                            } else if (res.data.state === 400) {
+                                alert(res.data.data.msg);
+                            }
+                        });
                 } else if (res.data.state === 400) {
                     alert(res.data.msg);
                 } else if (res.data.state === 401) {
