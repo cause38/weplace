@@ -46,8 +46,8 @@ const Login = () => {
                 if (res.data.state === 200) {
                     let name = res.data.data.basic.name;
                     let url = res.data.data.basic.thumb;
-                    sessionStorage.setItem('profile-url', url);
-                    sessionStorage.setItem('nick-name', name);
+                    sessionStorage.setItem('profileImg', url);
+                    sessionStorage.setItem('name', name);
                 }
             });
     };
