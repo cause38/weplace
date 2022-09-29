@@ -238,24 +238,81 @@ const Write = () => {
                                     className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                                 />
                             </div>
-                            <div className="bg-gray-100 p-6 rounded-lg">
+                            <div className="bg-gray-100 p-4 rounded-lg flex flex-col justify-center items-center gap-4">
                                 {searhStoreListMain.length <= 0 && searhStoreListSub.length <= 0 && (
-                                    <p className="flex justify-center items-center w-full h-full  text-gray-500 font-light text-center cursor-pointer">
+                                    <p className="flex justify-center items-center w-full h-full text-gray-500 font-light text-center">
                                         리뷰하실 매장을 검색해주세요.
                                     </p>
                                 )}
                                 {searhStoreListMain.length > 0 &&
                                     searhStoreListMain.map((item, id) => (
-                                        <div key={`main_${item.idx}`} className="">
-                                            {item.name}
+                                        <div
+                                            key={`main_${item.idx}`}
+                                            className="flex justify-between gap-2 items-center w-full p-4 bg-white rounded-lg"
+                                        >
+                                            <div>
+                                                <p>⭐ {item.star}</p>
+                                                <p>
+                                                    {item.name}
+                                                    <a src={item.url} className="bg-orange-100 p-2">
+                                                        링크
+                                                    </a>
+                                                </p>
+                                                <p>{item.address}</p>
+                                                <p>
+                                                    {item.base} {item.floor}층
+                                                </p>
+                                            </div>
+                                            <button className="block h-full min-w-[100px] w-full sm:w-1/5 h-full px-8 py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600">
+                                                선택
+                                            </button>
                                         </div>
                                     ))}
                                 {searhStoreListSub.length > 0 &&
                                     searhStoreListSub.map((item, id) => (
-                                        <div key={`sub_${item.idx}`} className="">
-                                            {item.name}
+                                        <div
+                                            key={`sub_${item.idx}`}
+                                            className="flex justify-between gap-2 items-center w-full p-4 bg-white rounded-lg shadow-md"
+                                        >
+                                            <div>
+                                                <p>⭐ 3.5</p>
+                                                <p>
+                                                    {item.name}
+                                                    <a src={item.url} className="bg-orange-100 p-2">
+                                                        링크
+                                                    </a>
+                                                </p>
+                                                <p>{item.address}</p>
+                                                <p>지상 1층</p>
+                                            </div>
+                                            <button className="block h-full min-w-[100px] w-full sm:w-1/5 h-full px-8 py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600">
+                                                선택
+                                            </button>
                                         </div>
                                     ))}
+                                <div className="flex justify-between gap-2 items-center w-full p-4 bg-white rounded-lg shadow-md">
+                                    <div>
+                                        <p className="flex items-center mb-1">⭐ 3.5</p>
+                                        <p className="text-xl font-bold">사흘카레</p>
+                                        <p className="mb-4">서울특별시 마천로22길</p>
+                                        <span className="text-xs p-1 px-3 bg-gray-400 text-white rounded-full mr-2">
+                                            지상 4층
+                                        </span>
+                                        <a
+                                            href="/"
+                                            target="_blank"
+                                            className="text-xs p-1 px-3 bg-orange-500 text-white rounded-full hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                        >
+                                            지도 바로가기
+                                        </a>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="block h-full min-w-[100px] w-full sm:w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                    >
+                                        선택
+                                    </button>
+                                </div>
                             </div>
                             <button
                                 ref={searchBtn}
