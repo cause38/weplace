@@ -5,11 +5,11 @@ const Pagination = ({total, limit, page, setPage}) => {
 
     return (
         <>
-            <article className="flex justify-end items-center m-[10px] gap-[7px]">
+            <article className="flex justify-end items-center m-[10px] gap-[10px]">
                 <button
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
-                    className="pagination-button bg-gray-300 hover:bg-orange-400 hover:text-white rounded-[20px]"
+                    className="pagination-button bg-gray-300 "
                 >
                     &lt;
                 </button>
@@ -20,16 +20,12 @@ const Pagination = ({total, limit, page, setPage}) => {
                             key={i + 1}
                             onClick={() => setPage(i + 1)}
                             aria-current={page === i + 1 ? 'page' : null}
-                            className="pagination-button bg-gray-300 hover:bg-orange-400 hover:text-white rounded-[20px]"
+                            className="pagination-button "
                         >
                             {i + 1}
                         </button>
                     ))}
-                <button
-                    onClick={() => setPage(page + 1)}
-                    disabled={page === numPages}
-                    className="pagination-button bg-gray-300 hover:bg-orange-400 hover:text-white rounded-[20px]"
-                >
+                <button onClick={() => setPage(page + 1)} disabled={page === numPages} className="pagination-button ">
                     &gt;
                 </button>
             </article>

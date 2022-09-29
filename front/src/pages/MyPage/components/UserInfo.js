@@ -36,7 +36,7 @@ const UserInfo = ({
                     <Button contents="프로필 사진 변경" onClick={handleProfileImg} />
                 </form>
             </div>
-            <div className="flex ml-[10%] mb-[50px] items-end w-[85%] justify-between">
+            <div className="userInfo flex ml-[10%] mb-[50px] items-end w-[85%] justify-between">
                 <div className="flex flex-col justify-center w-[80%]">
                     <div className="flex items-center">
                         <div className="min-w-[70px] w-[20%]">아이디</div>
