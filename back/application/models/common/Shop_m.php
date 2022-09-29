@@ -33,7 +33,7 @@ class Shop_m extends CI_Model {
             'base'      => $base,
             'floor'     => $floor,
             'distance'  => $distance,
-            'tag'       => json_encode($tag),
+            'tag'       => $tag,
             'url'       => $url,
             'shopId'    => $shopId
         ]);
