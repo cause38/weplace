@@ -25,7 +25,7 @@ const Reviews = ({reviews, goToWrite, handleDeleteReview}) => {
                             >
                                 <div className="p-[10px] h-[70%]">
                                     <div className="flex justify-between ">
-                                        <h3 className="w-fit p-[5px] rounded-[20px] bg-orange-400 text-white text-[14px]">
+                                        <h3 className="w-fit px-[5px] py-[2px] rounded-[20px] bg-orange-400 text-white text-[14px]">
                                             {menu}
                                         </h3>
                                         <p className="flex items-center text-[14px]">{wdate}</p>

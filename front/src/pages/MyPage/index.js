@@ -61,13 +61,14 @@ const MyPage = () => {
                 })
                 .then(res => {
                     if (res.data.state === 200) {
+                        console.log('res.data', res.data.data);
                         setNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
-                        setReviews(MY_REVIEW);
-                        setFavoriteList(MY_FAVORITE);
-                        // setReviews(res.data.data.reviews);
-                        // setFavoriteList(res.data.data.favorites);
+                        // setReviews(MY_REVIEW);
+                        // setFavoriteList(MY_FAVORITE);
+                        setReviews(res.data.data.reviews);
+                        setFavoriteList(res.data.data.favorites);
                     } else if (res.data.state === 400) {
                         alert(res.data.data.msg);
                     }
@@ -268,53 +269,11 @@ const MyPage = () => {
                     <section className="mt-14">
                         <h2 className="text-[20px] font-semibold text-orange-700">찜 목록&#128150;</h2>
                         {favoriteList?.length > 0 ? (
-                            <div className=" mt-[20px] flex flex-col max-w-[890px] w-fit">
-                                <div className="flex overflow-hidden grow mb-[5px]">
-                                    {favoriteList?.map(data => {
-                                        const {idx, favorite, category, name, review, star, wdate} = data;
-                                        return (
-                                            <Fragment key={idx}>
-                                                <div
-                                                    className={
-                                                        idx > 1
-                                                            ? ' flex w-[280px] min-w-[280px] mb-[10px] ml-[10px] bg-white rounded-[20px] shadow-md overflow-hidden'
-                                                            : ' flex w-[280px] min-w-[280px] mb-[10px] bg-white rounded-[20px] shadow-md overflow-hidden'
-                                                    }
-                                                >
-                                                    <div
-                                                        className="absolute cursor-pointer hover:opacity-50"
-                                                        onClick={e => handleDeleteFavorite(e, idx)}
-                                                    >
-                                                        <span className="text-red-600 text-[60px]">&#128150; </span>
-                                                    </div>
-                                                    <div
-                                                        className="w-full ml-[80px] p-[10px] cursor-pointer hover:bg-orange-400 hover:text-white"
-                                                        onClick={goToDetail}
-                                                    >
-                                                        <div className="flex justify-between">
-                                                            <span className="w-fit px-[6px] py-[1px] rounded-[20px] bg-orange-400 text-white">
-                                                                {category}
-                                                            </span>
-                                                            <span>{wdate}</span>
-                                                        </div>
-                                                        <div>
-                                                            <span className="text-2xl font-bold">{name}</span>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <span>⭐{star}</span>
-                                                            <span>&#128221;{review}</span>
-                                                            <span>💘{favorite}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Fragment>
-                                        );
-                                    })}
-                                </div>
-                                <div className="flex justify-end mt-[10px]">
-                                    <p>페이지 네이션</p>
-                                </div>
-                            </div>
+                            <Favorites
+                                favoriteList={favoriteList}
+                                handleDeleteFavorite={handleDeleteFavorite}
+                                goToDetail={goToDetail}
+                            />
                         ) : (
                             <div className="flex items-center h-[50px] justify-center">
                                 <p>찜한 가게가 없습니다.😥</p>
