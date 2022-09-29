@@ -16,7 +16,7 @@ const UserInfo = ({
     handleNickName,
 }) => {
     return (
-        <div className="flex mt-[20px] max-w-[890px]">
+        <div className="flex mt-[20px] max-w-[890px] bg-white rounded-[20px] p-[20px] shadow-md">
             <div className="min-w-[120px] w-[15%]">
                 <img
                     className="min-w-[100%] max-h-[130px] min-h-[130px] rounded-[50%] overflow-hidden "
