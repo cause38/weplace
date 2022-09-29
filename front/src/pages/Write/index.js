@@ -11,7 +11,7 @@ const Write = () => {
     const storeScoreArr = ['⭐⭐⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐', '⭐⭐', '⭐'];
     const locationArr = ['성동구'];
 
-    // 거리계산을 위한 현재 위치 좌표
+    // 거리계산을 위한 현재 위치 좌표(현재 회사 위치로 설정)
     const myLocation = {
         x: '127.048455023259',
         y: '37.5464770743083',
@@ -35,13 +35,20 @@ const Write = () => {
     // 이미지 미리보기
     const [showImages, setShowImages] = useState([]);
 
-    const searchBtn = useRef(null);
-
-    const tagBox = useRef();
-
     // 태그 목록 세로 사이즈
     const [tagBoxH, setTagBoxH] = useState(0);
 
+    // 이미지 첨부
+    const [files, setFiles] = useState();
+
+    // 첨부이미지 -> base64 파일로 변환
+    const [Base64s, setBase64s] = useState([]);
+
+    const searchBtn = useRef(null);
+    const tagBox = useRef();
+    const fileInput = useRef();
+
+    // 로그인 체크 후 카테고리, 태그 목록 set
     useEffect(() => {
         if (getToken === null) {
             navigate('/login');
@@ -51,23 +58,49 @@ const Write = () => {
                 if (response.status === 200) {
                     setCategoryData(response.data.data.category);
                     setTagData(response.data.data.tag);
-                    setTimeout(() => {
-                        setTagBoxH(tagBox.current.offsetHeight);
-                        tagBox.current.style.height = '100px';
-                    }, 100);
                 }
             });
         }
     }, []);
 
-    // 모달 오픈 시 바디 스크롤 제어
-    if (modalVisible) {
-        document.body.classList.add('overflow-y-hidden');
-    } else {
-        document.body.classList.remove('overflow-y-hidden');
-    }
+    // 첨부이미지 -> base64 파일로 변환
+    useEffect(() => {
+        if (files) {
+            setBase64s([]);
+            Array.from(files).forEach(image => {
+                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
+            });
+        }
+    }, [files]);
 
-    // 태글 토글 시 스타일 제어
+    useEffect(() => {
+        modalVisible
+            ? document.body.classList.add('overflow-y-hidden')
+            : document.body.classList.remove('overflow-y-hidden');
+    }, [modalVisible]);
+
+    const encodeFileToBase64 = image => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = event => resolve(event.target.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    // 첨부이미지 삭제
+    const deleteImage = targetIdx => {
+        const dataTranster = new DataTransfer();
+
+        Array.from(files).forEach((file, idx) => {
+            if (idx !== targetIdx) dataTranster.items.add(file);
+        });
+
+        setFiles(dataTranster.files);
+        fileInput.current.files = dataTranster.files;
+    };
+
+    // 태그 토글 시 애니메이션
     const handleTag = e => {
         e.target.classList.toggle('on');
 
@@ -77,6 +110,21 @@ const Write = () => {
         } else {
             e.target.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
             e.target.classList.add('bg-white', 'text-orange-600', 'border-orange-300');
+        }
+    };
+
+    // 태그 목록 더보기 애니메이션
+    const handleTagMore = e => {
+        e.target.classList.toggle('on');
+
+        if (e.target.classList.contains('on')) {
+            tagBox.current.classList.remove('h-[100px]');
+            tagBox.current.classList.add('pb-20');
+            e.target.textContent = '-';
+        } else {
+            tagBox.current.classList.add('h-[100px]');
+            tagBox.current.classList.remove('pb-20');
+            e.target.textContent = '+';
         }
     };
 
@@ -117,48 +165,6 @@ const Write = () => {
     };
 
     const handleSubmit = e => {};
-
-    // 이미지 미리보기
-    const handleAddImage = e => {
-        const imageLists = e.target.files;
-        let imageUrlLists = [...showImages];
-
-        for (let i = 0; i < imageLists.length; i++) {
-            const currentImageUrl = URL.createObjectURL(imageLists[i]);
-            imageUrlLists.push(currentImageUrl);
-        }
-
-        if (imageUrlLists.length > 3) {
-            imageUrlLists = imageUrlLists.slice(0, 3);
-        }
-
-        setShowImages(imageUrlLists);
-    };
-
-    // 이미지 미리보기 삭제
-    const handleDeleteImage = id => {
-        setShowImages(showImages.filter((_, index) => index !== id));
-    };
-
-    const handleTagMore = e => {
-        const button = tagBox.current.querySelector('button');
-        let height = tagBox.current.offsetHeight;
-
-        console.log(height);
-        console.log(tagBoxH);
-
-        if (height < tagBoxH) {
-            tagBox.current.style.height = height + 100 + 'px';
-            if (height === tagBoxH - 100) {
-                button.textContent = '-';
-            } else {
-                button.textContent = '+';
-            }
-        } else {
-            tagBox.current.style.height = '100px';
-            button.textContent = '+';
-        }
-    };
 
     return (
         <div className="container-wb">
@@ -299,32 +305,50 @@ const Write = () => {
 
                         <div>
                             <div>
-                                <label className="block text-gray-700 mb-2" htmlFor="image">
-                                    이미지 첨부
+                                <label className="block text-gray-700 mb-2" htmlFor="reviewImage">
+                                    이미지 첨부 <small className="text-gray-400">(최대 3장 첨부 가능합니다.)</small>
                                 </label>
 
                                 <input
+                                    id="reviewImage"
                                     type="file"
-                                    onChange={handleAddImage}
+                                    accept="image/*"
+                                    ref={fileInput}
+                                    onChange={e => setFiles(e.target.files)}
                                     multiple
                                     className="text-sm text-grey-500 file:mr-5 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-orange-500 file:text-white file:transition-colors hover:file:cursor-pointer hover:file:bg-orange-400 active:file:bg-orange-500 "
                                 />
-                                <div className="flex gap-4 mt-6">
-                                    {showImages.map((image, id) => (
-                                        <div
-                                            className="relative w-24 h-24 border"
-                                            key={id}
-                                            style={{background: `url(${image}) no-repeat center/cover`}}
-                                        >
-                                            <button
-                                                type="button"
-                                                className="block absolute flex justify-center items-center right-0 top-0 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-gray-400 font-bold text-center rounded-full z-10 hover:bg-gray-400"
-                                                onClick={() => handleDeleteImage(id)}
+                                <div className="flex gap-4 mt-6 h-[96px] border border-dashed rounded-lg">
+                                    {Base64s.length > 0 ? (
+                                        Base64s.map((item, id) => (
+                                            <div
+                                                className="relative w-24 h-24 border"
+                                                key={id}
+                                                style={{background: `url(${item.url}) no-repeat center/cover`}}
                                             >
-                                                <span className="block w-2/5 h-[1.5px] rounded-full bg-white"></span>
-                                            </button>
-                                        </div>
-                                    ))}
+                                                <button
+                                                    type="button"
+                                                    className="block absolute flex justify-center items-center right-0 top-0 -translate-y-1/2 translate-x-1/2 w-5 h-5 bg-gray-400 transition-colors font-bold text-center rounded-full z-10 hover:bg-gray-500"
+                                                    onClick={() => deleteImage(id)}
+                                                >
+                                                    <span className="absolute rotate-45 block w-2 h-[2px] bg-white"></span>
+                                                    <span className="absolute -rotate-45 block w-2 h-[2px] bg-white"></span>
+                                                </button>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <label
+                                            htmlFor="reviewImage"
+                                            className="flex justify-center items-center w-full h-full text-gray-500 font-light text-center cursor-pointer"
+                                        >
+                                            <div className="">
+                                                <span className="inline-block w-5 h-5 bg-gray-100 rounded-full mr-1 leading-4 border border-dashed border-gray-300">
+                                                    +
+                                                </span>
+                                                이미지를 첨부해주세요.
+                                            </div>
+                                        </label>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -335,7 +359,7 @@ const Write = () => {
                             </span>
                             <div
                                 ref={tagBox}
-                                className="relative flex flex-wrap justify-center gap-2 gap-y-6 overflow-hidden bg-orange-100 rounded-lg px-4 py-6"
+                                className="relative flex flex-wrap justify-center gap-2 gap-y-6 px-4 py-6 h-[100px] overflow-hidden bg-orange-100 rounded-lg transition-height"
                             >
                                 {tagData.map(item => (
                                     <span key={item.idx}>
@@ -353,7 +377,7 @@ const Write = () => {
                                     <button
                                         type="button"
                                         onClick={handleTagMore}
-                                        className="w-5 h-5 bg-white rounded-full text-center leading-5 bg-opacity-70 text-orange-500 hover:bg-opacity-100 transition-colors"
+                                        className="w-5 h-5 bg-white rounded-full text-center leading-5 bg-opacity-75 text-orange-500 font-bold hover:bg-opacity-100 transition-colors"
                                     >
                                         +
                                     </button>
