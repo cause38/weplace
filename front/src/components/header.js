@@ -1,7 +1,10 @@
 import {React, useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useNavigate, useLocation} from '../../node_modules/react-router-dom/dist/index';
-import profile from '../assets/sample_profile.png';
+// import profile from '../assets/sample_profile.png';
+
+import {profileImgValue} from 'atoms/state';
+import {useRecoilValue} from '../../node_modules/recoil/';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -10,6 +13,9 @@ const Header = () => {
 
     const [isLogin, setisLogin] = useState(true);
     const [isMenuOn, setIsMenuOn] = useState(true);
+
+    // 프로필 이미지
+    const profile = useRecoilValue(profileImgValue);
 
     // logout
     const goLogOut = () => {

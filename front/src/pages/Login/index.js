@@ -6,6 +6,9 @@ import Button from 'components/button';
 import InputBox from 'components/inputBox';
 import axios from 'axios';
 
+import {useRecoilState} from '../../../node_modules/recoil/';
+import {tokenValue, profileImgValue, nameValue} from 'atoms/state';
+
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -13,7 +16,13 @@ const Login = () => {
     const pathname = location.state?.pathname;
 
     // 토큰
-    const getToken = sessionStorage.getItem('token');
+    const [getToken, setGetToken] = useRecoilState(tokenValue);
+
+    // 프로필 이미지 url
+    const [profileImg, setProfileImg] = useRecoilState(profileImgValue);
+
+    // 프로필 닉네임
+    const [name, setName] = useRecoilState(nameValue);
 
     // input value
     const [id, setId] = useState('');
@@ -30,6 +39,7 @@ const Login = () => {
     const handleToken = id => {
         if (getToken === null) {
             sessionStorage.setItem('token', id);
+            setGetToken(id);
         }
     };
 
@@ -47,6 +57,8 @@ const Login = () => {
                     let url = res.data.data.basic.thumb;
                     sessionStorage.setItem('profileImg', url);
                     sessionStorage.setItem('name', name);
+                    setProfileImg(url);
+                    setName(name);
                 }
             });
     };

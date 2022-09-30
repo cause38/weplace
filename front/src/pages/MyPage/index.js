@@ -1,15 +1,14 @@
 import React, {Fragment, useEffect, useState, useRef} from 'react';
 
-import Button from 'components/button';
-import InputBox from 'components/inputBox';
-
-import Pagination from './components/Pagination';
 import UserInfo from './components/UserInfo';
 import Reviews from './components/Reviews';
 import Favorites from './components/Favorites';
 
 import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
 import axios from '../../../node_modules/axios/index';
+
+import {profileImgValue, nameValue} from 'atoms/state';
+import {useRecoilState} from '../../../node_modules/recoil/';
 
 const MyPage = () => {
     const navigate = useNavigate();
@@ -20,14 +19,22 @@ const MyPage = () => {
     //  토큰
     const [token, setToken] = useState(0);
 
+    // 프로필 이미지 url
+    // const [profileImg, setProfileImg] = useRecoilState(profileImgValue);
+
+    // 프로필 닉네임
+    // const [name, setName] = useRecoilState(nameValue);
+
+    // console.log('recoilva', recoilValue);
+
     // 유저 이미지
-    const [userImg, setUserImg] = useState();
+    const [userImg, setUserImg] = useRecoilState(profileImgValue);
 
     // 유저 아이디
     const [userId, setUserId] = useState();
 
     // 유저 닉네임
-    const [nickName, setNickName] = useState();
+    const [nickName, setNickName] = useRecoilState(nameValue);
 
     // 닉네임 변경 설정
     const [isChangeNickName, setIsChangeNickName] = useState(false);
