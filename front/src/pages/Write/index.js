@@ -145,7 +145,7 @@ const Write = () => {
         searchBtn.current.innerText = '검색중...';
         searchBtn.current.setAttribute('disabled', true);
 
-        // 파라미터 x, y => 현 위치 좌표(현재 회사주소)
+        // 카카오 api 검색 (파라미터 x, y => 현 위치 좌표(현재 회사주소))
         axios
             .get(
                 `https://dapi.kakao.com/v2/local/search/keyword.json?query=${data}&x=${myLocation.x}&y=${myLocation.y}`,
@@ -158,9 +158,14 @@ const Write = () => {
 
                 if (res.status === 200) {
                     if (res.data.documents.length > 0) {
+                        // 지역 필터 적용
+                        const result = res.data.documents.reduce((acc, cur) => {
+                            if (cur.address_name.indexOf(searhStoreLocation) > -1) acc.push(cur);
+                            return acc;
+                        }, []);
+
                         // 재가공 데이터 get
-                        console.log(res.data.documents);
-                        getReviewData(res.data.documents);
+                        getReviewData(result);
                     } else {
                         alert('검색된 데이터가 없습니다');
                         handleSearchBtn();
@@ -178,12 +183,10 @@ const Write = () => {
         const url = 'http://place-api.weballin.com/review/write/mapInfo';
 
         axios
-            .get(url, {
-                params: {
-                    json: JSON.stringify(data),
-                },
+            .post(url, {
+                json: JSON.stringify(data),
             })
-            .then(res => {
+            .then(function (res) {
                 handleSearchBtn();
 
                 console.log(res);
@@ -196,6 +199,10 @@ const Write = () => {
                     alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                     setModalVisible(false);
                 }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
             });
     };
 
@@ -277,7 +284,7 @@ const Write = () => {
                                             <button
                                                 onClick={setStoreData}
                                                 type="button"
-                                                className="block h-full min-w-[80px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                                className="block h-full min-w-[100px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                             >
                                                 선택
                                             </button>
@@ -303,7 +310,7 @@ const Write = () => {
                                             </div>
                                             <button
                                                 type="button"
-                                                className="block h-full min-w-[80px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                                className="block h-full min-w-[100px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                             >
                                                 선택
                                             </button>
