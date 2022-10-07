@@ -2,26 +2,40 @@ import {React, useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useNavigate, useLocation} from '../../node_modules/react-router-dom/dist/index';
 import iconHandshake from '../assets/waving-hand.png';
+<<<<<<< HEAD
 
 import {profileImgValue, nameValue} from 'atoms/state';
 import {useRecoilState} from '../../node_modules/recoil/';
+=======
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 
 const Header = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
     const getToken = sessionStorage.getItem('token');
+    const getName = sessionStorage.getItem('name');
+    const getProfileImg = sessionStorage.getItem('profileImg');
 
     // 로그인 정보
     const [isLogin, setisLogin] = useState(true);
+<<<<<<< HEAD
+=======
+    const [userName, setUserName] = useState(getName);
+    const [profileImg, setProfileImg] = useState(getProfileImg);
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 
     // 프로필 메뉴
     const [isMenuOn, setIsMenuOn] = useState(true);
 
+<<<<<<< HEAD
     // 프로필 이미지
     const [profile, setProfile] = useRecoilState(profileImgValue);
     const [nickName, setNickname] = useRecoilState(nameValue);
 
     // logout
+=======
+    // 로그아웃
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
     const goLogOut = () => {
         const isHome = pathname === '/';
         const msg = !isHome ? '\n메인페이지로 이동하시겠습니까?' : '';
@@ -43,14 +57,25 @@ const Header = () => {
 
     useEffect(() => {
         getToken !== null ? setisLogin(true) : setisLogin(false);
+<<<<<<< HEAD
         setProfile(profile);
         setNickname(nickName);
+=======
+        setProfileImg(getProfileImg);
+        setUserName(getName);
+
+        document.addEventListener('click', e => handleBodyClick(e));
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 
         document.addEventListener('click', e => handleBodyClick(e));
         return () => {
             document.removeEventListener('click', e => handleBodyClick(e));
         };
+<<<<<<< HEAD
     }, [getToken, profile, nickName]);
+=======
+    }, [getToken, profileImg, userName]);
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
@@ -67,7 +92,11 @@ const Header = () => {
                         </div>
                     </div>
                     <div className={`hidden ${isLogin && 'sm:flex'} gap-1 justify-center items-center text-gray-700`}>
+<<<<<<< HEAD
                         <strong className="bg-orange-100 px-1 text-orange-500">{nickName}</strong>님, 안녕하세요!
+=======
+                        <strong className="bg-orange-100 px-1 text-orange-500">{userName}</strong>님, 안녕하세요!
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
                         <img src={iconHandshake} className="inline-block w-6" />
                     </div>
                     <div className="flex items-end gap-3">
@@ -96,7 +125,11 @@ const Header = () => {
                             >
                                 <div className="profileBtn w-11 h-11 overflow-hidden border-orange-400 rounded-full">
                                     <img
+<<<<<<< HEAD
                                         src={profile}
+=======
+                                        src={profileImg}
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
                                         className="profileBtn w-full h-full object-cover"
                                         alt="profileImg"
                                     />

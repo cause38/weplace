@@ -57,8 +57,11 @@ const Login = () => {
                     let url = res.data.data.basic.thumb;
                     sessionStorage.setItem('profileImg', url);
                     sessionStorage.setItem('name', name);
+<<<<<<< HEAD
                     setProfileImg(url);
                     setName(name);
+=======
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
                 }
             });
     };

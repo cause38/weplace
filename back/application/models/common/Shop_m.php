@@ -1,5 +1,6 @@
 <?php
 class Shop_m extends CI_Model {
+<<<<<<< HEAD
     function getAllCategory() {
         $this->db->select('idx, name');
         $this->db->from('T_category');
@@ -17,6 +18,8 @@ class Shop_m extends CI_Model {
         return $this->db->get()->result();
     }
     
+=======
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
     function getTags($idx) {
         $this->db->select('tag');
         $this->db->from('T_shop');
@@ -27,6 +30,7 @@ class Shop_m extends CI_Model {
         return json_decode($tag, true);
     }
 
+<<<<<<< HEAD
     function getShopByShopIdx($shopIdx) {
         $q = $this->db->query("
             SELECT  s.idx, 
@@ -77,6 +81,9 @@ class Shop_m extends CI_Model {
     }
 
     function setShop($cidx, $name, $address, $base, $floor, $distance, $tag, $url, $shopId) {
+=======
+    function setShop($cidx, $name, $address, $base, $floor, $distance, $tag, $url) {
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
         $this->db->insert('T_shop', [
             'cidx'      => $cidx,
             'name'      => $name,
@@ -84,9 +91,14 @@ class Shop_m extends CI_Model {
             'base'      => $base,
             'floor'     => $floor,
             'distance'  => $distance,
+<<<<<<< HEAD
             'tag'       => $tag,
             'url'       => $url,
             'shopId'    => $shopId
+=======
+            'tag'       => json_encode($tag),
+            'url'       => $url
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
         ]);
 
         return $this->db->insert_id();

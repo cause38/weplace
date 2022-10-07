@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, {Fragment} from 'react';
+=======
+import React from 'react';
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 import {Link} from 'react-router-dom';
 
 const Category = () => {
@@ -10,7 +14,10 @@ const Category = () => {
                         const {id, name, url} = data;
                         return (
                             <Link
+<<<<<<< HEAD
                                 key={id}
+=======
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
                                 to={url}
                                 className="px-[10px] py-[5px] min-w-[81px] rounded-[20px] bg-orange-400 text-white hover:bg-orange-700"
                             >
@@ -22,6 +29,7 @@ const Category = () => {
                     })}
                 </ul>
             </section>
+<<<<<<< HEAD
             <section className="category">
                 <article className="flex p-[10px]">
                     <div>최신순</div>
@@ -73,6 +81,14 @@ const Category = () => {
                     })}
                 </section>
             </section>
+=======
+            <section className="category flex">
+                <div>최신순</div>
+                <div>찜한가게</div>
+                <div>해쉬태그들</div>
+            </section>
+            <section>매장리스트</section>
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
         </>
     );
 };
@@ -87,6 +103,7 @@ const CATEGORY_LIST = [
     {id: 7, name: '아시안', url: '/category'},
 ];
 
+<<<<<<< HEAD
 const storeList = [
     {
         idx: 1,
@@ -146,4 +163,6 @@ const storeList = [
     },
 ];
 
+=======
+>>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 export default Category;
