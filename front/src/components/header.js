@@ -1,39 +1,34 @@
 import {React, useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useNavigate, useLocation} from '../../node_modules/react-router-dom/dist/index';
-// import profile from '../assets/sample_profile.png';
+import iconHandshake from '../assets/waving-hand.png';
 
-import {profileImgValue} from 'atoms/state';
-import {useRecoilValue} from '../../node_modules/recoil/';
+import {profileImgValue, nameValue} from 'atoms/state';
+import {useRecoilState} from '../../node_modules/recoil/';
 
 const Header = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
     const getToken = sessionStorage.getItem('token');
-    const getName = sessionStorage.getItem('name');
-    const getProfileImg = sessionStorage.getItem('profileImg');
 
     // 로그인 정보
     const [isLogin, setisLogin] = useState(true);
-    const [userName, setUserName] = useState(getName);
-    const [profileImg, setProfileImg] = useState(getProfileImg);
 
     // 프로필 메뉴
     const [isMenuOn, setIsMenuOn] = useState(true);
 
-<<<<<<< HEAD
     // 프로필 이미지
-    const profile = useRecoilValue(profileImgValue);
+    const [profile, setProfile] = useRecoilState(profileImgValue);
+    const [nickName, setNickname] = useRecoilState(nameValue);
 
     // logout
-=======
-    // 로그아웃
->>>>>>> c4682eb... WEP-4 메인 퍼블 수정, header 로그인 정보 구문 추가
     const goLogOut = () => {
         const isHome = pathname === '/';
         const msg = !isHome ? '\n메인페이지로 이동하시겠습니까?' : '';
 
         sessionStorage.removeItem('token');
+        sessionStorage.removeItem('profileImg');
+        sessionStorage.removeItem('name');
         if (window.confirm('로그아웃 되었습니다.' + msg)) {
             navigate('/');
         }
@@ -48,15 +43,14 @@ const Header = () => {
 
     useEffect(() => {
         getToken !== null ? setisLogin(true) : setisLogin(false);
-        setProfileImg(getProfileImg);
-        setUserName(getName);
+        setProfile(profile);
+        setNickname(nickName);
 
         document.addEventListener('click', e => handleBodyClick(e));
-
         return () => {
             document.removeEventListener('click', e => handleBodyClick(e));
         };
-    }, [getToken, profileImg, userName]);
+    }, [getToken, profile, nickName]);
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
@@ -73,7 +67,7 @@ const Header = () => {
                         </div>
                     </div>
                     <div className={`hidden ${isLogin && 'sm:flex'} gap-1 justify-center items-center text-gray-700`}>
-                        <strong className="bg-orange-100 px-1 text-orange-500">{userName}</strong>님, 안녕하세요!
+                        <strong className="bg-orange-100 px-1 text-orange-500">{nickName}</strong>님, 안녕하세요!
                         <img src={iconHandshake} className="inline-block w-6" />
                     </div>
                     <div className="flex items-end gap-3">
@@ -102,7 +96,7 @@ const Header = () => {
                             >
                                 <div className="profileBtn w-11 h-11 overflow-hidden border-orange-400 rounded-full">
                                     <img
-                                        src={profileImg}
+                                        src={profile}
                                         className="profileBtn w-full h-full object-cover"
                                         alt="profileImg"
                                     />
