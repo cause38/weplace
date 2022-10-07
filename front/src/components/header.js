@@ -10,14 +10,25 @@ const Header = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
     const getToken = sessionStorage.getItem('token');
+    const getName = sessionStorage.getItem('name');
+    const getProfileImg = sessionStorage.getItem('profileImg');
 
+    // 로그인 정보
     const [isLogin, setisLogin] = useState(true);
+    const [userName, setUserName] = useState(getName);
+    const [profileImg, setProfileImg] = useState(getProfileImg);
+
+    // 프로필 메뉴
     const [isMenuOn, setIsMenuOn] = useState(true);
 
+<<<<<<< HEAD
     // 프로필 이미지
     const profile = useRecoilValue(profileImgValue);
 
     // logout
+=======
+    // 로그아웃
+>>>>>>> c4682eb... WEP-4 메인 퍼블 수정, header 로그인 정보 구문 추가
     const goLogOut = () => {
         const isHome = pathname === '/';
         const msg = !isHome ? '\n메인페이지로 이동하시겠습니까?' : '';
@@ -28,7 +39,7 @@ const Header = () => {
         }
     };
 
-    // 프로필 메뉴 제외 클릭시 메뉴 숨김
+    // 프로필 메뉴 영역 외 클릭 시 메뉴 숨김
     const handleBodyClick = e => {
         if (!e.target.classList.contains('profileBtn')) {
             setIsMenuOn(true);
@@ -37,12 +48,15 @@ const Header = () => {
 
     useEffect(() => {
         getToken !== null ? setisLogin(true) : setisLogin(false);
+        setProfileImg(getProfileImg);
+        setUserName(getName);
+
         document.addEventListener('click', e => handleBodyClick(e));
 
         return () => {
             document.removeEventListener('click', e => handleBodyClick(e));
         };
-    }, [getToken]);
+    }, [getToken, profileImg, userName]);
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
@@ -57,6 +71,10 @@ const Header = () => {
                                 Weplace
                             </Link>
                         </div>
+                    </div>
+                    <div className={`hidden ${isLogin && 'sm:flex'} gap-1 justify-center items-center text-gray-700`}>
+                        <strong className="bg-orange-100 px-1 text-orange-500">{userName}</strong>님, 안녕하세요!
+                        <img src={iconHandshake} className="inline-block w-6" />
                     </div>
                     <div className="flex items-end gap-3">
                         <button
@@ -74,26 +92,34 @@ const Header = () => {
                             <span className="mx-1">Login</span>
                         </button>
 
-                        <button
-                            onClick={() => setIsMenuOn(!isMenuOn)}
-                            type="button"
-                            className={(isLogin ? '' : 'hidden ') + 'profileBtn flex items-center focus:outline-none'}
-                        >
-                            <div className="profileBtn w-11 h-11 overflow-hidden border-2 p-1 border-orange-400 rounded-full">
-                                <img src={profile} className="profileBtn object-cover w-full h-full" alt="avatar" />
-                            </div>
-                        </button>
+                        <div className="flex gap-2 justify-center items-center">
+                            <button
+                                onClick={() => setIsMenuOn(!isMenuOn)}
+                                type="button"
+                                className={
+                                    (isLogin ? '' : 'hidden ') + 'profileBtn flex items-center focus:outline-none'
+                                }
+                            >
+                                <div className="profileBtn w-11 h-11 overflow-hidden border-orange-400 rounded-full">
+                                    <img
+                                        src={profileImg}
+                                        className="profileBtn w-full h-full object-cover"
+                                        alt="profileImg"
+                                    />
+                                </div>
+                            </button>
+                        </div>
                     </div>
                     <div
                         className={
                             (!isMenuOn ? '' : 'hidden ') + 'absolute bottom-0 right-0 translate-y-full pt-2 z-30'
                         }
                     >
-                        <div className="px-2 pt-4 pb-3 bg-white shadow-lg border rounded-md font-semibold text-gray-500 text-base">
-                            <Link to="/mypage" className="block pb-2 px-4 border-b hover:text-orange-500">
+                        <div className="px-3 py-1 bg-white shadow-lg border rounded-md font-medium text-gray-500 text-base">
+                            <Link to="/mypage" className="block p-2 border-b hover:text-orange-500">
                                 마이페이지
                             </Link>
-                            <button onClick={goLogOut} className="block w-full pt-3 px-4 hover:text-orange-500">
+                            <button onClick={goLogOut} className="block p-2 w-full hover:text-orange-500">
                                 로그아웃
                             </button>
                         </div>
