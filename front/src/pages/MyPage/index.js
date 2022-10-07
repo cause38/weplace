@@ -1,12 +1,5 @@
 import React, {Fragment, useEffect, useState, useRef} from 'react';
 
-<<<<<<< HEAD
-=======
-import Button from 'components/button';
-import InputBox from 'components/inputBox';
-
-import Pagination from './components/Pagination';
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 import UserInfo from './components/UserInfo';
 import Reviews from './components/Reviews';
 import Favorites from './components/Favorites';
@@ -25,7 +18,6 @@ const MyPage = () => {
 
     //  토큰
     const [token, setToken] = useState(0);
-<<<<<<< HEAD
 
     // 프로필 이미지 url
     // const [profileImg, setProfileImg] = useRecoilState(profileImgValue);
@@ -34,8 +26,6 @@ const MyPage = () => {
     // const [name, setName] = useRecoilState(nameValue);
 
     // console.log('recoilva', recoilValue);
-=======
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 
     // 유저 이미지
     const [userImg, setUserImg] = useRecoilState(profileImgValue);
@@ -228,7 +218,6 @@ const MyPage = () => {
             } else if (response.data.state === 402) {
                 alert(response.data.msg);
             }
-<<<<<<< HEAD
         });
     };
 
@@ -269,48 +258,6 @@ const MyPage = () => {
         });
     };
 
-=======
-        });
-    };
-
-    // 찜목록 삭제
-    const handleDeleteFavorite = (e, idx) => {
-        e.preventDefault();
-
-        const data = {token: token, idx: parseInt(idx)};
-        const url = 'http://place-api.weballin.com/mypage/deleteFavorite';
-        const options = {
-            headers: {'content-type': 'application/x-www-form-urlencoded'},
-            data: qs.stringify(data),
-        };
-        // axios(options);
-        axios.delete(url, options).then(response => {
-            if (response.data.state === 200) {
-                alert(response.data.msg);
-                axios
-                    .get(`http://place-api.weballin.com/mypage/myInfo`, {
-                        params: {
-                            token: token,
-                        },
-                    })
-                    .then(res => {
-                        if (res.data.state === 200) {
-                            setFavoriteList(res.data.data.favorites);
-                        } else if (res.data.state === 400) {
-                            alert(res.data.data.msg);
-                        }
-                    });
-            } else if (response.data.state === 400) {
-                alert(response.data.msg);
-            } else if (response.data.state === 401) {
-                alert(response.data.msg);
-            } else if (response.data.state === 402) {
-                alert(response.data.msg);
-            }
-        });
-    };
-
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
     // 리뷰 수정
     const goToWrite = () => {
         navigate('/write');
