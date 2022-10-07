@@ -1,12 +1,11 @@
 .category-nav {
     margin-top: 80px;
     width: 100%;
-    max-width: 1024px;
+    /* max-width: 1024px; */
     background-color: white;
 }
 
 .category {
     width: 100%;
-    max-width: 1024px;
     padding: 0 20px;
 }
