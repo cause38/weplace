@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SelectBox = ({label, id, arr, contents}) => {
+const SelectBox = ({label, id, arr, value, contents}) => {
     return (
         <div>
             <label className="inline-block text-gray-700 mb-2" htmlFor={id}>
@@ -10,6 +10,7 @@ const SelectBox = ({label, id, arr, contents}) => {
                 <div className="relative w-full">
                     <select
                         id={id}
+                        defaultValue={value || '0'}
                         className="w-full rounded border appearance-none border-gray-200 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 text-base pl-3 pr-10"
                     >
                         {arr.map((item, idx) => (

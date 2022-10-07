@@ -8,9 +8,7 @@ import axios from 'axios';
 const Write = () => {
     const navigate = useNavigate();
     const getToken = sessionStorage.getItem('token');
-    const storeScoreArr = ['⭐⭐⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐', '⭐⭐', '⭐'];
     const locationArr = ['성동구'];
-    const qs = require('qs');
 
     // 거리계산을 위한 현재 위치 좌표(현재 회사 위치로 설정)
     const myLocation = {
@@ -24,8 +22,11 @@ const Write = () => {
     // 태그 목록
     const [tagData, setTagData] = useState([]);
 
+    // 선택한 태그 목록
+    const [tagList, setTagList] = useState([]);
+
     // 이미지 첨부
-    const [files, setFiles] = useState();
+    const [files, setFiles] = useState([]);
 
     // 첨부이미지 -> base64 파일로 변환
     const [Base64s, setBase64s] = useState([]);
@@ -40,8 +41,28 @@ const Write = () => {
     const [searhStoreName, setSearhStoreName] = useState();
 
     // 매장검색 - 결과
-    const [searhStoreListMain, setSearhStoreListMain] = useState([]);
-    const [searhStoreListSub, setSearhStoreListSub] = useState([]);
+    const [searhStoreListMain, setSearhStoreListMain] = useState(false);
+    const [searhStoreListSub, setSearhStoreListSub] = useState(false);
+
+    // form data
+    const [value, setValue] = useState({
+        token: getToken,
+        shopIdx: 0,
+        shop: '',
+        address: '',
+        distance: 0,
+        url: '',
+        base: '지상',
+        floor: 1,
+        category: 0,
+        menu: '',
+        star: 0,
+        comment: '',
+        comment_good: '',
+        comment_bad: '',
+        tag: tagData,
+        reviewImg: Base64s,
+    });
 
     const searchBtn = useRef(null);
     const tagBox = useRef();
@@ -70,7 +91,24 @@ const Write = () => {
                 encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
             });
         }
+
+        setValue({
+            ...value,
+            ['reviewImg']: files,
+        });
     }, [files]);
+
+    // TODO: form 값 확인
+    useEffect(() => {
+        console.log(value);
+    }, [value]);
+
+    const handleFormData = (id, e) => {
+        setValue({
+            ...value,
+            [id]: e.target.value,
+        });
+    };
 
     const encodeFileToBase64 = image => {
         return new Promise((resolve, reject) => {
@@ -119,6 +157,13 @@ const Write = () => {
             tagBox.current.classList.remove('pb-20');
             e.target.textContent = '+';
         }
+
+        // TODO: 선택 태그 배열 추가하기
+        setTagList(tagList.push(e.target.value));
+        setValue({
+            ...value,
+            ['tag']: tagList,
+        });
     };
 
     // 매장검색 - 모달 오픈 시 바디 스크롤 숨김 처리
@@ -154,8 +199,6 @@ const Write = () => {
                 }
             )
             .then(res => {
-                console.log(res);
-
                 if (res.status === 200) {
                     if (res.data.documents.length > 0) {
                         // 지역 필터 적용
@@ -189,7 +232,6 @@ const Write = () => {
             .then(function (res) {
                 handleSearchBtn();
 
-                console.log(res);
                 if (res.data.state === 200) {
                     setSearhStoreListMain(res.data.data.main);
                     setSearhStoreListSub(res.data.data.sub);
@@ -206,7 +248,10 @@ const Write = () => {
             });
     };
 
-    const setStoreData = e => {};
+    const setStoreData = (id, idx) => {
+        const data = id === 'main' ? searhStoreListMain[idx] : searhStoreListSub[idx];
+        setModalVisible(false);
+    };
     const handleSubmit = e => {};
 
     return (
@@ -254,9 +299,14 @@ const Write = () => {
                                 />
                             </div>
                             <div className="bg-gray-100 p-4 rounded-lg flex flex-col justify-center items-center gap-4">
-                                {searhStoreListMain.length <= 0 && searhStoreListSub.length <= 0 && (
+                                {!searhStoreListMain && !searhStoreListSub && (
                                     <p className="flex justify-center items-center w-full h-full text-gray-500 font-light text-center">
                                         리뷰하실 매장을 검색해주세요.
+                                    </p>
+                                )}
+                                {searhStoreListMain.length <= 0 && searhStoreListSub <= 0 && (
+                                    <p className="flex justify-center items-center w-full h-full text-gray-500 font-light text-center">
+                                        검색결과가 없습니다.
                                     </p>
                                 )}
                                 {searhStoreListMain.length > 0 &&
@@ -282,7 +332,7 @@ const Write = () => {
                                                 </a>
                                             </div>
                                             <button
-                                                onClick={setStoreData}
+                                                onClick={() => setStoreData('main', id)}
                                                 type="button"
                                                 className="block h-full min-w-[100px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                             >
@@ -309,6 +359,7 @@ const Write = () => {
                                                 </a>
                                             </div>
                                             <button
+                                                onClick={() => setStoreData('sub', id)}
                                                 type="button"
                                                 className="block h-full min-w-[100px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                             >
@@ -351,6 +402,8 @@ const Write = () => {
             </div>
 
             <form name="frm">
+                <input type="hidden" value={value.token || ''} />
+                <input type="hidden" value={value.shopIdx || ''} onChange={e => handleFormData('shopIdx', e)} />
                 <div className="bg-white p-8 rounded-lg shadow-lg">
                     <div className="flex flex-col gap-4">
                         <div>
@@ -362,6 +415,7 @@ const Write = () => {
                                     name="storeName"
                                     id="storeName"
                                     type="text"
+                                    value={value.name || ''}
                                     readOnly
                                     onClick={() => setModalVisible(true)}
                                     className="block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-0"
@@ -382,12 +436,16 @@ const Write = () => {
                                 label="상세 주소"
                                 id="addressDetail"
                                 arr={['지상', '지하']}
+                                onChange={e => handleFormData('base', e)}
+                                value={value.base}
                                 contents={
                                     <>
                                         <input
                                             type="number"
                                             min={1}
                                             step="1"
+                                            value={value.floor}
+                                            onChange={e => handleFormData('floor', e)}
                                             placeholder="층수를 입력해주세요."
                                             className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                                         />
@@ -396,18 +454,36 @@ const Write = () => {
                             />
                         </div>
 
-                        <SelectBox label="카테고리" id="category" arr={categoryData} />
+                        <SelectBox
+                            label="카테고리"
+                            id="category"
+                            arr={categoryData}
+                            onChange={e => handleFormData('category', e)}
+                        />
 
                         <div className="grid grid-cols-2 gap-4">
                             <InputBox label="메뉴명" id="menuName" />
-                            <SelectBox label="별점" id="storeScore" arr={storeScoreArr} />
+                            <div>
+                                <label className="inline-block text-gray-600 mb-2 font-semibold" htmlFor="star">
+                                    별점
+                                </label>
+                                <input
+                                    id="star"
+                                    type="number"
+                                    min="0"
+                                    step="0.5"
+                                    value={value.star || ''}
+                                    onChange={e => handleFormData('star', e)}
+                                    className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
+                                />
+                            </div>
                         </div>
 
-                        <InputBox label="한줄평" id="review" />
+                        <InputBox label="한줄평" id="review" onChange={e => handleFormData('comment', e)} />
 
                         <div className="grid grid-rows-2 sm:grid-rows-none sm:grid-cols-2 gap-4">
-                            <InputBox label="장점" id="reviewGood" />
-                            <InputBox label="단점" id="reviewBad" />
+                            <InputBox label="장점" id="reviewGood" onChange={e => handleFormData('comment_good', e)} />
+                            <InputBox label="단점" id="reviewBad" onChange={e => handleFormData('comment_bad', e)} />
                         </div>
 
                         <div>
@@ -425,7 +501,7 @@ const Write = () => {
                                     multiple
                                     className="text-sm text-grey-500 file:mr-5 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-orange-500 file:text-white file:transition-colors hover:file:cursor-pointer hover:file:bg-orange-400 active:file:bg-orange-500 "
                                 />
-                                <div className="flex gap-4 mt-6 h-[96px] p-4 border border-dashed rounded-lg">
+                                <div className="flex gap-4 mt-6 h-[130px] p-4 border border-dashed rounded-lg">
                                     {Base64s.length > 0 ? (
                                         Base64s.map((item, id) => (
                                             <div
@@ -477,7 +553,13 @@ const Write = () => {
                                         >
                                             {`# ${item.name}`}
                                         </label>
-                                        <input type="checkbox" name="tags" id={`tag_${item.idx}`} className="hidden" />
+                                        <input
+                                            type="checkbox"
+                                            name="tags"
+                                            value={item.name}
+                                            id={`tag_${item.idx}`}
+                                            className="hidden"
+                                        />
                                     </span>
                                 ))}
                                 <div className="absolute bottom-0 flex flex-col justify-center items-center w-full h-12 bg-gradient-to-t from-orange-400 to-trasparent">
