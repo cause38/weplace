@@ -1,22 +1,5 @@
 <?php
 class Lists_m extends CI_Model {
-    function getAllCategory() {
-        $this->db->select('idx, name');
-        $this->db->from('T_category');
-        $this->db->order_by('idx', 'ASC');
-        
-        return $this->db->get()->result();
-    }
-
-    function getAllTag($order = false) {
-        $this->db->select('idx, name');
-        $this->db->from('T_tag');
-        if ($order) $this->db->order_by('used', 'DESC');
-        $this->db->order_by('idx', 'ASC');
-
-        return $this->db->get()->result();
-    }
-
     function getLists($category, $filter, $favorite, $uidx) {
         $where = '';
         $order_by = '';

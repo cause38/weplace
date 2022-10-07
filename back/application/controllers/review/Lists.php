@@ -11,12 +11,13 @@ class Lists extends RestController {
     {
         parent::__construct();
         $this->load->model('review/lists_m');
+        $this->load->model('common/shop_m');
     }
 
     public function filters_get() {
         $data = [
-            'category' => $this->lists_m->getAllCategory(),
-            'tag'      => $this->lists_m->getAllTag(true)
+            'category' => $this->shop_m->getAllCategory(),
+            'tag'      => $this->shop_m->getAllTag(true)
         ];
 
         $this->response([
@@ -50,7 +51,7 @@ class Lists extends RestController {
 
         $data = $this->lists_m->getLists($category, $filter, $favorite, $idx);
 
-        $allTag = $this->lists_m->getAllTag();
+        $allTag = $this->shop_m->getAllTag();
 
         foreach ($data as $k => $v) {
             $vidx = $v->idx;

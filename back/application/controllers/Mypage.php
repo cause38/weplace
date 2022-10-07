@@ -108,6 +108,7 @@ class Mypage extends RestController {
     }
 
     public function deleteReview_delete() {
+        $this->load->model('common/review_m');
         $ridx = trim($this->delete('idx'));
 
         if (!$ridx) {
@@ -117,7 +118,7 @@ class Mypage extends RestController {
             ]);
         }
 
-        $isMyReview = $this->mypage_m->checkReview($this->idx, $ridx);
+        $isMyReview = $this->review_m->checkReview($this->idx, $ridx);
 
         if (!$isMyReview) {
             $this->response([
@@ -126,7 +127,7 @@ class Mypage extends RestController {
             ]);
         }
 
-        $this->mypage_m->deleteReview($ridx);
+        $this->review_m->deleteReview($ridx);
         $this->response([
             'state' => 200,
             'msg'   => '리뷰가 삭제되었습니다.'
