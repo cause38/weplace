@@ -5,18 +5,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . 'libraries/RestController.php';
 require APPPATH . 'libraries/Format.php';
 
-class Write extends RestController {
+class Modify extends RestController {
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('review/write_m');
+        $this->load->model('review/modify_m');
     }
 
     public function index_get() {
         $data = [
-            'category' => $this->write_m->getCategories(),
-            'tag'      => $this->write_m->getTags()
+            'category' => $this->modify_m->getCategories(),
+            'tag'      => $this->modify_m->getTags()
         ];
 
         $this->response([
@@ -88,7 +88,7 @@ class Write extends RestController {
 
 
         // tag 사용량 증가
-        $this->write_m->setUsedTags($tag);
+        $this->modify_m->setUsedTags($tag);
 
         if (!$shopIdx) {
             // shop 등록
@@ -99,11 +99,11 @@ class Write extends RestController {
         }
 
         // review 등록
-        $ridx = $this->write_m->setReveiw($idx, $shopIdx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
+        $ridx = $this->modify_m->setReveiw($idx, $shopIdx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->write_m->setReviewImg($ridx, $data['file_name']);
+            $this->modify_m->setReviewImg($ridx, $data['file_name']);
         }
 
         $this->response([
@@ -112,10 +112,10 @@ class Write extends RestController {
         ]);
     }
 
-    public function mapInfo_post() {
+    public function mapInfo_get() {
         $this->load->model('common/shop_m');
 
-        $json = trim($this->post('json')) ?: $this->response(['state' => 400, 'msg' => '데이터를 확인할 수 없습니다.']);
+        $json = trim($this->get('json')) ?: $this->response(['state' => 400, 'msg' => '데이터를 확인할 수 없습니다.']);
         $json = json_decode($json, true);
 
         $main = [];
