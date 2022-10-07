@@ -5,14 +5,14 @@ const Category = () => {
     return (
         <>
             <section className="category-nav">
-                <ul className="flex gap-[10px] mx-[10px] my-[5px] px-[10px]">
+                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex ">
                     {CATEGORY_LIST?.map(data => {
                         const {id, name, url} = data;
                         return (
                             <Link
                                 key={id}
                                 to={url}
-                                className="px-[10px] py-[5px] min-w-[81px] rounded-[20px] bg-orange-400 text-white hover:bg-orange-700"
+                                className="mx-[15px] px-[10px] py-[5px] min-w-[81px] rounded-[20px] bg-orange-400 text-white hover:bg-orange-700"
                             >
                                 <li key={id} className="text-center">
                                     {name}
@@ -22,12 +22,14 @@ const Category = () => {
                     })}
                 </ul>
             </section>
-            <section className="category">
-                <article className="flex p-[10px]">
-                    <div>최신순</div>
-                    <div>찜한가게</div>
-                    <div>해쉬태그들</div>
-                </article>
+            <section className="max-w-6xl mx-auto my-0 flex w-full">
+                <div className="max-w-6xl flex">
+                    <div className="mx-[20px]">최신순</div>
+                    <div className="mx-[20px]">찜한가게</div>
+                    <div className="mx-[20px]">해쉬태그들</div>
+                </div>
+            </section>
+            <section className="category max-w-6xl mx-auto">
                 <section className="flex grow flex-wrap mt-[20px] mb-[20px]">
                     {storeList?.map(data => {
                         const {idx, category, destMin, name, star, review, favorite, hash} = data;
@@ -53,18 +55,20 @@ const Category = () => {
                                             <span>&#128221;{review}</span>
                                             <span>💘{favorite}</span>
                                         </div>
-                                        <div className="flex gap-[5px] flex-wrap">
-                                            {hash.map(data => {
-                                                const {id, content} = data;
-                                                return (
-                                                    <span
-                                                        key={id}
-                                                        className="rounded-[10px] px-[5px] py-[2px] bg-orange-600 text-white text-[12px]"
-                                                    >
-                                                        #{content}
-                                                    </span>
-                                                );
-                                            })}
+                                        <div className="h-[50px]">
+                                            <div className="flex gap-[5px] flex-wrap">
+                                                {hash.map(data => {
+                                                    const {id, content} = data;
+                                                    return (
+                                                        <span
+                                                            key={id}
+                                                            className="rounded-[10px] px-[5px] py-[2px] bg-orange-600 text-white text-[12px]"
+                                                        >
+                                                            #{content}
+                                                        </span>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -99,10 +103,10 @@ const storeList = [
         hash: [
             {id: 1, content: '가성비'},
             {id: 2, content: '맛있는'},
-            {id: 1, content: '가성비'},
-            {id: 2, content: '맛있는'},
-            {id: 1, content: '가성비'},
-            {id: 2, content: '맛있는'},
+            {id: 3, content: '넓은'},
+            {id: 4, content: '가까운'},
+            {id: 5, content: '포장'},
+            {id: 6, content: '서비스'},
         ],
     },
     {
