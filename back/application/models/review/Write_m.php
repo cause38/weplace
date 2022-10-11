@@ -35,11 +35,7 @@ class Write_m extends CI_Model {
             'comment'       => $comment,
             'comment_good'  => $comment_good,
             'comment_bad'   => $comment_bad,
-<<<<<<< HEAD
             'tag'           => $tag
-=======
-            'tag'           => json_encode($tag)
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
         ]);
 
         return $this->db->insert_id();
