@@ -52,10 +52,7 @@ class Write extends RestController {
         $address      = trim($this->post('address'));
         $distance     = trim($this->post('distance'));
         $url          = trim($this->post('url'));
-<<<<<<< HEAD
         $shopId       = end(explode('/', $url));
-=======
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
         $base         = trim($this->post('base'))         ?: $this->response(['state' => 402, 'msg' => '지상/지하를 선택해주세요.']);
         $floor        = trim($this->post('floor'))        ?: $this->response(['state' => 403, 'msg' => '층수를 선택해주세요.']);
         $category     = trim($this->post('cidx'))         ?: $this->response(['state' => 404, 'msg' => '카테고리를 선택해주세요.']);
@@ -95,11 +92,7 @@ class Write extends RestController {
 
         if (!$shopIdx) {
             // shop 등록
-<<<<<<< HEAD
             $shopIdx = $this->shop_m->setShop($category, $shop, $address, $base, $floor, $distance, $tag, $url, $shopId);
-=======
-            $shopIdx = $this->shop_m->setShop($category, $shop, $address, $base, $floor, $distance, $tag, $url);
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
         } else {
             // shop tag 병합
             $tag += $this->shop_m->getTags($shopIdx);
@@ -118,7 +111,6 @@ class Write extends RestController {
             'msg' => '리뷰가 등록되었습니다.'
         ]);
     }
-<<<<<<< HEAD
 
     public function mapInfo_post() {
         $this->load->model('common/shop_m');
@@ -155,7 +147,5 @@ class Write extends RestController {
             'data'  => $result
         ]);
     }
-=======
->>>>>>> 41c455b362289bdd24aa3e9465ec974fb9954e43
 }
 ?>
