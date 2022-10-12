@@ -6,7 +6,7 @@ const InputBox = ({label, id, onClick, onChange}) => {
         <>
             {onClick ? (
                 <div>
-                    <label className="inline-block text-gray-600 mb-2 font-semibold" htmlFor={id}>
+                    <label className="inline-block text-gray-600 mb-2" htmlFor={id}>
                         {label}
                     </label>
                     <input
