@@ -1,13 +1,5 @@
 <?php
-class Write_m extends CI_Model {
-    function getCategories() {
-        $this->db->select('*');
-        $this->db->from('T_category');
-        $this->db->order_by('idx', 'ASC');
-
-        return $this->db->get()->result();
-    }
-
+class Modify_m extends CI_Model {
     function getTags() {
         $this->db->select('idx, name');
         $this->db->from('T_tag');
@@ -15,6 +7,29 @@ class Write_m extends CI_Model {
         $this->db->order_by('name', 'ASC');
 
         return $this->db->get()->result();
+    }
+
+    function getModifyData($ridx) {
+        $q = $this->db->query("
+            SELECT  r.idx AS ridx,
+                    s.name, 
+                    s.address, 
+                    s.base, 
+                    s.floor, 
+                    c.name AS category, 
+                    r.menu,
+                    r.star,
+                    r.comment,
+                    r.comment_good,
+                    r.comment_bad,
+                    r.tag
+            FROM T_review AS r
+                LEFT JOIN T_shop AS s ON s.idx = r.sidx
+                LEFT JOIN T_category AS c ON c.idx = s.cidx
+            WHERE r.idx = $ridx
+        ");
+
+        return $q->row();
     }
 
     function setUsedTags($tag) {
@@ -26,25 +41,15 @@ class Write_m extends CI_Model {
         }
     }
 
-    function setReveiw($uidx, $sidx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
-        $this->db->insert('T_review', [
-            'uidx'          => $uidx,
-            'sidx'          => $sidx,
+    function setReveiw($ridx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
+        $this->db->where('ridx', $ridx);
+        $this->db->update('T_review', [
             'menu'          => $menu,
             'star'          => $star,
             'comment'       => $comment,
             'comment_good'  => $comment_good,
             'comment_bad'   => $comment_bad,
-            'tag'           => $tag
-        ]);
-
-        return $this->db->insert_id();
-    }
-
-    function setReviewImg($idx, $fileName) {
-        $this->db->insert('T_image', [
-            'ridx' => $idx,
-            'image' => UPLOAD_PATH . 'review/' . $fileName
+            'tag'           => json_encode($tag)
         ]);
     }
 }

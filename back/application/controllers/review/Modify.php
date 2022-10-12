@@ -7,30 +7,22 @@ require APPPATH . 'libraries/Format.php';
 
 class Modify extends RestController {
 
+    public $idx;
+
     function __construct()
     {
         parent::__construct();
         $this->load->model('review/modify_m');
-    }
-
-    public function index_get() {
-        $data = [
-            'category' => $this->modify_m->getCategories(),
-            'tag'      => $this->modify_m->getTags()
-        ];
-
-        $this->response([
-            'state' => 200,
-            'msg'   => 'OK',
-            'data'  => $data
-        ]);
-    }
-
-    public function index_post() {
         $this->load->model('common/user_m');
-        $this->load->model('common/shop_m');
+        $this->load->model('common/review_m');
 
-        $token = trim($this->post('token'));
+        $method = $this->input->server('REQUEST_METHOD');
+        switch($method) {
+            case 'POST': $token = trim($this->post('token')); break;
+            case 'GET': $token = trim($this->get('token')); break;
+            case 'PUT': $token = trim($this->put('token')); break;
+            case 'DELETE': $token = trim($this->delete('token')); break;
+        }
         
         if (!$token) {
             $this->response([
@@ -39,29 +31,56 @@ class Modify extends RestController {
             ]);
         }
 
-        $idx = $this->user_m->getIdxByToken($token);
-        if (!$idx) {
+        $this->idx = $this->user_m->getIdxByToken($token);
+        if (!$this->idx) {
             $this->response([
                 'state' => 400,
                 'msg' => '비정상적인 접근입니다.'
             ]);
         }
+    }
 
-        $shopIdx      = trim($this->post('idx'));
-        $shop         = trim($this->post('shop'))         ?: $this->response(['state' => 401, 'msg' => '매장을 선택해주세요.']);
-        $address      = trim($this->post('address'));
-        $distance     = trim($this->post('distance'));
-        $url          = trim($this->post('url'));
-        $shopId       = end(explode('/', $url));
-        $base         = trim($this->post('base'))         ?: $this->response(['state' => 402, 'msg' => '지상/지하를 선택해주세요.']);
-        $floor        = trim($this->post('floor'))        ?: $this->response(['state' => 403, 'msg' => '층수를 선택해주세요.']);
-        $category     = trim($this->post('cidx')    )     ?: $this->response(['state' => 404, 'msg' => '카테고리를 선택해주세요.']);
-        $menu         = trim($this->post('menu'))         ?: $this->response(['state' => 405, 'msg' => '메뉴명을 입력해주세요.']);
-        $star         = trim($this->post('star'))         ?: $this->response(['state' => 406, 'msg' => '별점을 선택해주세요.']);
-        $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 407, 'msg' => '한줄평을 입력해주세요.']);
-        $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 408, 'msg' => '장점을 입력해주세요.']);
-        $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 409, 'msg' => '단점을 입력해주세요.']);
-        $tag          = trim($this->post('tag')); // option
+    public function index_get() {
+        $ridx = trim($this->get('ridx')) ?: $this->response(['state' => 401, 'msg' => '리뷰를 선택해주세요.']);
+
+        $isMyReview = $this->review_m->checkReview($this->idx, $ridx);
+        
+        if (!$isMyReview) $this->response(['state' => 402, 'msg' => '비정상적인 접근입니다.']);
+
+        $data = $this->modify_m->getModifyData($ridx);
+
+        $images = $this->review_m->getReviewImage($ridx);
+        $image = [];
+        foreach ($images as $img) {
+            $image[] = $img->image;
+        }
+
+        $data->tag   = json_decode($data->tag);
+        $data->image = $image;
+
+        $this->response([
+            'state' => 200,
+            'msg'   => 'OK',
+            'data'  => [
+                'tag'    => $this->modify_m->getTags(),
+                'review' => $data
+            ]
+        ]);
+    }
+
+    public function index_put() {
+        $this->load->model('common/shop_m');
+
+        $ridx         = trim($this->put('ridx'))         ?: $this->response(['state' => 401, 'msg' => '리뷰를 선택해주세요.']);
+        $menu         = trim($this->put('menu'))         ?: $this->response(['state' => 402, 'msg' => '메뉴명을 입력해주세요.']);
+        $star         = trim($this->put('star'))         ?: $this->response(['state' => 403, 'msg' => '별점을 선택해주세요.']);
+        $comment      = trim($this->put('comment'))      ?: $this->response(['state' => 404, 'msg' => '한줄평을 입력해주세요.']);
+        $comment_good = trim($this->put('comment_good')) ?: $this->response(['state' => 405, 'msg' => '장점을 입력해주세요.']);
+        $comment_bad  = trim($this->put('comment_bad'))  ?: $this->response(['state' => 406, 'msg' => '단점을 입력해주세요.']);
+        $tag          = $this->put('tag') ?? []; // option
+
+        $isMyReview = $this->review_m->checkReview($this->idx, $ridx);
+        if (!$isMyReview) $this->response(['state' => 407, 'msg' => '비정상적인 접근입니다.']);
 
         
         // image
@@ -80,71 +99,44 @@ class Modify extends RestController {
             foreach ($this->upload->get_multi_upload_data() as $data) unlink($data['full_path']);
             if ($this->upload->error_msg !== []) {
                 $this->response([
-                    'state' => 410,
+                    'state' => 408,
                     'msg' => $this->upload->error_msg
                 ]);
             }
         }
 
+        // 기존 리뷰 태그 확인
+        $reviewTag = getReviewTag($ridx);
+
+        // 신규 사용 리뷰 확인
+        $newTag = array_values(array_diff($tag, $reviewTag));
 
         // tag 사용량 증가
-        $this->modify_m->setUsedTags($tag);
+        $this->modify_m->setUsedTags($newTag);
 
-        if (!$shopIdx) {
-            // shop 등록
-            $shopIdx = $this->shop_m->setShop($category, $shop, $address, $base, $floor, $distance, $tag, $url, $shopId);
-        } else {
-            // shop tag 병합
-            $tag += $this->shop_m->getTags($shopIdx);
-        }
+        // shop tag 병합
+        $shopTag = $newTag + $this->shop_m->getTags($shopIdx);
+        $this->shop_m->setTags($shopIdx, $shopTag);
 
         // review 등록
-        $ridx = $this->modify_m->setReveiw($idx, $shopIdx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
+        $ridx = $this->modify_m->setReveiw($ridx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
+
+        // 기존 review 이미지 삭제
+        $images = $this->review_m->getReviewImage($ridx);
+        foreach ($images as $img) {
+            $image = explode(API_PATH, $img->image);
+            $image = end($image);
+            unlink($image);
+        }
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->modify_m->setReviewImg($ridx, $data['file_name']);
+            $this->review_m->setReviewImg($ridx, $data['file_name']);
         }
 
         $this->response([
             'state' => 200,
-            'msg' => '리뷰가 등록되었습니다.'
-        ]);
-    }
-
-    public function mapInfo_get() {
-        $this->load->model('common/shop_m');
-
-        $json = trim($this->get('json')) ?: $this->response(['state' => 400, 'msg' => '데이터를 확인할 수 없습니다.']);
-        $json = json_decode($json, true);
-
-        $main = [];
-        $sub = [];
-        foreach($json as $shop) {
-            $_data = $this->shop_m->getShopByShopId($shop['id']);
-            $data = [
-                'address' => $shop['road_address_name'],
-                'distance' => round((int)$shop['distance'] / 70) ?: 1,
-                'name' => $shop['place_name'],
-                'url' => $shop['place_url']
-            ];
-
-            if ($_data) {
-                $main[] = $_data + $data;
-            } else {
-                $sub[] = $data;
-            }
-        }
-
-        $result = [
-            'main' => $main,
-            'sub'  => $sub
-        ];
-
-        $this->response([
-            'state' => 200,
-            'msg'   => 'OK',
-            'data'  => $result
+            'msg' => '리뷰가 수정되었습니다.'
         ]);
     }
 }
