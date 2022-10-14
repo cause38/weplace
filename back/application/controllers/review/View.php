@@ -12,6 +12,7 @@ class View extends RestController {
         parent::__construct();
         $this->load->model('review/view_m');
         $this->load->model('common/shop_m');
+        $this->load->model('common/review_m');
     }
 
     public function index_get() {
@@ -68,7 +69,7 @@ class View extends RestController {
                 }
             }
 
-            $images = $this->view_m->getReviewImage($v->idx);
+            $images = $this->review_m->getReviewImage($v->idx);
             $image = [];
             foreach ($images as $img) {
                 $image[] = $img->image;

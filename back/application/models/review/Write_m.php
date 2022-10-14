@@ -18,7 +18,6 @@ class Write_m extends CI_Model {
     }
 
     function setUsedTags($tag) {
-        $tag = json_decode($tag, true);
         foreach ($tag as $idx) {
             $this->db->set('used', 'used+1', FALSE);
             $this->db->where('idx', $idx);
@@ -26,7 +25,7 @@ class Write_m extends CI_Model {
         }
     }
 
-    function setReveiw($uidx, $sidx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
+    function setReview($uidx, $sidx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
         $this->db->insert('T_review', [
             'uidx'          => $uidx,
             'sidx'          => $sidx,
@@ -35,7 +34,7 @@ class Write_m extends CI_Model {
             'comment'       => $comment,
             'comment_good'  => $comment_good,
             'comment_bad'   => $comment_bad,
-            'tag'           => $tag
+            'tag'           => json_encode($tag)
         ]);
 
         return $this->db->insert_id();

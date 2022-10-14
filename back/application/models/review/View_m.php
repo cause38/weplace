@@ -32,13 +32,5 @@ class View_m extends CI_Model {
 
         return $q->result();
     }
-
-    function getReviewImage($ridx) {
-        $this->db->select('image');
-        $this->db->from('T_image');
-        $this->db->where('ridx', $ridx);
-
-        return $this->db->get()->result();
-    }
 }
 ?>
