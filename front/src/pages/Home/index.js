@@ -138,7 +138,7 @@ const Home = () => {
                     >
                         {newReviewData.map(data => (
                             <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={data.idx}>
-                                <div onClick={() => handleDetailView(data.idx)} className="cursor-pointer">
+                                <Link to="/detail">
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
                                             {data.menu}
@@ -150,7 +150,7 @@ const Home = () => {
                                         <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.name}</h4>
                                         <p className="truncate w-full text-gray-800">{data.comment}</p>
                                     </div>
-                                </div>
+                                </Link>
                             </SwiperSlide>
                         ))}
                     </Swiper>
