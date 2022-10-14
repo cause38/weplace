@@ -64,7 +64,8 @@ const Login = () => {
     };
 
     // 로그인
-    const setLogin = () => {
+    const setLogin = e => {
+        e.preventDefault();
         if (id.length < 1) {
             alert(`아이디를 입력해 주세요.`);
         } else if (pw.length < 1) {
