@@ -1,7 +1,19 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {useNavigate, useLocation, Link} from 'react-router-dom';
 import {profileImgValue} from 'atoms/state';
+import axios from 'axios';
 
 const Detail = () => {
+    const {idx} = useLocation();
+    const token = sessionStorage.getItem('token');
+
+    useEffect(() => {
+        axios.get(`http://place-api.weballin.com/review/view`, {params: {idx, token}}).then(res => {
+            if (res.status === 200) {
+                console.log(res);
+            }
+        });
+    }, []);
     return (
         <div className="container-wb">
             <div className="bg-white rounded p-6 pt-7 shadow-lg">

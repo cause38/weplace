@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation, Pagination, A11y} from 'swiper';
 import axios from 'axios';
@@ -11,16 +11,8 @@ import 'swiper/css/pagination';
 import 'styles/swiper-custom.css';
 
 const Home = () => {
+    const navigate = useNavigate();
     const [newReviewData, setNewReviewData] = useState([]);
-
-    // set 최신 리뷰 별점
-    const storeScore = score => {
-        const arr = [];
-        for (let i = 0; i < score; i++) {
-            arr.push(`⭐`);
-        }
-        return arr.join('');
-    };
 
     useEffect(() => {
         // get 최신리뷰 데이터
@@ -30,6 +22,10 @@ const Home = () => {
             }
         });
     }, []);
+
+    const handleDetailView = idx => {
+        navigate('/detail', {state: {idx: idx}});
+    };
 
     return (
         <>
@@ -104,7 +100,7 @@ const Home = () => {
                     >
                         {newReviewData.map(data => (
                             <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={data.idx}>
-                                <Link to="/detail">
+                                <div onClick={() => handleDetailView(data.idx)} className="cursor-pointer">
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
                                             {data.menu}
@@ -112,11 +108,11 @@ const Home = () => {
                                         <span className="text-sm">{data.wdate}</span>
                                     </div>
                                     <div className="mt-6">
-                                        <span className="text-xs">{storeScore(data.star)}</span>
+                                        <span className="text-xs mb-1">{'⭐'.repeat(data.star)}</span>
                                         <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.name}</h4>
                                         <p className="truncate w-full text-gray-800">{data.comment}</p>
                                     </div>
-                                </Link>
+                                </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>
