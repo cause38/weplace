@@ -393,7 +393,7 @@ const Write = () => {
                                 {searhStoreListSub.length > 0 &&
                                     searhStoreListSub.map((item, id) => (
                                         <div
-                                            key={`sub_${item.idx}`}
+                                            key={`sub_${id}`}
                                             className="flex justify-between gap-2 items-center w-full p-4 pr-5 pb-5 bg-white rounded-lg shadow-md"
                                         >
                                             <div>
