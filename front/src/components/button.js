@@ -20,7 +20,7 @@ const Button = ({contents, onClick, disAbled}) => {
                     className={
                         'w-full h-full py-[5px] leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded hover:bg-orange-400 focus:outline-none'
                     }
-                    type="button"
+                    type={contents === '로그인' ? 'submit' : 'button'}
                     onClick={e => onClick(e)}
                 >
                     {contents}

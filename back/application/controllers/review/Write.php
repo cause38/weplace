@@ -52,7 +52,8 @@ class Write extends RestController {
         $address      = trim($this->post('address'));
         $distance     = trim($this->post('distance'));
         $url          = trim($this->post('url'));
-        $shopId       = end(explode('/', $url));
+        $shopId       = explode('/', $url);
+        $shopId       = end($shopId);
         $base         = trim($this->post('base'))         ?: $this->response(['state' => 402, 'msg' => '지상/지하를 선택해주세요.']);
         $floor        = trim($this->post('floor'))        ?: $this->response(['state' => 403, 'msg' => '층수를 선택해주세요.']);
         $category     = trim($this->post('cidx'))         ?: $this->response(['state' => 404, 'msg' => '카테고리를 선택해주세요.']);
@@ -61,7 +62,7 @@ class Write extends RestController {
         $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 407, 'msg' => '한줄평을 입력해주세요.']);
         $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 408, 'msg' => '장점을 입력해주세요.']);
         $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 409, 'msg' => '단점을 입력해주세요.']);
-        $tag          = trim($this->post('tag')); // option
+        $tag          = $this->post('tag') ?? []; // option
 
         
         // image
@@ -95,15 +96,16 @@ class Write extends RestController {
             $shopIdx = $this->shop_m->setShop($category, $shop, $address, $base, $floor, $distance, $tag, $url, $shopId);
         } else {
             // shop tag 병합
-            $tag += $this->shop_m->getTags($shopIdx);
+            $shopTag = $tag + $this->shop_m->getTags($shopIdx);
+            $this->shop_m->setTags($shopIdx, $shopTag);
         }
 
         // review 등록
-        $ridx = $this->write_m->setReveiw($idx, $shopIdx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
+        $ridx = $this->write_m->setReview($idx, $shopIdx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->write_m->setReviewImg($ridx, $data['file_name']);
+            $this->review_m->setReviewImg($ridx, $data['file_name']);
         }
 
         $this->response([

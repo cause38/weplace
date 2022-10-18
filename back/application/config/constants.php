@@ -87,4 +87,5 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 // custom constants
+defined('API_PATH')    OR define('API_PATH', 'http://place-api.weballin.com/'); // 업로드 폴더 기본 경로
 defined('UPLOAD_PATH') OR define('UPLOAD_PATH', 'http://place-api.weballin.com/uploads/'); // 업로드 폴더 기본 경로

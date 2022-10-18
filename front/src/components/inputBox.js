@@ -9,7 +9,7 @@ const InputBox = ({id, name, type, value, onChange, placeholder, ariaLabel, read
                 <div className="w-full flex">
                     {name && (
                         <label
-                            htmlFor="{name}"
+                            htmlFor={id}
                             className="w-2/5 pl-1 py-2 text-slate-600 text-sm font-semibold placeholder-gray-500 bg-slate-200 border rounded-md focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                         >
                             {name}
@@ -35,7 +35,7 @@ const InputBox = ({id, name, type, value, onChange, placeholder, ariaLabel, read
                 <div className="w-full flex ">
                     {name && (
                         <label
-                            htmlFor="{name}"
+                            htmlFor={id}
                             className="w-2/5 pl-1 py-2 text-slate-600 text-sm font-semibold placeholder-gray-500 bg-slate-200 border rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                         >
                             {name}
