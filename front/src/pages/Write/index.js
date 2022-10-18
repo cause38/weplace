@@ -164,6 +164,10 @@ const Write = () => {
         }
     };
 
+    useEffect(() => {
+        console.log(value);
+    }, [value]);
+
     // 매장검색 - 모달 오픈 시 바디 스크롤 숨김 처리
     useEffect(() => {
         modalVisible
@@ -266,7 +270,6 @@ const Write = () => {
             const dataValue =
                 key === 'idx' || key === 'cidx' || key === 'floor' || key === 'star' ? parseInt(data[key]) : data[key];
 
-            console.log(dataValue);
             newValue = {...newValue, [key]: dataValue};
         }
 
@@ -286,10 +289,9 @@ const Write = () => {
             .post(url, value)
             .then(function (res) {
                 handleSearchBtn();
-                console.log(res);
                 if (res.data.state === 200) {
                     if (window.confirm('리뷰가 등록되었습니다')) {
-                        navigate('/category/0');
+                        navigate(`/detail/${res.data.data.shopIdx}`);
                     }
                 } else {
                     alert(res.data.msg);
