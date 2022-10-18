@@ -249,11 +249,6 @@ const Write = () => {
             });
     };
 
-    // TODO: form 값 확인
-    useEffect(() => {
-        console.log(value);
-    }, [value]);
-
     // 매장 검색 후 선택 시 data 적용
     const setStoreData = (id, idx) => {
         let data = null;
@@ -293,7 +288,9 @@ const Write = () => {
                 handleSearchBtn();
                 console.log(res);
                 if (res.data.state === 200) {
-                    alert(res.data.msg);
+                    if (window.confirm('리뷰가 등록되었습니다')) {
+                        navigate('/category/0');
+                    }
                 } else {
                     alert(res.data.msg);
                 }
