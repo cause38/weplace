@@ -1,27 +1,81 @@
-import React, {Fragment} from 'react';
-import {Link} from 'react-router-dom';
+import React, {Fragment, useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
+import {Swiper, SwiperSlide} from 'swiper/react';
+import {Navigation, Pagination, A11y} from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+import API from 'config';
 
 const Category = () => {
+    const {id} = useParams();
+    const [categoryList, setCategoryList] = useState();
+    const [storeList, setStoreList] = useState();
+
+    const [tagList, setTagList] = useState();
+
+    // category list
+    useEffect(() => {
+        fetch(`${API.categoryfilters}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                return setCategoryList(data.data.category), setTagList(data.data.tag);
+            });
+    }, []);
+
+    // 카테고리 리스트 클릭 시, 카테고리 변경
+    useEffect(() => {
+        console.log('adadf', `${API.categoryList}?category=${id}`);
+        fetch(`${API.categoryList}?category=${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(data => setStoreList(data.data));
+    }, [id]);
+
     return (
         <>
             <section className="category-nav">
-                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex ">
-                    {CATEGORY_LIST?.map(data => {
-                        const {id, name, url} = data;
+                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex overflow-auto">
+                    {categoryList?.map(data => {
+                        const {idx, name} = data;
                         return (
+                            // <Swiper
+                            //     modules={[Navigation, Pagination, A11y]}
+                            //     spaceBetween={5}
+                            //     slidesPerView={1.2}
+                            //     navigation
+                            //     breakpoints={{
+                            //         768: {
+                            //             width: 768,
+                            //             slidesPerView: 2.1,
+                            //         },
+                            //     }}
+                            // >
+                            //     <SwiperSlide className="" key={idx}>
                             <Link
-                                key={id}
-                                to={url}
+                                key={idx}
+                                to={`/category/${idx}`}
                                 className="mx-[15px] px-[10px] py-[5px] min-w-[81px] rounded-[20px] bg-orange-400 text-white hover:bg-orange-700"
                             >
-                                <li key={id} className="text-center">
-                                    {name}
-                                </li>
+                                {name}
                             </Link>
+                            //     </SwiperSlide>
+                            // </Swiper>
                         );
                     })}
                 </ul>
             </section>
+
             <section className="max-w-6xl mx-auto my-0 flex w-full">
                 <div className="max-w-6xl flex">
                     <div className="mx-[20px]">최신순</div>
@@ -32,7 +86,7 @@ const Category = () => {
             <section className="category max-w-6xl mx-auto">
                 <section className="flex grow flex-wrap mt-[20px] mb-[20px]">
                     {storeList?.map(data => {
-                        const {idx, category, destMin, name, star, review, favorite, hash} = data;
+                        const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                         return (
                             <Fragment key={idx}>
                                 <div
@@ -45,7 +99,7 @@ const Category = () => {
                                             <h3 className="w-fit px-[5px] py-[2px] rounded-[20px] bg-orange-400 text-white text-[14px]">
                                                 {category}
                                             </h3>
-                                            <p className="flex items-center text-[14px]">&#128681; {destMin}분</p>
+                                            <p className="flex items-center text-[14px]">&#128681; {distance}분</p>
                                         </div>
                                         <div>
                                             <p className="text-2xl font-bold">{name}</p>
@@ -53,18 +107,17 @@ const Category = () => {
                                         <div className="flex justify-between">
                                             <span>⭐{star}</span>
                                             <span>&#128221;{review}</span>
-                                            <span>💘{favorite}</span>
+                                            <span>{isFavorite === true ? '💘' : '🖤'}</span>
                                         </div>
                                         <div className="h-[50px]">
                                             <div className="flex gap-[5px] flex-wrap">
-                                                {hash.map(data => {
-                                                    const {id, content} = data;
+                                                {tag.map((data, id) => {
                                                     return (
                                                         <span
                                                             key={id}
                                                             className="rounded-[10px] px-[5px] py-[2px] bg-orange-600 text-white text-[12px]"
                                                         >
-                                                            #{content}
+                                                            #{data}
                                                         </span>
                                                     );
                                                 })}
@@ -81,73 +134,12 @@ const Category = () => {
     );
 };
 
-const CATEGORY_LIST = [
-    {id: 1, name: '전체보기', url: '/category'},
-    {id: 2, name: '한식', url: '/category'},
-    {id: 3, name: '중식', url: '/category'},
-    {id: 4, name: '일식', url: '/category'},
-    {id: 5, name: '양식', url: '/category'},
-    {id: 6, name: '분식', url: '/category'},
-    {id: 7, name: '아시안', url: '/category'},
-];
-
-const storeList = [
-    {
-        idx: 1,
-        category: '한식',
-        destMin: '5',
-        name: '일차돌',
-        star: '4',
-        review: '1',
-        favorite: '3',
-        hash: [
-            {id: 1, content: '가성비'},
-            {id: 2, content: '맛있는'},
-            {id: 3, content: '넓은'},
-            {id: 4, content: '가까운'},
-            {id: 5, content: '포장'},
-            {id: 6, content: '서비스'},
-        ],
-    },
-    {
-        idx: 2,
-        category: '한식',
-        destMin: '5',
-        name: '일차돌',
-        star: '4',
-        review: '1',
-        favorite: '3',
-        hash: [
-            {id: 1, content: '가성비'},
-            {id: 2, content: '맛있는'},
-        ],
-    },
-    {
-        idx: 3,
-        category: '한식',
-        destMin: '5',
-        name: '일차돌',
-        star: '4',
-        review: '1',
-        favorite: '3',
-        hash: [
-            {id: 1, content: '가성비'},
-            {id: 2, content: '맛있는'},
-        ],
-    },
-    {
-        idx: 4,
-        category: '한식',
-        destMin: '5',
-        name: '일차돌',
-        star: '4',
-        review: '1',
-        favorite: '3',
-        hash: [
-            {id: 1, content: '가성비'},
-            {id: 2, content: '맛있는'},
-        ],
-    },
-];
-
 export default Category;
+
+const SORTING = [
+    {id: 1, name: '최신순'},
+    {id: 2, name: '별점 높은 순'},
+    {id: 3, name: '가까운 순'},
+    {id: 4, name: '리뷰 많은 순'},
+    {id: 5, name: '찜 많은 순'},
+];
