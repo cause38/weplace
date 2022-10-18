@@ -24,7 +24,7 @@ function Switchs() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/join" element={<Join />} />
                 <Route path="/mypage" element={<MyPage />} />
-                <Route path="/detail" element={<Detail />} />
+                <Route path="/detail/:id" element={<Detail />} />
                 <Route path="/write" element={<Write />} />
                 <Route path="/find-password" element={<FindPassword />} />
             </Routes>
