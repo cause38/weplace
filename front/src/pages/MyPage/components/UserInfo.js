@@ -76,7 +76,7 @@ const UserInfo = ({
                 </div>
                 {isChangeNickName ? (
                     <div className="h-[40px] w-[20%] ml-[5%] min-w-[100px]">
-                        <Button contents="중복 확인" onClick={handleCheckedName} />
+                        <Button contents="닉네임 변경" onClick={handleCheckedName} />
                     </div>
                 ) : (
                     <div className="h-[40px] w-[20%] ml-[10px] min-w-[100px]">
