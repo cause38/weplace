@@ -1,7 +1,13 @@
 import React, {useState, useEffect} from 'react';
+<<<<<<< HEAD
 import {useNavigate, useLocation, Link, useParams} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faImage, faHeart, faStar, faLocationDot} from '@fortawesome/free-solid-svg-icons';
+=======
+import {useNavigate, useLocation, Link} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faImage} from '@fortawesome/free-solid-svg-icons';
+>>>>>>> fb39976... fontawesome 패키지 설치
 import {profileImgValue} from 'atoms/state';
 import axios from 'axios';
 import {faLocation} from '../../../node_modules/@fortawesome/free-solid-svg-icons/index';
