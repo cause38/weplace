@@ -11,8 +11,10 @@ const Review = ({data, handleReviewToggle}) => {
                     <div className="flex flex-col gap-2">
                         <p>{data.name}</p>
                         <div className="flex gap-2 items-center">
-                            <span>⭐⭐⭐⭐</span>
-                            <div className="w-[15px] h-[15px] border ms-2"></div>
+                            <span>{data.star}</span>
+                            <span className={`${data.image.length > 0 ? 'hidden' : ''} text-orange-500`}>
+                                <FontAwesomeIcon icon={faImage} />
+                            </span>
                         </div>
                         <strong className="text-xl">"{data.comment}"</strong>
                         <p className="mb-1">

@@ -44,10 +44,8 @@ const Detail = () => {
         const more = e.currentTarget.previousElementSibling;
         more.classList.toggle('hidden');
         if (more.classList.contains('hidden')) {
-            console.log('안보임');
             e.currentTarget.innerHTML = `<i class="fa fa-chevron-circle-down" aria-hidden="true"></i>`;
         } else {
-            console.log('보임');
             e.currentTarget.innerHTML = `<i class="fa fa-chevron-circle-up" aria-hidden="true"></i>`;
         }
     };
