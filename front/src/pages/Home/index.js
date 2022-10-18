@@ -13,11 +13,49 @@ import 'styles/swiper-custom.css';
 const Home = () => {
     const navigate = useNavigate();
     const [newReviewData, setNewReviewData] = useState([]);
+    const categoryArr = [
+        {
+            idx: 0,
+            name: '전체보기',
+            icon: '😋🍴',
+        },
+        {
+            idx: 1,
+            name: '한식',
+            icon: '🍚',
+        },
+        {
+            idx: 2,
+            name: '중식',
+            icon: '🥟',
+        },
+        {
+            idx: 3,
+            name: '일식',
+            icon: '🍣',
+        },
+        {
+            idx: 4,
+            name: '양식',
+            icon: '🍝',
+        },
+        {
+            idx: 5,
+            name: '분식',
+            icon: '🥠',
+        },
+        {
+            idx: 6,
+            name: '아시안 매장',
+            icon: '🍜',
+        },
+    ];
 
     useEffect(() => {
         // get 최신리뷰 데이터
         axios.get('http://place-api.weballin.com/main').then(response => {
             if (response.status === 200) {
+                console.log(response);
                 setNewReviewData(response.data.data.reviews);
             }
         });
@@ -119,27 +157,16 @@ const Home = () => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 text-center text-lg font-semibold text-orange-500">
-                    <Link to="/category" className="col-span-2 bg-white shadow-lg rounded-lg p-10">
-                        전체 보기<p className="mt-6 text-5xl">😋🍴</p>
-                    </Link>
-                    <Link to="/category" className="bg-white shadow-lg rounded-lg p-10">
-                        한식<p className="mt-6 text-5xl">🍚</p>
-                    </Link>
-                    <Link to="/category" className="bg-white shadow-lg rounded-lg p-10">
-                        중식<p className="mt-6 text-5xl">🥟</p>
-                    </Link>
-                    <Link to="/category" className="bg-white shadow-lg rounded-lg p-10">
-                        일식<p className="mt-6 text-5xl">🍣</p>
-                    </Link>
-                    <Link to="/category" className="bg-white shadow-lg rounded-lg p-10">
-                        양식<p className="mt-6 text-5xl">🍝</p>
-                    </Link>
-                    <Link to="/category" className="bg-white shadow-lg rounded-lg p-10">
-                        분식<p className="mt-6 text-5xl">🥠</p>
-                    </Link>
-                    <Link to="/category" className="bg-white shadow-lg rounded-lg p-10">
-                        아시안 매장<p className="mt-6 text-5xl">🍜</p>
-                    </Link>
+                    {categoryArr.map(item => (
+                        <Link
+                            to={`/category/${item.idx}`}
+                            className={`${item.idx <= 0 ? 'col-span-2 ' : ''} bg-white shadow-lg rounded-lg p-10`}
+                            key={item.idx}
+                        >
+                            {item.name}
+                            <p className="mt-6 text-5xl">{item.icon}</p>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </>
