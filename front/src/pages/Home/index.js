@@ -120,7 +120,7 @@ const Home = () => {
                 <div className="">
                     <div className="flex justify-between items-end mb-4">
                         <h3 className="text-xl font-bold">💖최신 리뷰</h3>
-                        <Link to="/category" className="text-sm font-semibold text-gray-600 hover:text-orange-500">
+                        <Link to={'/category/0'} className="text-sm font-semibold text-gray-600 hover:text-orange-500">
                             더보기 +
                         </Link>
                     </div>
