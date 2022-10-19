@@ -21,8 +21,8 @@ const Category = () => {
 
     const [categoryList, setCategoryList] = useState();
     const [tagList, setTagList] = useState();
-
     const [storeList, setStoreList] = useState();
+    const [sendTagList, setSendTagList] = useState([]);
 
     // 진열방식
     const [isDrop, setIsDrop] = useState(false);
@@ -100,12 +100,15 @@ const Category = () => {
         } else {
             setOnlyLike(!onlyLike);
             if (!onlyLike) {
-                fetch(`${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-type': 'application/json',
-                    },
-                })
+                fetch(
+                    `${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                    }
+                )
                     .then(res => res.json())
                     .then(data => {
                         if (data.state === 200) {
@@ -115,12 +118,15 @@ const Category = () => {
                         }
                     });
             } else {
-                fetch(`${API.categoryList}?token=${token}&filter=${switchedValue}&category=${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-type': 'application/json',
-                    },
-                })
+                fetch(
+                    `${API.categoryList}?token=${token}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                    }
+                )
                     .then(res => res.json())
                     .then(data => {
                         if (data.state === 200) {
@@ -179,17 +185,22 @@ const Category = () => {
         setIsDrop(!isDrop);
         setNewSorting(newSorting);
 
+        console.log('datadatdtat', sendTagList);
+
         if (id === undefined) {
             return;
         }
 
         if (onlyLike) {
-            fetch(`${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-            })
+            fetch(
+                `${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                }
+            )
                 .then(res => res.json())
                 .then(data => {
                     if (data.state === 200) {
@@ -199,7 +210,7 @@ const Category = () => {
                     }
                 });
         } else {
-            fetch(`${API.categoryList}?filter=${switchedValue}&category=${id}`, {
+            fetch(`${API.categoryList}?filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -216,17 +227,111 @@ const Category = () => {
         }
     };
 
+    // 태그 선택 시, api 호출
+    const handleTag = (e, key) => {
+        const tagValue = key;
+        let newTagList = sendTagList;
+
+        const switchedValue = changeSortingVal(selectedSorting);
+        e.target.classList.toggle('on');
+
+        if (e.target.classList.contains('on')) {
+            e.target.classList.remove('border-orange-300');
+            e.target.classList.add('bg-orange-500', 'border-transparent', 'text-white');
+
+            newTagList.push(parseInt(tagValue));
+            setSendTagList(newTagList);
+
+            // 토큰이 있는 경우, 찜한가게 여부 포함
+            if (token !== '') {
+                fetch(
+                    `${API.categoryList}?token=${token}&favorite${onlyLike}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                    }
+                )
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            setStoreList(data.data);
+                        } else {
+                            console.log(data.state);
+                        }
+                    });
+            } else {
+                fetch(`${API.categoryList}?filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            setStoreList(data.data);
+                        } else {
+                            console.log(data.state);
+                        }
+                    });
+            }
+        } else {
+            e.target.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
+            e.target.classList.add('border-orange-300');
+
+            const filtered = newTagList.filter(item => item !== parseInt(tagValue));
+            setSendTagList(filtered);
+
+            if (token !== '') {
+                fetch(
+                    `${API.categoryList}?token=${token}&favorite${onlyLike}&filter=${switchedValue}&category=${id}&tag=[${filtered}]`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                    }
+                )
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            setStoreList(data.data);
+                        } else {
+                            console.log(data.state);
+                        }
+                    });
+            } else {
+                fetch(`${API.categoryList}?filter=${switchedValue}&category=${id}&tag=[${filtered}]`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            setStoreList(data.data);
+                        } else {
+                            console.log(data.state);
+                        }
+                    });
+            }
+        }
+    };
+
     return (
         <div className="flex-col">
             <section className="category-nav">
-                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex overflow-auto">
+                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex gap-1.5 overflow-x-scroll">
                     {categoryList?.map(data => {
                         const {idx, name} = data;
                         return (
                             <Link
                                 key={idx}
                                 to={`/category/${idx}`}
-                                className="w-fit mx-[5px] px-[5px] py-[5px] rounded-[20px] bg-orange-400 text-white hover:bg-orange-700"
+                                className="min-w-fit p-2 rounded-full bg-orange-400 text-white hover:bg-orange-700"
                             >
                                 {name}
                             </Link>
@@ -252,7 +357,7 @@ const Category = () => {
                     </div>
                     <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
                     {isDrop && (
-                        <div className="absolute top-[200px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="absolute top-[235px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <ul className="">
                                 {SORTING.map((data, key) => {
                                     return (
@@ -277,88 +382,19 @@ const Category = () => {
                         </div>
                     )}
 
-                    {/* <Menu as="div" className="relative inline-block text-left w-[125px]">
-                        <div>
-                            <Menu.Button
-                                // onClick={handleDrop}
-                                className="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                            >
-                                {selectedSorting}
-                                <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
-                            </Menu.Button>
-                        </div>
-
-                        <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                        >
-                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <ul className="py-1">
-                                    {SORTING.map((data, key) => {
-                                        return (
-                                            // <li
-                                            //     key={key}
-                                            //     onClick={e => handleSorting(e, key)}
-                                            //     value={data.name}
-                                            //     className={newSorting[key] === true ? 'font-semibold' : ''}
-                                            // >
-                                            //     <div className="row justify-between">
-                                            //         <p className="R13 black-80">{data.name}</p>
-                                            //         {newSorting[key] === true}
-                                            //     </div>
-                                            // </li>
-                                            <Menu.Item key={key}>
-                                                {({active}) => (
-                                                    <li
-                                                        onClick={e => handleSorting(e, key)}
-                                                        className={newSorting[key] === true ? 'font-semibold' : ''}
-                                                    >
-                                                        <div
-                                                            className={classNames(
-                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                'block px-4 py-2 text-sm flex justify-between'
-                                                            )}
-                                                        >
-                                                            <p>{data.name}</p>
-                                                            {newSorting[key] === true && (
-                                                                <img alt="selected" src={selected} />
-                                                            )}
-                                                        </div>
-                                                    </li>
-                                                )}
-                                            </Menu.Item>
-                                        );
-                                    })}
-
-                                    <Menu.Item>
-                                        {({active}) => (
-                                            <div
-                                                className={classNames(
-                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                    'block px-4 py-2 text-sm'
-                                                )}
-                                            >
-                                                Account settings
-                                            </div>
-                                        )}
-                                    </Menu.Item>
-                                </ul>
-                            </Menu.Items>
-                        </Transition>
-                    </Menu> */}
-
                     <button className="mx-[20px]" onClick={e => showOnlyLike(e)}>
                         {onlyLike ? '💘 찜한가게' : '🖤 찜한가게'}
                     </button>
-                    <div className="mx-[20px] w-[calc(100%-300px)] flex items-center overflow-auto">
+
+                    <div className="mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll">
                         {tagList?.map(data => {
                             return (
-                                <button key={data.idx} className="min-w-fit mr-5 hover:underline underline-offset-4">
+                                <button
+                                    onClick={e => handleTag(e, data.idx)}
+                                    key={data.idx}
+                                    value={data.name}
+                                    className="min-w-fit mr-5 hover:underline underline-offset-4"
+                                >
                                     #{data.name}
                                 </button>
                             );
@@ -367,20 +403,26 @@ const Category = () => {
                 </div>
             </section>
             <section className="category max-w-6xl mx-auto">
-                <section className="flex grow flex-wrap mt-[20px] mb-[20px]">
+                <section
+                    className={
+                        storeList?.length > 0
+                            ? 'flex grow flex-wrap mb-[20px] '
+                            : 'flex justify-center items-center h-[calc(100vh-352px)]'
+                    }
+                >
                     {storeList?.length > 0 ? (
                         storeList.map(data => {
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                             return (
-                                <Fragment key={idx}>
+                                <Link key={idx} to={`/detail/${idx}`}>
                                     <div
                                         className={
-                                            'h-[170px] w-[280px] min-w-[280px] my-[10px] mx-[5px] bg-white rounded-[20px] shadow-md overflow-hidden'
+                                            'h-[170px] w-[265px] min-w-[265px] my-[10px] mx-[5px] bg-white rounded-[20px] shadow-md overflow-hidden'
                                         }
                                     >
                                         <div className="p-[10px] h-full flex flex-col justify-between">
                                             <div className="flex justify-between">
-                                                <h3 className="w-fit px-[5px] py-[2px] rounded-[20px] bg-orange-400 text-white text-[14px]">
+                                                <h3 className="w-fit px-[5px] py-[2px] rounded bg-orange-400 text-white text-[14px]">
                                                     {category}
                                                 </h3>
                                                 <p className="flex items-center text-[14px]">&#128681; {distance}분</p>
@@ -393,13 +435,13 @@ const Category = () => {
                                                 <span>&#128221;{review}</span>
                                                 <span>{isFavorite === true ? '💘' : '🖤'}</span>
                                             </div>
-                                            <div className="h-[50px]">
-                                                <div className="flex gap-[5px] flex-wrap">
+                                            <div className="h-11 overflow-y-scroll">
+                                                <div className="flex gap-1 flex-wrap max-h-fit">
                                                     {tag.map((data, id) => {
                                                         return (
                                                             <span
                                                                 key={id}
-                                                                className="rounded-[10px] px-[5px] py-[2px] bg-orange-600 text-white text-[12px]"
+                                                                className="rounded min-w-fit p-1 bg-orange-600 text-white text-[12px]"
                                                             >
                                                                 #{data}
                                                             </span>
@@ -409,13 +451,13 @@ const Category = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </Fragment>
+                                </Link>
                             );
                         })
                     ) : onlyLike ? (
-                        <p>찜한 가게가 없습니다😭</p>
+                        <p className="h-[calc(100vh-352px)]">찜한 가게가 없습니다😭</p>
                     ) : (
-                        <p>작성된 리뷰가 없습니다😭</p>
+                        <p className="h-[calc(100vh-352px)]">작성된 리뷰가 없습니다😭</p>
                     )}
                 </section>
             </section>
