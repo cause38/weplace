@@ -1,5 +1,6 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faStar} from '@fortawesome/free-solid-svg-icons';
 import {faImage, faThumbsUp, faThumbsDown} from '@fortawesome/free-regular-svg-icons';
 
 const Review = ({data, handleReviewToggle}) => {
@@ -11,7 +12,7 @@ const Review = ({data, handleReviewToggle}) => {
                     <div className="flex flex-col gap-2">
                         <p>{data.name}</p>
                         <div className="flex gap-2 items-center">
-                            <span>{data.star}</span>
+                            <span className="text-yellow-400">{<FontAwesomeIcon icon={faStar} />}</span>
                             <span className={`${data.image.length > 0 ? 'hidden' : ''} text-orange-500`}>
                                 <FontAwesomeIcon icon={faImage} />
                             </span>

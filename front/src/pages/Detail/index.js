@@ -35,7 +35,6 @@ const Detail = () => {
             }
         });
     }, []);
-
     useEffect(() => {
         console.log(review);
     }, [review]);
