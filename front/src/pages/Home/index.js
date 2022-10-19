@@ -53,10 +53,9 @@ const Home = () => {
 
     useEffect(() => {
         // get 최신리뷰 데이터
-        axios.get('http://place-api.weballin.com/main').then(response => {
-            if (response.status === 200) {
-                console.log(response);
-                setNewReviewData(response.data.data.reviews);
+        axios.get('http://place-api.weballin.com/main').then(res => {
+            if (res.status === 200) {
+                setNewReviewData(res.data.data.reviews);
             }
         });
     }, []);
@@ -136,8 +135,8 @@ const Home = () => {
                             },
                         }}
                     >
-                        {newReviewData.map(data => (
-                            <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={data.idx}>
+                        {newReviewData.map((data, idx) => (
+                            <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={idx}>
                                 <Link to={`/detail/${data.idx}`}>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className="inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
