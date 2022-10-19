@@ -16,9 +16,9 @@ class View extends RestController {
     }
 
     public function index_get() {
-        $shopIdx  = trim($this->get('idx'))          ?: $this->response(['state' => 401, 'msg' => '등록되지 않은 매장입니다.']);
-        $token    = trim($this->get('token') ?? '');
-        $favorite = false;
+        $shopIdx    = trim($this->get('idx'))          ?: $this->response(['state' => 401, 'msg' => '등록되지 않은 매장입니다.']);
+        $token      = trim($this->get('token') ?? '');
+        $isFavorite = false;
 
         $idx = 0;
         if ($token) {
