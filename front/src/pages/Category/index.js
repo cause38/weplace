@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Link, useParams, useNavigate} from 'react-router-dom';
 
 import dropdown from '../../assets/dropdown.svg';
@@ -10,11 +10,11 @@ import API from 'config';
 const Category = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-
+    const tagRef = useRef();
     const token = sessionStorage.getItem('token') || '';
 
     const [categoryList, setCategoryList] = useState();
-    const [tagList, setTagList] = useState();
+    const [tagList, setTagList] = useState([]);
     const [storeList, setStoreList] = useState();
     const [sendTagList, setSendTagList] = useState([]);
 
@@ -57,10 +57,19 @@ const Category = () => {
 
         const selectedSorting = SORTING[0].name;
 
+        const resetTagList = [...tagList];
+        const tagClass = document.querySelectorAll('.hash');
+
+        const remo = '.border-transparent.text-orange-500.underline.underline-offset-4.font-semibold.cursor-pointer';
+        if (tagClass) {
+            // tagClass.filter(el => el !== remo);
+        }
+
         setSelectedSorting(selectedSorting);
         setNewSorting(_newSorting);
         setOnlyLike(false);
         setIsDrop(false);
+        setTagList(resetTagList);
 
         fetch(`${API.categoryList}?category=${id}&token=${token}`, {
             method: 'GET',
@@ -70,7 +79,12 @@ const Category = () => {
         })
             .then(res => res.json())
             .then(data => {
-                setStoreList(data.data);
+                if (data.state === 200) {
+                    setStoreList(data.data);
+                } else if (data.state === 400) {
+                    console.error(data.msg);
+                    alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                }
             });
     }, [id]);
 
@@ -107,8 +121,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             } else {
@@ -125,8 +140,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             }
@@ -197,8 +213,9 @@ const Category = () => {
                 .then(data => {
                     if (data.state === 200) {
                         setStoreList(data.data);
-                    } else {
-                        console.log(data.state);
+                    } else if (data.state === 400) {
+                        console.error(data.msg);
+                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                     }
                 });
         } else {
@@ -212,8 +229,9 @@ const Category = () => {
                 .then(data => {
                     if (data.state === 200) {
                         setStoreList(data.data);
-                    } else {
-                        console.log(data.state);
+                    } else if (data.state === 400) {
+                        console.error(data.msg);
+                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                     }
                 });
         }
@@ -256,8 +274,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             } else {
@@ -271,8 +290,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             }
@@ -304,8 +324,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             } else {
@@ -319,8 +340,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             }
@@ -396,10 +418,11 @@ const Category = () => {
                         {tagList?.map(data => {
                             return (
                                 <button
+                                    ref={tagRef}
                                     onClick={e => handleTag(e, data.idx)}
                                     key={data.idx}
                                     value={data.name}
-                                    className="min-w-fit mr-5 hover:underline underline-offset-4"
+                                    className="hash min-w-fit mr-5 hover:underline underline-offset-4"
                                 >
                                     #{data.name}
                                 </button>
