@@ -3,6 +3,7 @@ import {Link, useParams} from 'react-router-dom';
 
 import dropdown from '../../assets/dropdown.svg';
 import dropdownActive from '../../assets/dropdownActive.svg';
+import selected from '../../assets/selected.svg';
 
 import API from 'config';
 
@@ -48,11 +49,25 @@ const Category = () => {
             });
     }, []);
 
-    // 카테고리 리스트 클릭 시, 카테고리 변경
+    // 카테고리 리스트 클릭 시, 카테고리 변경 & 필터기능 리셋
     useEffect(() => {
+        let _newSorting = [...SORTING];
+
+        const getTrue = _newSorting.map((data, key) => {
+            if (data.id !== 0) {
+                _newSorting[key] = false;
+            } else {
+                _newSorting[key] = true;
+            }
+        });
+
+        const selectedSorting = SORTING[0].name;
+
+        setSelectedSorting(selectedSorting);
+        setNewSorting(_newSorting);
         setOnlyLike(false);
         setIsDrop(false);
-        setSelectedSorting(SORTING[0].name);
+
         fetch(`${API.categoryList}?category=${id}&token=${token}`, {
             method: 'GET',
             headers: {
@@ -120,11 +135,11 @@ const Category = () => {
 
     // 진열방식 값 변경
     const changeSortingVal = selectedSorting => {
-        // 최신순 눌렀을 때는 빈값
-        // 별점높은순을 눌렀을 때 sales
-        // 가까운순을 눌렀을 때 low
-        // 리뷰많은순을 눌렀을 때 high
-        // 찜많은순을 눌렀을 때 review
+        // 최신순 눌렀을 때는 recent
+        // 별점높은순 눌렀을 때 star
+        // 가까운순을 눌렀을 때 distance
+        // 리뷰많은순을 눌렀을 때 review
+        // 찜많은순을 눌렀을 때 favorite
         if (selectedSorting === '최신순') {
             return 'recent';
         } else if (selectedSorting === '별점높은순') {
@@ -146,8 +161,9 @@ const Category = () => {
     // filter 선택 시,
     const handleSorting = (e, key) => {
         e.preventDefault();
+
         let value = SORTING.filter(data => data.id === key);
-        console.log('key', key);
+
         let newSorting = [...SORTING];
 
         if (newSorting[key] !== value.id) {
@@ -155,6 +171,7 @@ const Category = () => {
         } else {
             newSorting[key] = !newSorting[key];
         }
+
         const selectedSorting = value[0].name;
 
         const switchedValue = changeSortingVal(selectedSorting);
@@ -218,10 +235,13 @@ const Category = () => {
                 </ul>
             </section>
 
-            <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px]">
+            <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
                 <div className="max-w-6xl flex">
-                    {/* <div className="flex w-[95px] justify-between" onClick={handleDrop}>
-                        <span className="font-semibold">{selectedSorting}</span>
+                    <div
+                        className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                        onClick={handleDrop}
+                    >
+                        <span className="">{selectedSorting}</span>
                         <div className="flex">
                             {!isDrop ? (
                                 <img alt="dropdown" src={dropdown} />
@@ -229,12 +249,39 @@ const Category = () => {
                                 <img alt="dropdown" src={dropdownActive} />
                             )}
                         </div>
-                    </div> */}
-                    <Menu as="div" className="relative inline-block text-left">
+                    </div>
+                    <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
+                    {isDrop && (
+                        <div className="absolute top-[200px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <ul className="">
+                                {SORTING.map((data, key) => {
+                                    return (
+                                        <li
+                                            key={key}
+                                            onClick={e => handleSorting(e, key)}
+                                            value={data.name}
+                                            className={
+                                                newSorting[key] === true
+                                                    ? 'font-semibold cursor-pointer'
+                                                    : 'cursor-pointer'
+                                            }
+                                        >
+                                            <div className="block px-4 py-2 text-sm flex justify-between">
+                                                <p className="">{data.name}</p>
+                                                {newSorting[key] === true && <img alt="selected" src={selected} />}
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* <Menu as="div" className="relative inline-block text-left w-[125px]">
                         <div>
                             <Menu.Button
-                                onClick={handleDrop}
-                                className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                                // onClick={handleDrop}
+                                className="inline-flex w-full justify-between rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                             >
                                 {selectedSorting}
                                 <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
@@ -265,25 +312,22 @@ const Category = () => {
                                             //         {newSorting[key] === true}
                                             //     </div>
                                             // </li>
-                                            <Menu.Item>
+                                            <Menu.Item key={key}>
                                                 {({active}) => (
                                                     <li
-                                                        key={key}
                                                         onClick={e => handleSorting(e, key)}
                                                         className={newSorting[key] === true ? 'font-semibold' : ''}
                                                     >
-                                                        <div className="row justify-between">
-                                                            <p
-                                                                className={classNames(
-                                                                    active
-                                                                        ? 'bg-gray-100 text-gray-900'
-                                                                        : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                {data.name}
-                                                            </p>
-                                                            {newSorting[key] === true}
+                                                        <div
+                                                            className={classNames(
+                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                                'block px-4 py-2 text-sm flex justify-between'
+                                                            )}
+                                                        >
+                                                            <p>{data.name}</p>
+                                                            {newSorting[key] === true && (
+                                                                <img alt="selected" src={selected} />
+                                                            )}
                                                         </div>
                                                     </li>
                                                 )}
@@ -306,33 +350,20 @@ const Category = () => {
                                 </ul>
                             </Menu.Items>
                         </Transition>
-                    </Menu>
-                    {/* <div className={isDrop ? 'drop-background' : null} onClick={() => setIsDrop(false)} />
-                    {isDrop && (
-                        <div className="absolute drop-box bg-zinc-100 rounded">
-                            <ul className="">
-                                {SORTING.map((data, key) => {
-                                    return (
-                                        <li
-                                            key={key}
-                                            onClick={e => handleSorting(e, key)}
-                                            value={data.name}
-                                            className={newSorting[key] === true ? 'font-semibold' : ''}
-                                        >
-                                            <div className="row justify-between">
-                                                <p className="R13 black-80">{data.name}</p>
-                                                {newSorting[key] === true}
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    )} */}
+                    </Menu> */}
+
                     <button className="mx-[20px]" onClick={e => showOnlyLike(e)}>
                         {onlyLike ? '💘 찜한가게' : '🖤 찜한가게'}
                     </button>
-                    <div className="mx-[20px]">해쉬태그들</div>
+                    <div className="mx-[20px] w-[calc(100%-300px)] flex items-center overflow-auto">
+                        {tagList?.map(data => {
+                            return (
+                                <button key={data.idx} className="min-w-fit mr-5 hover:underline underline-offset-4">
+                                    #{data.name}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </section>
             <section className="category max-w-6xl mx-auto">
