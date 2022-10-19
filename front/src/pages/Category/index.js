@@ -68,9 +68,6 @@ const Category = () => {
     // 찜 리스트만 보기
     const showOnlyLike = e => {
         e.preventDefault();
-        setOnlyLike(!onlyLike);
-
-        console.log('onlyLike', onlyLike);
         const switchedValue = changeSortingVal(selectedSorting);
 
         if (id === undefined) {
@@ -78,44 +75,46 @@ const Category = () => {
         }
 
         if (token === '') {
+            setOnlyLike(false);
             if (window.confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
                 alert('로그인 창으로 이동');
                 window.location.href = '/login';
             } else {
                 return;
             }
-        }
-
-        if (!onlyLike) {
-            fetch(`${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.state === 200) {
-                        setStoreList(data.data);
-                    } else {
-                        console.log(data.state);
-                    }
-                });
         } else {
-            fetch(`${API.categoryList}?token=${token}&filter=${switchedValue}&category=${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.state === 200) {
-                        setStoreList(data.data);
-                    } else {
-                        console.log(data.state);
-                    }
-                });
+            setOnlyLike(!onlyLike);
+            if (!onlyLike) {
+                fetch(`${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            setStoreList(data.data);
+                        } else {
+                            console.log(data.state);
+                        }
+                    });
+            } else {
+                fetch(`${API.categoryList}?token=${token}&filter=${switchedValue}&category=${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            setStoreList(data.data);
+                        } else {
+                            console.log(data.state);
+                        }
+                    });
+            }
         }
     };
 
