@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {useNavigate, useLocation} from '../../node_modules/react-router-dom/dist/index';
 import iconHandshake from '../assets/waving-hand.png';
 
-import {profileImgValue, nameValue} from 'atoms/state';
+import {tokenValue, profileImgValue, nameValue} from 'atoms/state';
 import {useRecoilState} from '../../node_modules/recoil/';
 
 const Header = () => {
@@ -20,6 +20,7 @@ const Header = () => {
     const [isMenuOn, setIsMenuOn] = useState(true);
 
     // 프로필 이미지
+    const [token, setToken] = useRecoilState(tokenValue);
     const [profile, setProfile] = useRecoilState(profileImgValue);
     const [nickName, setNickname] = useRecoilState(nameValue);
 
@@ -31,6 +32,7 @@ const Header = () => {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('profileImg');
         sessionStorage.removeItem('name');
+        setToken(null);
         if (window.confirm('로그아웃 되었습니다.' + msg)) {
             navigate('/');
         }

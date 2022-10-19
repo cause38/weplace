@@ -86,9 +86,9 @@ const Login = () => {
                             pathname === '/find-password' ||
                             pathname === undefined
                         ) {
-                            window.location.href = '/';
+                            navigate('/');
                         } else {
-                            navigate(pathname);
+                            navigate(-1);
                         }
                     } else if (response.data.state === 400) {
                         alert(response.data.msg);
