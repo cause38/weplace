@@ -1,5 +1,5 @@
-import React, {Fragment, useEffect, useState} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useParams, useNavigate} from 'react-router-dom';
 
 import dropdown from '../../assets/dropdown.svg';
 import dropdownActive from '../../assets/dropdownActive.svg';
@@ -7,15 +7,9 @@ import selected from '../../assets/selected.svg';
 
 import API from 'config';
 
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/20/solid';
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ');
-}
-
 const Category = () => {
     const {id} = useParams();
+    const navigate = useNavigate();
 
     const token = sessionStorage.getItem('token') || '';
 
@@ -55,9 +49,9 @@ const Category = () => {
 
         const getTrue = _newSorting.map((data, key) => {
             if (data.id !== 0) {
-                _newSorting[key] = false;
+                return (_newSorting[key] = false);
             } else {
-                _newSorting[key] = true;
+                return (_newSorting[key] = true);
             }
         });
 
@@ -93,7 +87,7 @@ const Category = () => {
             setOnlyLike(false);
             if (window.confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
                 alert('로그인 창으로 이동');
-                window.location.href = '/login';
+                navigate('/login');
             } else {
                 return;
             }
@@ -185,8 +179,6 @@ const Category = () => {
         setIsDrop(!isDrop);
         setNewSorting(newSorting);
 
-        console.log('datadatdtat', sendTagList);
-
         if (id === undefined) {
             return;
         }
@@ -237,7 +229,14 @@ const Category = () => {
 
         if (e.target.classList.contains('on')) {
             e.target.classList.remove('border-orange-300');
-            e.target.classList.add('bg-orange-500', 'border-transparent', 'text-white');
+            e.target.classList.add(
+                'border-transparent',
+                'text-orange-500',
+                'underline',
+                'underline-offset-4',
+                'font-semibold',
+                'cursor-pointer'
+            );
 
             newTagList.push(parseInt(tagValue));
             setSendTagList(newTagList);
@@ -278,7 +277,14 @@ const Category = () => {
                     });
             }
         } else {
-            e.target.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
+            e.target.classList.remove(
+                'border-transparent',
+                'text-orange-500',
+                'underline',
+                'underline-offset-4',
+                'font-semibold',
+                'cursor-pointer'
+            );
             e.target.classList.add('border-orange-300');
 
             const filtered = newTagList.filter(item => item !== parseInt(tagValue));
@@ -383,7 +389,7 @@ const Category = () => {
                     )}
 
                     <button className="mx-[20px]" onClick={e => showOnlyLike(e)}>
-                        {onlyLike ? '💘 찜한가게' : '🖤 찜한가게'}
+                        {onlyLike ? '💘 찜한가게' : '🤍 찜한가게'}
                     </button>
 
                     <div className="mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll">
@@ -411,7 +417,7 @@ const Category = () => {
                     }
                 >
                     {storeList?.length > 0 ? (
-                        storeList.map(data => {
+                        storeList.map((data, key) => {
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                             return (
                                 <Link key={idx} to={`/detail/${idx}`}>
@@ -433,7 +439,7 @@ const Category = () => {
                                             <div className="flex justify-between">
                                                 <span>⭐{star}</span>
                                                 <span>&#128221;{review}</span>
-                                                <span>{isFavorite === true ? '💘' : '🖤'}</span>
+                                                <span>{isFavorite === true ? '💘' : '🤍'}</span>
                                             </div>
                                             <div className="h-11 overflow-y-scroll">
                                                 <div className="flex gap-1 flex-wrap max-h-fit">
