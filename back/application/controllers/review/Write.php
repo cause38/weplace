@@ -110,7 +110,8 @@ class Write extends RestController {
 
         $this->response([
             'state' => 200,
-            'msg' => '리뷰가 등록되었습니다.'
+            'msg'   => '리뷰가 등록되었습니다.',
+            'data'  => ['shopIdx' => $shopIdx]
         ]);
     }
 
