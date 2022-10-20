@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Link, useParams, useNavigate} from 'react-router-dom';
+import {Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
 import dropdown from '../../assets/dropdown.svg';
 import dropdownActive from '../../assets/dropdownActive.svg';
@@ -10,6 +10,7 @@ import API from 'config';
 const Category = () => {
     const {id} = useParams();
     const navigate = useNavigate();
+    const {pathname} = useLocation();
     const tagRef = useRef();
     const token = sessionStorage.getItem('token') || '';
 
@@ -101,7 +102,7 @@ const Category = () => {
             setOnlyLike(false);
             if (window.confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
                 alert('로그인 창으로 이동');
-                navigate('/login');
+                navigate('/login', {state: {pathname: pathname}});
             } else {
                 return;
             }
