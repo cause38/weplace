@@ -1,6 +1,8 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
+import CategoryNav from './components/CategoryNav';
+
 import dropdown from '../../assets/dropdown.svg';
 import dropdownActive from '../../assets/dropdownActive.svg';
 import selected from '../../assets/selected.svg';
@@ -14,7 +16,8 @@ const Category = () => {
     const tagRef = useRef();
     const token = sessionStorage.getItem('token') || '';
 
-    const [categoryList, setCategoryList] = useState();
+    const [categoryList, setCategoryList] = useState([]);
+    const [currentCategory, setCurrentCategory] = useState([]);
     const [tagList, setTagList] = useState([]);
     const [storeList, setStoreList] = useState();
     const [sendTagList, setSendTagList] = useState([]);
@@ -41,6 +44,11 @@ const Category = () => {
                 const categoryDate = [...defaultAll, ...data.data.category];
                 setCategoryList(categoryDate);
                 setTagList(data.data.tag);
+
+                const current = categoryDate.filter(function (data) {
+                    return data.idx === id ? true : false;
+                });
+                setCurrentCategory(current);
             });
     }, []);
 
@@ -353,7 +361,8 @@ const Category = () => {
     return (
         <div className="flex-col">
             <section className="category-nav">
-                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex gap-1.5 overflow-x-scroll">
+                <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.name} />
+                {/* <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex gap-1.5 overflow-x-scroll">
                     {categoryList?.map(data => {
                         const {idx, name} = data;
                         return (
@@ -366,7 +375,7 @@ const Category = () => {
                             </Link>
                         );
                     })}
-                </ul>
+                </ul> */}
             </section>
 
             <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
