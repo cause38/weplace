@@ -4,15 +4,9 @@ import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import SwiperCore, {Keyboard, Mousewheel} from 'swiper';
 
-import {useRecoilState} from '../../../../node_modules/recoil/';
-
 const CategoryNav = ({data, currentCategory}) => {
-    console.log('data', data);
-    const router = useParams();
     const navigate = useNavigate();
     const {pathname} = useLocation();
-
-    const categoryQuery = router.id;
 
     const tabRef = useRef([]);
     const [scrollOnCategory, setScrollOnCategory] = useState();
@@ -27,51 +21,46 @@ const CategoryNav = ({data, currentCategory}) => {
         }
     }, [currentCategory]);
 
+    // 해당 카테고리가 가운데에 보이게
     useEffect(() => {
         if (tabRef.current[scrollOnCategory] === undefined) {
             return;
         }
         tabRef.current[scrollOnCategory]?.scrollIntoView({
-            // behavior: "smooth",
             block: 'center',
             inline: 'center',
         });
     }, [scrollOnCategory]);
 
+    // 카테고리 선택 시, 카테고리 변경
     const handleCategoryId = (e, category) => {
-        console.log('cate', category);
         e.preventDefault();
-        // if (pathName === "/category") {
-        // router.push({
-        //   pathname: `/category/${category.id}`,
-        // });
-        window.location.href = `/category/${category.idx}`;
 
-        // navigate(`/category/${category.idx}`, {state: {pathname: pathname}});
-
-        // useStore.setState({
-        //     categoryList: [category],
-        // });
-        // } else if (pathName === "/FAQ") {
-        //   console.log(category.id);
-        //   setCurrentName(category.name);
-        // }
+        navigate(`/category/${category.idx}`, {state: {pathname: pathname}});
+        setCurrentName(category.name);
     };
 
     return (
-        <article className="header-slide row max-width flex justify-center" key={data.idx}>
+        <article
+            className="category-nav-container my-0 mx-auto overflow-hidden overflow-x-auto flex max-w-6xl p-2 cursor-pointer"
+            key={data.idx}
+        >
             {data.map((category, i) => {
                 return (
-                    <div className="header-slide-name-box link" key={i} onClick={e => handleCategoryId(e, category)}>
+                    <div
+                        className="header-slide-name-box link min-w-fit"
+                        key={i}
+                        onClick={e => handleCategoryId(e, category)}
+                    >
                         {currentName === category.name ? (
                             <h1
                                 ref={el => (tabRef.current[category.name] = el)}
-                                className="font-semibold min-w-fit p-2 rounded-full bg-orange-400 text-white bg-orange-700"
+                                className="font-semibold min-w-fit p-2 rounded-full text-white bg-orange-500 m-1"
                             >
                                 {category.name}
                             </h1>
                         ) : (
-                            <h1 className="min-w-fit p-2 rounded-full bg-orange-400 text-white hover:bg-orange-700">
+                            <h1 className="min-w-fit p-2 rounded-full bg-white text-orange-600 border border-orange-300 m-1 hover:bg-orange-500 hover:text-white">
                                 {category.name}
                             </h1>
                         )}
