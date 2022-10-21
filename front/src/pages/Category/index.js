@@ -76,6 +76,7 @@ const Category = () => {
         setNewSorting(_newSorting);
         setOnlyLike(false);
         setIsDrop(false);
+        setSendTagList([]);
 
         fetch(`${API.categoryList}?category=${id}&token=${token}`, {
             method: 'GET',
