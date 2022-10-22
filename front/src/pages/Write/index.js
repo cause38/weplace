@@ -31,10 +31,13 @@ const Write = () => {
     // 선택한 태그 목록
     const [tagList, setTagList] = useState([]);
 
-    // 이미지 첨부
+    // form 이미지 첨부
+    const [imgList, setImgList] = useState([]);
+
+    // 미리보기 이미지 첨부
     const [files, setFiles] = useState([]);
 
-    // 첨부이미지 -> base64 파일로 변환
+    // 미리보기 이미지 -> base64 파일로 변환
     const [Base64s, setBase64s] = useState([]);
 
     // 매장검색 모달
@@ -122,12 +125,14 @@ const Write = () => {
     useEffect(() => {
         if (files) {
             setBase64s([]);
-
+            setImgList([]);
             Array.from(files).forEach(image => {
                 encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
             });
 
-            setValue({...value, ['reviewImg']: Base64s});
+            const imgArr = Base64s.map(item => item.image);
+            setImgList(imgArr);
+            setValue({...value, ['reviewImg']: imgList});
         }
     }, [files]);
 
@@ -310,22 +315,24 @@ const Write = () => {
         const msg = isModify ? '수정' : '등록';
         const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
-        axios
-            .post(url, value)
-            .then(function (res) {
-                handleSearchBtn();
-                if (res.data.state === 200) {
-                    if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
-                        navigate(`/detail/${res.data.data.shopIdx}`);
-                    }
-                } else {
-                    alert(res.data.msg);
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-            });
+        console.log(value);
+
+        // axios
+        //     .post(url, value)
+        //     .then(function (res) {
+        //         handleSearchBtn();
+        //         if (res.data.state === 200) {
+        //             if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
+        //                 navigate(`/detail/${res.data.data.shopIdx}`);
+        //             }
+        //         } else {
+        //             alert(res.data.msg);
+        //         }
+        //     })
+        //     .catch(function (error) {
+        //         console.error(error);
+        //         alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+        //     });
     };
 
     return (

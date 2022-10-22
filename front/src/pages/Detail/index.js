@@ -128,6 +128,8 @@ const Detail = () => {
                 review.map(item => (
                     <Review
                         key={item.idx}
+                        idx={idx}
+                        token={token}
                         sIdx={store.idx}
                         data={item}
                         more={moreToggle}

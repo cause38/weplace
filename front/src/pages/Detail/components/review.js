@@ -1,11 +1,36 @@
 import React, {useState, useEffect} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
-import {faImage, faThumbsUp, faThumbsDown, faPenToSquare} from '@fortawesome/free-regular-svg-icons';
+import axios from 'axios';
 import {Link} from 'react-router-dom';
 
-const Review = ({sIdx, data, more, handleReviewToggle, handleImg}) => {
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import {faImage, faThumbsUp, faThumbsDown, faPenToSquare, faTrashCan} from '@fortawesome/free-regular-svg-icons';
+
+const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg}) => {
     const [star, setStar] = useState([]);
+    const qs = require('qs');
+
+    const handleDelete = ridx => {
+        const url = 'http://place-api.weballin.com/review/view';
+        const data = {token: token, ridx};
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+        axios
+            .delete(url, options)
+            .then(function (res) {
+                console.log(res);
+                if (res.data.state === 200) {
+                } else {
+                    alert(res.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
+    };
 
     // 별점
     useEffect(() => {
@@ -26,12 +51,21 @@ const Review = ({sIdx, data, more, handleReviewToggle, handleImg}) => {
                         style={{background: `url('${data.thumb}') center/cover`}}
                     ></span>
                     <p className="text-lg">{data.name}</p>
-                    <Link
-                        to={`/write?idx=${sIdx}&ridx=${data.idx}`}
-                        className={`${data.isMine ? '' : 'hidden'} text-orange-500`}
-                    >
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                    </Link>
+                    <div className={`${data.isMine ? '' : 'hidden'} flex gap-2`}>
+                        <Link
+                            to={`/write?idx=${sIdx}&ridx=${data.idx}`}
+                            className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full hover:bg-orange-50"
+                        >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => handleDelete(data.idx)}
+                            className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full hover:bg-orange-50"
+                        >
+                            <FontAwesomeIcon icon={faTrashCan} />
+                        </button>
+                    </div>
                 </div>
                 <p className="flex items-center">{data.wdate}</p>
             </div>
