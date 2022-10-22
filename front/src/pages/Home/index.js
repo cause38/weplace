@@ -67,7 +67,7 @@ const Home = () => {
     return (
         <>
             <div className="pt-28 pb-8 md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
-                <div className="container-wb relative py-0 flex flex-col justify-center items-center gap-10 w-full ">
+                <div className="container-wb relative my-10 py-0 flex flex-col justify-center items-center gap-10 w-full ">
                     <img
                         src={iconThinking}
                         alt="thinking_food"
@@ -115,55 +115,55 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className="container-wb py-10">
-                <div className="">
-                    <div className="flex justify-between items-end mb-4">
-                        <h3 className="text-xl font-bold">💖최신 리뷰</h3>
-                        <Link to={'/category/0'} className="text-sm font-semibold text-gray-600 hover:text-orange-500">
-                            더보기 +
-                        </Link>
-                    </div>
-                    <Swiper
-                        modules={[Navigation, Pagination, A11y]}
-                        spaceBetween={25}
-                        slidesPerView={1.2}
-                        navigation
-                        breakpoints={{
-                            768: {
-                                width: 768,
-                                slidesPerView: 2.1,
-                            },
-                        }}
-                    >
-                        {newReviewData.map((data, idx) => (
-                            <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={idx}>
-                                <Link to={`/detail/${data.idx}`}>
-                                    <div className="flex justify-between items-center mb-3">
-                                        <span className="inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
-                                            {data.menu}
-                                        </span>
-                                        <span className="text-sm">{data.wdate}</span>
-                                    </div>
-                                    <div className="mt-6">
-                                        <span className="text-xs mb-1">{'⭐'.repeat(data.star)}</span>
-                                        <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.name}</h4>
-                                        <p className="truncate w-full text-gray-800">{data.comment}</p>
-                                    </div>
-                                </Link>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+            <div className="container-wb mt-0 pb-8 lg:pb-12">
+                <div className="flex justify-between items-end mt-4 mb-4">
+                    <h3 className="text-xl font-bold">💖최신 리뷰</h3>
+                    <Link to={'/category/0'} className="text-sm font-semibold text-gray-600 hover:text-orange-500">
+                        더보기 +
+                    </Link>
                 </div>
+                <Swiper
+                    modules={[Navigation, Pagination, A11y]}
+                    spaceBetween={25}
+                    slidesPerView={1.2}
+                    navigation
+                    breakpoints={{
+                        768: {
+                            width: 768,
+                            slidesPerView: 2.1,
+                        },
+                    }}
+                >
+                    {newReviewData.map((data, idx) => (
+                        <SwiperSlide className="bg-white rounded-lg p-5 shadow-lg" key={idx}>
+                            <Link to={`/detail/${data.idx}`}>
+                                <div className="flex justify-between items-center mb-3">
+                                    <span className="inline-block	text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
+                                        {data.menu}
+                                    </span>
+                                    <span className="text-sm">{data.wdate}</span>
+                                </div>
+                                <div className="mt-6">
+                                    <span className="text-xs mb-1">{'⭐'.repeat(data.star)}</span>
+                                    <h4 className="text-xl font-bold text-gray-900 truncate w-full">{data.name}</h4>
+                                    <p className="truncate w-full text-gray-800">{data.comment}</p>
+                                </div>
+                            </Link>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 text-center text-lg font-semibold text-orange-500">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4 text-center text-lg font-semibold text-orange-500">
                     {categoryArr.map(item => (
                         <Link
                             to={`/category/${item.idx}`}
-                            className={`${item.idx <= 0 ? 'col-span-2 ' : ''} bg-white shadow-lg rounded-lg p-10`}
+                            className={`${
+                                item.idx <= 0 ? 'col-span-2 ' : ''
+                            } bg-white shadow-lg rounded-lg p-5 lg:p-10`}
                             key={item.idx}
                         >
                             {item.name}
-                            <p className="mt-6 text-5xl">{item.icon}</p>
+                            <p className="mt-2 lg:mt-6 text-3xl lg:text-5xl">{item.icon}</p>
                         </Link>
                     ))}
                 </div>

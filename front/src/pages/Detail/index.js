@@ -4,7 +4,6 @@ import axios from 'axios';
 import Review from './components/review';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeart, faStar, faLocationDot} from '@fortawesome/free-solid-svg-icons';
-import {data} from '../../../node_modules/autoprefixer/lib/autoprefixer';
 
 const Detail = () => {
     const idx = parseInt(useParams().id);
@@ -12,6 +11,7 @@ const Detail = () => {
 
     // store data
     const [review, setReview] = useState([]);
+    const [moreToggle, setMoreToggle] = useState(false);
     const [store, setStore] = useState({
         address: '',
         base: '',
@@ -35,27 +35,20 @@ const Detail = () => {
             }
         });
     }, []);
-    useEffect(() => {
-        console.log(review);
-    }, [review]);
 
     const handleReviewToggle = e => {
-        const more = e.currentTarget.previousElementSibling;
+        const more = e.currentTarget.previousElementSibling.querySelector('.moreData');
+        setMoreToggle(!moreToggle);
         more.classList.toggle('hidden');
-        if (more.classList.contains('hidden')) {
-            e.currentTarget.innerHTML = `<i class="fa fa-chevron-circle-down" aria-hidden="true"></i>`;
-        } else {
-            e.currentTarget.innerHTML = `<i class="fa fa-chevron-circle-up" aria-hidden="true"></i>`;
-        }
     };
 
     return (
         <div className="container-wb">
             <div className="bg-white rounded p-6 pt-7 shadow-lg">
                 <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">{store.category}</span>
-                <h3 className="text-2xl font-bold mt-4">{store.name}</h3>
+                <h3 className="text-2xl font-bold mt-5 mb-1">{store.name}</h3>
                 <p>{`${store.address} ${store.base} ${store.floor}층`}</p>
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex flex-wrap gap-2 mt-5">
                     {store.tag.length > 0 &&
                         store.tag.map((tag, idx) => (
                             <span
@@ -91,7 +84,9 @@ const Detail = () => {
                 </div>
             </div>
             {review.length > 0 &&
-                review.map(item => <Review key={item.idx} data={item} handleReviewToggle={handleReviewToggle} />)}
+                review.map(item => (
+                    <Review key={item.idx} data={item} more={moreToggle} handleReviewToggle={handleReviewToggle} />
+                ))}
         </div>
     );
 };
