@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
-import {faImage, faThumbsUp, faThumbsDown} from '@fortawesome/free-regular-svg-icons';
+import {faImage, faThumbsUp, faThumbsDown, faPenToSquare} from '@fortawesome/free-regular-svg-icons';
+import {Link} from 'react-router-dom';
 
-const Review = ({data, more, handleReviewToggle}) => {
+const Review = ({sIdx, data, more, handleReviewToggle, handleImg}) => {
     const [star, setStar] = useState([]);
 
     // 별점
@@ -17,7 +18,7 @@ const Review = ({data, more, handleReviewToggle}) => {
     }, []);
 
     return (
-        <div key={data.idx} className="relative flex flex-col gap-5 mt-4 p-4 py-5 bg-white shadow-lg rounded">
+        <div className="relative flex flex-col gap-5 mt-4 p-4 py-5 bg-white shadow-lg rounded">
             <div className="flex gap-1 justify-between border border-gray-100 rounded-full p-2 py-1 pr-5">
                 <div className="flex gap-3 items-center">
                     <span
@@ -25,6 +26,12 @@ const Review = ({data, more, handleReviewToggle}) => {
                         style={{background: `url('${data.thumb}') center/cover`}}
                     ></span>
                     <p className="text-lg">{data.name}</p>
+                    <Link
+                        to={`/write?idx=${sIdx}&ridx=${data.idx}`}
+                        className={`${data.isMine ? '' : 'hidden'} text-orange-500`}
+                    >
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                    </Link>
                 </div>
                 <p className="flex items-center">{data.wdate}</p>
             </div>
@@ -75,14 +82,17 @@ const Review = ({data, more, handleReviewToggle}) => {
                             </span>
                             <p>{data.comment_bad}</p>
                         </div>
-                        <div className="flex gap-2 mt-2">
-                            {data.image.length > 0 &&
-                                data.image.map((img, idx) => {
-                                    <div key={idx} className="w-[100px] h-[100px] border">
-                                        <img src={img} alt="리뷰이미지" />
-                                    </div>;
-                                })}
-                        </div>
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                        {data.image.length > 0 &&
+                            data.image.map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className="w-[100px] h-[100px] border p-2 hover:bg-orange-200 cursor-pointer"
+                                    onClick={() => handleImg(item)}
+                                    style={{background: `url(${item}) no-repeat center/auto 90%`}}
+                                ></div>
+                            ))}
                     </div>
                 </div>
             </div>
