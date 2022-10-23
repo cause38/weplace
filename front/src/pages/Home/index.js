@@ -17,22 +17,24 @@ import 'styles/swiper-custom.css';
 const Home = () => {
     const navigate = useNavigate();
 
+    // 슬롯머신 버튼
+    const [lever, setLever] = useState(false);
+
     // 슬롯머신 메뉴
     const [menuList, setMenuList] = useState([
         '제육볶음',
         '순대국',
         '보쌈',
-        '볶음밥',
         '짜장면',
         '떡볶이',
         '우동',
         '햄버거',
         '냉면',
-        '볶음밥',
-        '짜장면',
-        '떡볶이',
-        '우동',
-        '햄버거',
+        '짬뽕',
+        '쌀국수',
+        '돈까스',
+        '피자',
+        '뚝배기 불고기',
     ]);
 
     // 최신리뷰 데이터
@@ -106,20 +108,24 @@ const Home = () => {
         const lever = e.currentTarget;
         const slot = document.querySelector('.slot-box');
 
+        // button diabled
+        setLever(true);
+
+        // animation start
         slot.classList.add('animation');
         lever.classList.add('animation');
 
+        // random idx
         const randIdx = Math.floor(Math.random() * menuList.length);
 
         setTimeout(() => {
-            // 랜덤메뉴 추가
-            const newItem = `<li class="h-[150px] leading-[150px]">${menuList[randIdx]}</li>`;
-            slot.lastElementChild.remove();
-            slot.insertAdjacentHTML('afterbegin', newItem);
+            // 랜덤메뉴
+            slot.firstElementChild.textContent = `${menuList[randIdx]}`;
 
             // 초기화
             lever.classList.remove('animation');
             slot.classList.remove('animation');
+            setLever(false);
         }, 1000);
     };
 
@@ -145,32 +151,33 @@ const Home = () => {
                     </h3>
                     <div className="relative flex items-center w-full w-lg:w-1/3 max-w-[500px]">
                         <div className="w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md">
-                            <div className="relative h-[150px] overflow-hidden bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center">
+                            <div className="relative h-[120px] overflow-hidden bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center">
                                 <ul className="slot-box absolute w-full">
-                                    <li className="h-[150px] leading-[150px]">제육볶음</li>
-                                    <li className="h-[150px] leading-[150px]">냉면</li>
-                                    <li className="h-[150px] leading-[150px]">햄버거</li>
-                                    <li className="h-[150px] leading-[150px]">보쌈</li>
-                                    <li className="h-[150px] leading-[150px]">떡볶이</li>
-                                    <li className="h-[150px] leading-[150px]">제육볶음</li>
-                                    <li className="h-[150px] leading-[150px]">냉면</li>
-                                    <li className="h-[150px] leading-[150px]">햄버거</li>
-                                    <li className="h-[150px] leading-[150px]">보쌈</li>
-                                    <li className="h-[150px] leading-[150px]">떡볶이</li>
+                                    <li className="h-[150px] leading-[120px]">START!</li>
+                                    <li className="h-[120px] leading-[120px]">냉면</li>
+                                    <li className="h-[120px] leading-[120px]">햄버거</li>
+                                    <li className="h-[120px] leading-[120px]">보쌈</li>
+                                    <li className="h-[120px] leading-[120px]">떡볶이</li>
+                                    <li className="h-[120px] leading-[120px]">제육볶음</li>
+                                    <li className="h-[120px] leading-[120px]">냉면</li>
+                                    <li className="h-[120px] leading-[120px]">햄버거</li>
+                                    <li className="h-[120px] leading-[120px]">보쌈</li>
+                                    <li className="h-[120px] leading-[120px]">떡볶이</li>
                                 </ul>
                             </div>
                         </div>
                         <div className="absolute right-0 bottom-2 w-2/12 h-3/5 overflow-visible">
                             <div className="absolute right-0 bottom-0 w-full h-full bg-orange-500 rounded-r-lg z-1"></div>
-                            <div
+                            <button
                                 id="lever"
                                 onClick={handleLever}
+                                disabled={lever}
                                 className="absolute -top-[110px] left-1/2 -translate-x-1/2 w-[40px] z-10 flex flex-col-reverse items-center cursor-pointer"
                             >
                                 <div className="w-[10px] h-[30px] bg-orange-600"></div>
                                 <div className="bar w-[10px] h-[70px] bg-stone-300"></div>
                                 <div className="circle w-[40px] h-[40px] bg-yellow-400 rounded-full"></div>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
