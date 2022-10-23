@@ -153,6 +153,8 @@ const MyPage = () => {
         formData.append('profileImg', file);
         formData.append('token', token);
 
+        console.log(file);
+
         axios
             .post('http://place-api.weballin.com/mypage/changeProfileImg', formData, {
                 headers: {

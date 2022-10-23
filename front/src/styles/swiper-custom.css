@@ -2,9 +2,14 @@
   padding-bottom: 20px;
 }
 .swiper-button-prev, .swiper-button-next {
-  transform: translateY(-10px);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f97316;
+  margin: 0;
+  transform: translateY(-80%);
 }
 .swiper-button-next:after, .swiper-button-prev:after {
-  font-size: 30px;
-  color: #f97316
+  font-size: 10px;
+  color: #fff;
 }

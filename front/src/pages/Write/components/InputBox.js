@@ -1,7 +1,7 @@
 import React from 'react';
 import {Fragment} from 'react';
 
-const InputBox = ({label, id, onClick, onChange}) => {
+const InputBox = ({label, id, value, onClick, onChange}) => {
     return (
         <>
             {onClick ? (
@@ -27,6 +27,7 @@ const InputBox = ({label, id, onClick, onChange}) => {
                     <input
                         name={id}
                         id={id}
+                        value={value || ''}
                         type="text"
                         onChange={onChange}
                         className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
