@@ -6,30 +6,34 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import {faImage, faThumbsUp, faThumbsDown, faPenToSquare, faTrashCan} from '@fortawesome/free-regular-svg-icons';
 
-const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg}) => {
+const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, getReviewData}) => {
     const [star, setStar] = useState([]);
     const qs = require('qs');
 
     const handleDelete = ridx => {
-        const url = 'http://place-api.weballin.com/review/view';
-        const data = {token: token, ridx};
-        const options = {
-            headers: {'content-type': 'application/x-www-form-urlencoded'},
-            data: qs.stringify(data),
-        };
-        axios
-            .delete(url, options)
-            .then(function (res) {
-                console.log(res);
-                if (res.data.state === 200) {
-                } else {
-                    alert(res.data.msg);
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-            });
+        if (window.confirm('삭제 시 복구가 불가능합니다.\n정말 삭제 하시겠습니까?')) {
+            const url = 'http://place-api.weballin.com/mypage/deleteReview';
+            const data = {token: token, idx: parseInt(ridx)};
+            const options = {
+                headers: {'content-type': 'application/x-www-form-urlencoded'},
+                data: qs.stringify(data),
+            };
+
+            axios
+                .delete(url, options)
+                .then(response => {
+                    if (response.data.state === 200) {
+                        alert(response.data.msg);
+                        getReviewData();
+                    } else {
+                        alert(response.data.msg);
+                    }
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                });
+        }
     };
 
     // 별점

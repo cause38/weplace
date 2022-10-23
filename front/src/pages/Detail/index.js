@@ -32,7 +32,7 @@ const Detail = () => {
         url: '',
     });
 
-    useEffect(() => {
+    const getReviewData = () => {
         axios.get(`http://place-api.weballin.com/review/view`, {params: {idx, token}}).then(res => {
             if (res.status === 200) {
                 setIsFavorite(res.data.data.isFavorite);
@@ -40,6 +40,10 @@ const Detail = () => {
                 setReview(res.data.data.review);
             }
         });
+    };
+
+    useEffect(() => {
+        getReviewData();
     }, []);
 
     const handleReviewToggle = e => {
@@ -133,6 +137,7 @@ const Detail = () => {
                         sIdx={store.idx}
                         data={item}
                         more={moreToggle}
+                        getReviewData={getReviewData}
                         handleReviewToggle={handleReviewToggle}
                         handleImg={handleImg}
                     />
