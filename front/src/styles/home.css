@@ -1,0 +1,17 @@
+@keyframes shift_lever_rod { 
+    0% {transform: translateY(0) scaleY(1)} 
+    50% {transform: translateY(70px) scaleY(0.05)}
+    100% {transform: translateY(0) scaleY(1)} 
+}
+@keyframes shift_lever_top { 
+    0% {transform: translateY(0%)}
+    50% {transform: translateY(calc(50% + 100px))}
+    100% {transform: translateY(0%)}
+}
+#lever.animation .bar {
+    transform-origin: center center;
+    animation: 1s shift_lever_rod ease-in-out;
+}
+#lever.animation .circle {
+    animation: 1s shift_lever_top ease-in-out;
+}

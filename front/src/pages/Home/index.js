@@ -5,6 +5,7 @@ import {Navigation, Pagination, A11y} from 'swiper';
 import axios from 'axios';
 import iconThinking from '../../assets/thinking_emoji.png';
 
+import 'styles/home.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -64,6 +65,14 @@ const Home = () => {
         navigate('/detail', {state: {idx: idx}});
     };
 
+    const handleLever = e => {
+        const lever = e.currentTarget;
+        lever.classList.add('animation');
+        setTimeout(() => {
+            lever.classList.remove('animation');
+        }, 1000);
+    };
+
     return (
         <>
             <div className="pt-28 pb-8 md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
@@ -76,7 +85,7 @@ const Home = () => {
                     <img
                         src={iconThinking}
                         alt="thinking_food"
-                        className="hidden md:block absolute w-36 -bottom-20 right-0 animate-reverse-spin"
+                        className="hidden md:block absolute w-36 -bottom-20 md:right-10 right-0 animate-reverse-spin"
                     />
                     <h3
                         className="text-4xl md:text-5xl font-semibold text-orange-400 mb-0 md:mb-10"
@@ -90,27 +99,17 @@ const Home = () => {
                                 제육볶음
                             </div>
                         </div>
-                        <div className="absolute right-0 bottom-2 w-2/12 h-3/5 bg-orange-500 rounded-r-lg">
-                            <span className="absolute left-1/2 -translate-x-1/2 block w-3 h-8 bg-orange-600"></span>
-                            <svg
-                                viewBox="0 0 114 355"
-                                version="1.1"
-                                className="absolute top-0 left-1/2 -translate-y-full -translate-x-1/2 w-2/4 cursor-pointer"
+                        <div className="absolute right-0 bottom-2 w-2/12 h-3/5 overflow-visible">
+                            <div className="absolute right-0 bottom-0 w-full h-full bg-orange-500 rounded-r-lg z-1"></div>
+                            <div
+                                id="lever"
+                                onClick={handleLever}
+                                className="absolute -top-[110px] left-1/2 -translate-x-1/2 w-[40px] z-10 flex flex-col-reverse items-center cursor-pointer"
                             >
-                                <g id="lever">
-                                    <rect id="socket" fill="#3A6255" x="43" y="355" width="28" height="91.5"></rect>
-                                    <rect id="rod" fill="#D8D8D8" x="43" y="57" width="28" height="298"></rect>
-                                    <g id="top">
-                                        <circle fill="#F0A830" cx="57" cy="57" r="57"></circle>
-                                        <path
-                                            d="M102.570209,40.1833305 C102.676794,40.0838119 102.777304,39.9779482 102.871517,39.8656698 C105.889032,36.2695351 101.304331,27.4546828 92.6313004,20.177146 C83.9582698,12.8996092 74.4812099,9.91524313 71.4636947,13.5113778 C71.3644458,13.629658 71.273421,13.753584 71.1904954,13.8829152 C76.2444491,16.5602964 82.1808506,20.6036755 88.1462014,25.6091992 C94.0729258,30.5823114 99.0593916,35.6922002 102.570209,40.1833305 Z"
-                                            id="highlight"
-                                            fill="#FFFFFF"
-                                            transform="translate(87.494931, 26.085223) rotate(7.000000) translate(-87.494931, -26.085223) "
-                                        ></path>
-                                    </g>
-                                </g>
-                            </svg>
+                                <div className="w-[10px] h-[30px] bg-orange-600"></div>
+                                <div className="bar w-[10px] h-[70px] bg-stone-300"></div>
+                                <div className="circle w-[40px] h-[40px] bg-yellow-400 rounded-full"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
