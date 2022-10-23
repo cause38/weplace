@@ -9,7 +9,7 @@
     100% {transform: translateY(0%)}
 }
 #lever.animation .bar {
-    transform-origin: center center;
+    transform-origin: center;
     animation: 1s shift_lever_rod ease-in-out;
 }
 #lever.animation .circle {
