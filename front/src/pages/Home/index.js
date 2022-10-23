@@ -6,7 +6,7 @@ import axios from 'axios';
 import iconThinking from '../../assets/thinking_emoji.png';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faStar, faCirclePlus} from '@fortawesome/free-solid-svg-icons';
+import {faStar} from '@fortawesome/free-solid-svg-icons';
 
 import 'styles/home.css';
 import 'swiper/css';
@@ -16,7 +16,29 @@ import 'styles/swiper-custom.css';
 
 const Home = () => {
     const navigate = useNavigate();
+
+    // 슬롯머신 메뉴
+    const [menuList, setMenuList] = useState([
+        '제육볶음',
+        '순대국',
+        '보쌈',
+        '볶음밥',
+        '짜장면',
+        '떡볶이',
+        '우동',
+        '햄버거',
+        '냉면',
+        '볶음밥',
+        '짜장면',
+        '떡볶이',
+        '우동',
+        '햄버거',
+    ]);
+
+    // 최신리뷰 데이터
     const [newReviewData, setNewReviewData] = useState([]);
+
+    // 카테고리 리스트
     const categoryArr = [
         {
             idx: 0,
@@ -64,18 +86,12 @@ const Home = () => {
         });
     }, []);
 
+    // 최신리뷰 클릭 시 상세페이지
     const handleDetailView = idx => {
         navigate('/detail', {state: {idx: idx}});
     };
 
-    const handleLever = e => {
-        const lever = e.currentTarget;
-        lever.classList.add('animation');
-        setTimeout(() => {
-            lever.classList.remove('animation');
-        }, 1000);
-    };
-
+    // 최신리뷰 별점
     const handleStar = star => {
         const arr = [];
         for (let i = 0; i < 5; i++) {
@@ -83,6 +99,28 @@ const Home = () => {
             else arr.push(false);
         }
         return arr;
+    };
+
+    // 슬롯머신
+    const handleLever = e => {
+        const lever = e.currentTarget;
+        const slot = document.querySelector('.slot-box');
+
+        slot.classList.add('animation');
+        lever.classList.add('animation');
+
+        const randIdx = Math.floor(Math.random() * menuList.length);
+
+        setTimeout(() => {
+            // 랜덤메뉴 추가
+            const newItem = `<li class="h-[150px] leading-[150px]">${menuList[randIdx]}</li>`;
+            slot.lastElementChild.remove();
+            slot.insertAdjacentHTML('afterbegin', newItem);
+
+            // 초기화
+            lever.classList.remove('animation');
+            slot.classList.remove('animation');
+        }, 1000);
     };
 
     return (
@@ -107,8 +145,19 @@ const Home = () => {
                     </h3>
                     <div className="relative flex items-center w-full w-lg:w-1/3 max-w-[500px]">
                         <div className="w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md">
-                            <div className="p-8 py-10 bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center">
-                                제육볶음
+                            <div className="relative h-[150px] overflow-hidden bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center">
+                                <ul className="slot-box absolute w-full">
+                                    <li className="h-[150px] leading-[150px]">제육볶음</li>
+                                    <li className="h-[150px] leading-[150px]">냉면</li>
+                                    <li className="h-[150px] leading-[150px]">햄버거</li>
+                                    <li className="h-[150px] leading-[150px]">보쌈</li>
+                                    <li className="h-[150px] leading-[150px]">떡볶이</li>
+                                    <li className="h-[150px] leading-[150px]">제육볶음</li>
+                                    <li className="h-[150px] leading-[150px]">냉면</li>
+                                    <li className="h-[150px] leading-[150px]">햄버거</li>
+                                    <li className="h-[150px] leading-[150px]">보쌈</li>
+                                    <li className="h-[150px] leading-[150px]">떡볶이</li>
+                                </ul>
                             </div>
                         </div>
                         <div className="absolute right-0 bottom-2 w-2/12 h-3/5 overflow-visible">
@@ -131,7 +180,7 @@ const Home = () => {
                     <h3 className="text-xl font-bold">최신 리뷰</h3>
                     <Link
                         to={'/category/0'}
-                        className="font-semibold p-[1px] px-2 pb-1 rounded-full text-xs text-white bg-orange-400 hover:bg-orange-300 transition-colors"
+                        className="font-semibold p-[1px] px-2 pb-1 rounded-full text-xs text-white bg-stone-400 hover:bg-orange-400 transition-colors"
                     >
                         more
                     </Link>
