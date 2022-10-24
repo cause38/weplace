@@ -109,10 +109,7 @@ const Write = () => {
     }, []);
 
     const getDefalutData = (url, params, modifyMode) => {
-        console.log(url);
-        console.log(params);
-        console.log(modifyMode);
-        axios.get(url, params).then(res => {
+        axios.get(url, params).then(async res => {
             if (res.status === 200) {
                 const data = res.data.data;
                 if (modifyMode) {
@@ -124,6 +121,8 @@ const Write = () => {
                         }
                     });
 
+                    // modify tag data setting
+                    setTagList([...data.review.tag]);
                     setValue({
                         ...value,
                         idx: sidx,
@@ -190,55 +189,44 @@ const Write = () => {
         fileInput.current.files = dataTranster.files;
     };
 
-    // 태그 토글 시 애니메이션
-    useEffect(() => {
-        const tagFunc = async () => {
-            let newTagList = value['tag'];
+    // tag toggle event
+    const handleTag = async e => {
+        let newTagList = tagList;
 
-            newTagList.forEach(id => {
-                const tag = document.getElementById(`tag_${id}`);
-                tag.setAttribute('checked', 'checked');
-            });
-            await handleTagClass();
-        };
-        // tagFunc();
-    }, []);
+        const tagFunc = () => {
+            const tagValue = parseInt(e.target.nextSibling.value);
 
-    const handleTag = e => {
-        const tagFunc = async () => {
-            const tagValue = e.target.nextSibling.value;
-            let newTagList = value['tag'];
-
-            e.target.classList.toggle('on');
-
-            if (e.target.classList.contains('on')) {
-                console.log('on 있음');
-                newTagList = newTagList.filter(item => item !== tagValue);
+            if (tagList.indexOf(tagValue) < 0) {
+                newTagList.push(tagValue);
             } else {
-                console.log('on 없음');
-                newTagList.push(parseInt(tagValue));
+                newTagList = newTagList.filter(item => item !== tagValue);
             }
-
-            setTagList([...newTagList]);
-            handleTagClass();
         };
-        // tagFunc();
+
+        tagFunc();
+        await setTagList([...newTagList]);
     };
 
-    const handleTagClass = () => {
-        const tags = document.querySelectorAll('input[name="tags"]:checked');
-        const labels = document.querySelectorAll('.tagLabel');
-        // 초기화
-        labels.forEach(item => item.classList.remove('on'));
+    // 선택한 태그에 클래스 적용
+    useEffect(() => {
+        let newTagList = tagList;
 
-        // 선택된 태그 리스트만 클래스 적용
-        tags.forEach(tag => {
+        // 초기화
+        const labels = document.querySelectorAll('.tagLabel');
+        labels.forEach(item => {
+            item.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
+            item.classList.add('bg-white', 'text-orange-600', 'border-orange-300');
+        });
+
+        newTagList.forEach(idx => {
+            const tag = document.getElementById(`tag_${idx}`);
             const label = tag.previousSibling;
-            label.classList.add('on');
+
+            // 태그리스트 라벨 클래스 적용
             label.classList.remove('bg-white', 'text-orange-600', 'border-orange-300');
             label.classList.add('bg-orange-500', 'border-transparent', 'text-white');
         });
-    };
+    }, [tagList]);
 
     // 태그 목록 더보기 애니메이션
     const handleTagMore = e => {
@@ -364,16 +352,16 @@ const Write = () => {
 
     const handleSubmit = () => {
         const msg = isModify ? '수정' : '등록';
-        const url = 'http://place-api.weballin.com/review/write';
+        const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
         let formData = new FormData();
         console.log(value);
         for (let key in value) {
-            if (key !== 'reviewImg') {
+            if (key !== 'reviewImg' || key !== 'tag') {
                 formData.append(key, value[key]);
             } else {
                 value[key].forEach(item => {
-                    formData.append('reviewImg[]', item);
+                    formData.append(`${key}[]`, item);
                 });
             }
         }
@@ -385,8 +373,9 @@ const Write = () => {
                 },
             })
             .then(function (res) {
-                handleSearchBtn();
                 console.log(res);
+                !isModify && handleSearchBtn();
+
                 if (res.data.state === 200) {
                     if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
                         navigate(`/detail/${res.data.data.shopIdx}`);
