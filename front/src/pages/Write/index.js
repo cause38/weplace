@@ -4,13 +4,11 @@ import InputBox from './components/InputBox';
 import SelectBox from './components/SelectBox';
 import Modal from 'components/Modal';
 import axios from 'axios';
-import getMapData from '../../../node_modules/lodash/_getMapData';
-import {isModuleDeclaration} from '../../../../../../Users/FNF09/AppData/Local/Microsoft/TypeScript/4.8/node_modules/@babel/types/lib/index';
 
 const Write = () => {
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(useLocation().search);
-    const sidx = searchParams.get('idx');
+    const sidx = parseInt(searchParams.get('idx'));
     const ridx = searchParams.get('ridx');
     const token = sessionStorage.getItem('token');
     const locationArr = ['성동구'];
@@ -82,7 +80,7 @@ const Write = () => {
      *
      * 로그인 체크 후
      * 등록 -> 카테고리, 태그 목록
-     * 수정 -> 기존 리뷰 데이터
+     * 수정 -> 카테고리, 태그 목록 / 기존 리뷰 데이터
      *
      * ================================
      *  */
@@ -102,7 +100,7 @@ const Write = () => {
                 const params = modifyMode ? {params: {token, idx: sidx, ridx: ridx}} : '';
 
                 // 수정모드에서도 기본 카테고리 데이터 필요하여 세팅
-                if (modifyMode) await getDefalutData('http://place-api.weballin.com/review/write', '', false);
+                if (modifyMode) getDefalutData('http://place-api.weballin.com/review/write', '', false);
                 await getDefalutData(url, params, modifyMode);
             }
         };
@@ -111,12 +109,38 @@ const Write = () => {
     }, []);
 
     const getDefalutData = (url, params, modifyMode) => {
+        console.log(url);
+        console.log(params);
+        console.log(modifyMode);
         axios.get(url, params).then(res => {
             if (res.status === 200) {
                 const data = res.data.data;
                 if (modifyMode) {
-                    setValue({...value, ...data.review});
-                    setTagData(data.tag);
+                    // category str => int
+                    let newCidx = 0;
+                    categoryData.forEach(item => {
+                        if (item.name === data.review.category) {
+                            newCidx = parseInt(item.idx);
+                        }
+                    });
+
+                    setValue({
+                        ...value,
+                        idx: sidx,
+                        name: data.review.name,
+                        base: data.review.base,
+                        floor: parseInt(data.review.floor),
+                        cidx: newCidx,
+                        address: data.review.address,
+                        menu: data.review.menu,
+                        star: parseInt(data.review.star),
+                        comment: data.review.comment,
+                        comment_good: data.review.comment_good,
+                        comment_bad: data.review.comment_bad,
+                        tag: data.review.tag,
+                        reviewImg: data.review.image,
+                        ridx: parseInt(data.review.ridx),
+                    });
                 } else {
                     setCategoryData(data.category);
                     setTagData(data.tag);
@@ -177,7 +201,7 @@ const Write = () => {
             });
             await handleTagClass();
         };
-        tagFunc();
+        // tagFunc();
     }, []);
 
     const handleTag = e => {
@@ -198,7 +222,7 @@ const Write = () => {
             setTagList([...newTagList]);
             handleTagClass();
         };
-        tagFunc();
+        // tagFunc();
     };
 
     const handleTagClass = () => {
@@ -343,21 +367,23 @@ const Write = () => {
         const url = 'http://place-api.weballin.com/review/write';
 
         let formData = new FormData();
+        console.log(value);
         for (let key in value) {
             if (key !== 'reviewImg') {
                 formData.append(key, value[key]);
             } else {
                 value[key].forEach(item => {
-                    formData.append('reviewImg', item);
+                    formData.append('reviewImg[]', item);
                 });
             }
         }
-        // for (const pair of formData.entries()) {
-        //     console.log(`${pair[0]}, ${pair[1]}`);
-        // }
 
         axios
-            .post(url, value)
+            .post(url, formData, {
+                headers: {
+                    'Content-Type': `multipart/form-data; `,
+                },
+            })
             .then(function (res) {
                 handleSearchBtn();
                 console.log(res);
