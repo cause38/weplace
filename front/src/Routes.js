@@ -16,7 +16,8 @@ import Footer from './components/footer';
 
 function Switchs() {
     return (
-        <Router basename="http://place.weballin.com">
+        // <Router basename="http://place.weballin.com">
+        <Router>
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
