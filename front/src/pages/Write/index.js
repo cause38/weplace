@@ -315,24 +315,22 @@ const Write = () => {
         const msg = isModify ? '수정' : '등록';
         const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
-        console.log(value);
-
-        // axios
-        //     .post(url, value)
-        //     .then(function (res) {
-        //         handleSearchBtn();
-        //         if (res.data.state === 200) {
-        //             if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
-        //                 navigate(`/detail/${res.data.data.shopIdx}`);
-        //             }
-        //         } else {
-        //             alert(res.data.msg);
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         console.error(error);
-        //         alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-        //     });
+        axios
+            .post(url, value)
+            .then(function (res) {
+                handleSearchBtn();
+                if (res.data.state === 200) {
+                    if (window.confirm(`리뷰가 ${msg}되었습니다`)) { 
+                        navigate(`/detail/${res.data.data.shopIdx}`);
+                    }
+                } else {
+                    alert(res.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
     };
 
     return (
