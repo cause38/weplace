@@ -1,5 +1,5 @@
 import {React, useState, useEffect, useRef} from 'react';
-import {useNavigate} from '../../../node_modules/react-router-dom/dist/index';
+import {useLocation, useNavigate, useParams} from '../../../node_modules/react-router-dom/dist/index';
 import InputBox from './components/InputBox';
 import SelectBox from './components/SelectBox';
 import Modal from 'components/Modal';
@@ -7,7 +7,10 @@ import axios from 'axios';
 
 const Write = () => {
     const navigate = useNavigate();
-    const getToken = sessionStorage.getItem('token');
+    const searchParams = new URLSearchParams(useLocation().search);
+    const sidx = searchParams.get('idx');
+    const ridx = searchParams.get('ridx');
+    const token = sessionStorage.getItem('token');
     const locationArr = ['성동구'];
 
     // 거리계산을 위한 현재 위치 좌표(현재 회사 위치로 설정)
@@ -15,6 +18,9 @@ const Write = () => {
         x: '127.048455023259',
         y: '37.5464770743083',
     };
+
+    // 카테고리 목록
+    const [isModify, setIsModify] = useState(false);
 
     // 카테고리 목록
     const [categoryData, setCategoryData] = useState([]);
@@ -25,10 +31,13 @@ const Write = () => {
     // 선택한 태그 목록
     const [tagList, setTagList] = useState([]);
 
-    // 이미지 첨부
+    // form 이미지 첨부
+    const [imgList, setImgList] = useState([]);
+
+    // 미리보기 이미지 첨부
     const [files, setFiles] = useState([]);
 
-    // 첨부이미지 -> base64 파일로 변환
+    // 미리보기 이미지 -> base64 파일로 변환
     const [Base64s, setBase64s] = useState([]);
 
     // 매장검색 모달
@@ -47,7 +56,7 @@ const Write = () => {
 
     // form data
     const [value, setValue] = useState({
-        token: getToken,
+        token,
         idx: 0,
         name: '',
         address: '',
@@ -71,16 +80,44 @@ const Write = () => {
 
     // 로그인 체크 후 카테고리, 태그 목록 set
     useEffect(() => {
-        if (getToken === null) {
+        if (token === null) {
             navigate('/login');
         } else {
             // get 카테고리, 태그 목록
-            axios.get('http://place-api.weballin.com/review/write').then(response => {
-                if (response.status === 200) {
-                    setCategoryData(response.data.data.category);
-                    setTagData(response.data.data.tag);
+            axios.get('http://place-api.weballin.com/review/write').then(res => {
+                if (res.status === 200) {
+                    setCategoryData(res.data.data.category);
+                    setTagData(res.data.data.tag);
                 }
             });
+
+            if (sidx !== null) {
+                setIsModify(true);
+                setIsReadOnly(true);
+                axios
+                    .get(`http://place-api.weballin.com/review/modify`, {params: {token, idx: sidx, ridx: ridx}})
+                    .then(res => {
+                        if (res.status === 200) {
+                            const data = res.data.data.review;
+                            setValue({
+                                ...value,
+                                name: data.name,
+                                base: data.base,
+                                floor: parseInt(data.floor),
+                                cidx: data.category,
+                                address: data.address,
+                                menu: data.menu,
+                                star: parseInt(data.star),
+                                comment: data.comment,
+                                comment_good: data.comment_good,
+                                comment_bad: data.comment_bad,
+                                tag: data.tag,
+                                reviewImg: data.image,
+                                rdix: data.rdix,
+                            });
+                        }
+                    });
+            }
         }
     }, []);
 
@@ -88,22 +125,16 @@ const Write = () => {
     useEffect(() => {
         if (files) {
             setBase64s([]);
+            setImgList([]);
             Array.from(files).forEach(image => {
                 encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
             });
+
+            const imgArr = Base64s.map(item => item.image);
+            setImgList(imgArr);
+            setValue({...value, ['reviewImg']: imgList});
         }
-
-        setValue({...value, ['reviewImg']: files});
     }, [files]);
-
-    const handleFormData = (id, e) => {
-        const inputValue =
-            id === 'idx' || id === 'cidx' || id === 'floor' || id === 'star'
-                ? parseInt(e.target.value)
-                : e.target.value;
-
-        setValue({...value, [id]: inputValue});
-    };
 
     const encodeFileToBase64 = image => {
         return new Promise((resolve, reject) => {
@@ -112,6 +143,15 @@ const Write = () => {
             reader.onload = event => resolve(event.target.result);
             reader.onerror = error => reject(error);
         });
+    };
+
+    const handleFormData = (id, e) => {
+        const inputValue =
+            id === 'idx' || id === 'cidx' || id === 'floor' || id === 'star'
+                ? parseInt(e.target.value)
+                : e.target.value;
+
+        setValue({...value, [id]: inputValue});
     };
 
     // 첨부이미지 삭제
@@ -163,17 +203,6 @@ const Write = () => {
             e.target.textContent = '+';
         }
     };
-
-    useEffect(() => {
-        console.log(value);
-    }, [value]);
-
-    // 매장검색 - 모달 오픈 시 바디 스크롤 숨김 처리
-    useEffect(() => {
-        modalVisible
-            ? document.body.classList.add('overflow-y-hidden')
-            : document.body.classList.remove('overflow-y-hidden');
-    }, [modalVisible]);
 
     // 매장검색 - 버튼 활성화
     const handleSearchBtn = () => {
@@ -283,24 +312,27 @@ const Write = () => {
     };
 
     const handleSubmit = () => {
-        const url = 'http://place-api.weballin.com/review/write';
+        const msg = isModify ? '수정' : '등록';
+        const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
-        axios
-            .post(url, value)
-            .then(function (res) {
-                handleSearchBtn();
-                if (res.data.state === 200) {
-                    if (window.confirm('리뷰가 등록되었습니다')) {
-                        navigate(`/detail/${res.data.data.shopIdx}`);
-                    }
-                } else {
-                    alert(res.data.msg);
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-            });
+        console.log(value);
+
+        // axios
+        //     .post(url, value)
+        //     .then(function (res) {
+        //         handleSearchBtn();
+        //         if (res.data.state === 200) {
+        //             if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
+        //                 navigate(`/detail/${res.data.data.shopIdx}`);
+        //             }
+        //         } else {
+        //             alert(res.data.msg);
+        //         }
+        //     })
+        //     .catch(function (error) {
+        //         console.error(error);
+        //         alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+        //     });
     };
 
     return (
@@ -347,7 +379,7 @@ const Write = () => {
                                     className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-orange-400 focus:ring-orange-300 focus:ring-opacity-40 focus:outline-none focus:ring"
                                 />
                             </div>
-                            <div className="bg-gray-100 p-4 rounded-lg flex flex-col justify-center items-center gap-4">
+                            <div className="max-h-[45vh] overflow-auto scrollbar bg-gray-100 p-4 rounded-lg flex flex-col items-center gap-4">
                                 {!searhStoreListMain && !searhStoreListSub && (
                                     <p className="flex justify-center items-center w-full h-full text-gray-500 font-light text-center">
                                         리뷰하실 매장을 검색해주세요.
@@ -445,7 +477,7 @@ const Write = () => {
                         onClick={handleSubmit}
                         className="px-6 md:px-8 py-2 md:py-2.5 leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                     >
-                        저장
+                        {isModify ? '수정' : '저장'}
                     </button>
                 </div>
             </div>
@@ -464,13 +496,22 @@ const Write = () => {
                                     type="text"
                                     value={value.name}
                                     readOnly
-                                    onClick={() => setModalVisible(true)}
+                                    onClick={e => {
+                                        isModify ? e.preventDefault() : setModalVisible(true);
+                                    }}
                                     className="block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-0"
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => setModalVisible(true)}
-                                    className="min-w-[175px] w-full sm:w-1/5 h-full px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                    onClick={e => {
+                                        isModify ? e.preventDefault() : setModalVisible(true);
+                                    }}
+                                    disabled={isModify}
+                                    className={`min-w-[175px] w-full sm:w-1/5 h-full px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform rounded-md focus:outline-none ${
+                                        isModify
+                                            ? 'bg-gray-200'
+                                            : 'bg-orange-500 hover:bg-orange-400 focus:outline-none focus:bg-orange-600'
+                                    }`}
                                 >
                                     매장 검색
                                 </button>
@@ -488,7 +529,9 @@ const Write = () => {
                                     type="text"
                                     readOnly
                                     value={value.address}
-                                    onClick={() => setModalVisible(true)}
+                                    onClick={e => {
+                                        isModify ? e.preventDefault() : setModalVisible(true);
+                                    }}
                                     onChange={e => handleFormData('address', e)}
                                     className="block w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-0"
                                 />

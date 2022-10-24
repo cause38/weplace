@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useParams, useNavigate} from 'react-router-dom';
+import React, {useEffect, useState, useRef} from 'react';
+import {Link, useParams, useNavigate, useLocation} from 'react-router-dom';
+
+import CategoryNav from './components/CategoryNav';
 
 import dropdown from '../../assets/dropdown.svg';
 import dropdownActive from '../../assets/dropdownActive.svg';
@@ -10,15 +12,17 @@ import API from 'config';
 const Category = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-
+    const {pathname} = useLocation();
+    const tagRef = useRef();
     const token = sessionStorage.getItem('token') || '';
 
-    const [categoryList, setCategoryList] = useState();
-    const [tagList, setTagList] = useState();
+    const [categoryList, setCategoryList] = useState([]);
+    const [currentCategory, setCurrentCategory] = useState([]);
+    const [tagList, setTagList] = useState([]);
     const [storeList, setStoreList] = useState();
     const [sendTagList, setSendTagList] = useState([]);
 
-    // 진열방식
+    // 필터 진열방식
     const [isDrop, setIsDrop] = useState(false);
     const [selectedSorting, setSelectedSorting] = useState(SORTING[0].name);
     const [newSorting, setNewSorting] = useState([]);
@@ -40,6 +44,11 @@ const Category = () => {
                 const categoryDate = [...defaultAll, ...data.data.category];
                 setCategoryList(categoryDate);
                 setTagList(data.data.tag);
+
+                const current = categoryDate.filter(function (data) {
+                    return data.idx === id ? true : false;
+                });
+                setCurrentCategory(current);
             });
     }, []);
 
@@ -57,10 +66,17 @@ const Category = () => {
 
         const selectedSorting = SORTING[0].name;
 
+        const resetClassName = document.getElementsByClassName('hash');
+
+        for (let i = 0; i < resetClassName.length; i++) {
+            resetClassName[i].className = 'hash min-w-fit mr-5 hover:underline underline-offset-4';
+        }
+
         setSelectedSorting(selectedSorting);
         setNewSorting(_newSorting);
         setOnlyLike(false);
         setIsDrop(false);
+        setSendTagList([]);
 
         fetch(`${API.categoryList}?category=${id}&token=${token}`, {
             method: 'GET',
@@ -70,7 +86,12 @@ const Category = () => {
         })
             .then(res => res.json())
             .then(data => {
-                setStoreList(data.data);
+                if (data.state === 200) {
+                    setStoreList(data.data);
+                } else if (data.state === 400) {
+                    console.error(data.msg);
+                    alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                }
             });
     }, [id]);
 
@@ -87,7 +108,7 @@ const Category = () => {
             setOnlyLike(false);
             if (window.confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
                 alert('로그인 창으로 이동');
-                navigate('/login');
+                navigate('/login', {state: {pathname: pathname}});
             } else {
                 return;
             }
@@ -107,8 +128,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             } else {
@@ -125,8 +147,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             }
@@ -197,8 +220,9 @@ const Category = () => {
                 .then(data => {
                     if (data.state === 200) {
                         setStoreList(data.data);
-                    } else {
-                        console.log(data.state);
+                    } else if (data.state === 400) {
+                        console.error(data.msg);
+                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                     }
                 });
         } else {
@@ -212,8 +236,9 @@ const Category = () => {
                 .then(data => {
                     if (data.state === 200) {
                         setStoreList(data.data);
-                    } else {
-                        console.log(data.state);
+                    } else if (data.state === 400) {
+                        console.error(data.msg);
+                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                     }
                 });
         }
@@ -256,8 +281,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             } else {
@@ -271,8 +297,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             }
@@ -304,8 +331,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             } else {
@@ -319,8 +347,9 @@ const Category = () => {
                     .then(data => {
                         if (data.state === 200) {
                             setStoreList(data.data);
-                        } else {
-                            console.log(data.state);
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                         }
                     });
             }
@@ -328,86 +357,76 @@ const Category = () => {
     };
 
     return (
-        <div className="flex-col">
-            <section className="category-nav">
-                <ul className="container-wb max-w-6xl py-4 mx-auto my-0 h-full flex gap-1.5 overflow-x-scroll">
-                    {categoryList?.map(data => {
-                        const {idx, name} = data;
-                        return (
-                            <Link
-                                key={idx}
-                                to={`/category/${idx}`}
-                                className="min-w-fit p-2 rounded-full bg-orange-400 text-white hover:bg-orange-700"
-                            >
-                                {name}
-                            </Link>
-                        );
-                    })}
-                </ul>
-            </section>
+        <>
+            <div className="flex-col category-container">
+                <section className="category-nav">
+                    <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.name} />
+                </section>
 
-            <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
-                <div className="max-w-6xl flex">
-                    <div
-                        className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                        onClick={handleDrop}
-                    >
-                        <span className="">{selectedSorting}</span>
-                        <div className="flex">
-                            {!isDrop ? (
-                                <img alt="dropdown" src={dropdown} />
-                            ) : (
-                                <img alt="dropdown" src={dropdownActive} />
-                            )}
+                <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
+                    <div className="max-w-6xl flex">
+                        <div
+                            className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                            onClick={handleDrop}
+                        >
+                            <span className="">{selectedSorting}</span>
+                            <div className="flex">
+                                {!isDrop ? (
+                                    <img alt="dropdown" src={dropdown} />
+                                ) : (
+                                    <img alt="dropdown" src={dropdownActive} />
+                                )}
+                            </div>
+                        </div>
+                        <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
+                        {isDrop && (
+                            <div className="absolute top-[180px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <ul className="">
+                                    {SORTING.map((data, key) => {
+                                        return (
+                                            <li
+                                                key={key}
+                                                onClick={e => handleSorting(e, key)}
+                                                value={data.name}
+                                                className={
+                                                    newSorting[key] === true
+                                                        ? 'font-semibold cursor-pointer'
+                                                        : 'cursor-pointer'
+                                                }
+                                            >
+                                                <div className="block px-4 py-2 text-sm flex justify-between">
+                                                    <p className="">{data.name}</p>
+                                                    {newSorting[key] === true && <img alt="selected" src={selected} />}
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        )}
+
+                        <button className="mx-[20px]" onClick={e => showOnlyLike(e)}>
+                            {onlyLike ? '💘 찜한가게' : '🤍 찜한가게'}
+                        </button>
+
+                        <div className="mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll tag-container">
+                            {tagList?.map(data => {
+                                return (
+                                    <button
+                                        ref={tagRef}
+                                        onClick={e => handleTag(e, data.idx)}
+                                        key={data.idx}
+                                        value={data.name}
+                                        className="hash min-w-fit mr-5 hover:underline underline-offset-4"
+                                    >
+                                        #{data.name}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
-                    <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
-                    {isDrop && (
-                        <div className="absolute top-[235px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <ul className="">
-                                {SORTING.map((data, key) => {
-                                    return (
-                                        <li
-                                            key={key}
-                                            onClick={e => handleSorting(e, key)}
-                                            value={data.name}
-                                            className={
-                                                newSorting[key] === true
-                                                    ? 'font-semibold cursor-pointer'
-                                                    : 'cursor-pointer'
-                                            }
-                                        >
-                                            <div className="block px-4 py-2 text-sm flex justify-between">
-                                                <p className="">{data.name}</p>
-                                                {newSorting[key] === true && <img alt="selected" src={selected} />}
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    )}
-
-                    <button className="mx-[20px]" onClick={e => showOnlyLike(e)}>
-                        {onlyLike ? '💘 찜한가게' : '🤍 찜한가게'}
-                    </button>
-
-                    <div className="mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll">
-                        {tagList?.map(data => {
-                            return (
-                                <button
-                                    onClick={e => handleTag(e, data.idx)}
-                                    key={data.idx}
-                                    value={data.name}
-                                    className="min-w-fit mr-5 hover:underline underline-offset-4"
-                                >
-                                    #{data.name}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
             <section className="category max-w-6xl mx-auto">
                 <section
                     className={
@@ -441,13 +460,13 @@ const Category = () => {
                                                 <span>&#128221;{review}</span>
                                                 <span>{isFavorite === true ? '💘' : '🤍'}</span>
                                             </div>
-                                            <div className="h-11 overflow-y-scroll">
-                                                <div className="flex gap-1 flex-wrap max-h-fit">
+                                            <div className="h-11 overflow-y-auto store-tag-container">
+                                                <div className="flex flex-wrap max-h-fit">
                                                     {tag.map((data, id) => {
                                                         return (
                                                             <span
                                                                 key={id}
-                                                                className="rounded min-w-fit p-1 bg-orange-600 text-white text-[12px]"
+                                                                className="rounded min-w-fit text-sm rounded-full p-1 bg-white text-orange-600 underline underline-offset-4 font-medium"
                                                             >
                                                                 #{data}
                                                             </span>
@@ -461,13 +480,13 @@ const Category = () => {
                             );
                         })
                     ) : onlyLike ? (
-                        <p className="h-[calc(100vh-352px)]">찜한 가게가 없습니다😭</p>
+                        <p className="h-[calc(100vh - 352px)]">찜한 가게가 없습니다😭</p>
                     ) : (
-                        <p className="h-[calc(100vh-352px)]">작성된 리뷰가 없습니다😭</p>
+                        <p className="h-[calc(100vh - 352px)]">작성된 리뷰가 없습니다😭</p>
                     )}
                 </section>
             </section>
-        </div>
+        </>
     );
 };
 
