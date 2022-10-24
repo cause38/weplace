@@ -3,8 +3,10 @@ import {useNavigate, Link} from 'react-router-dom';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Navigation, Pagination, A11y} from 'swiper';
 import axios from 'axios';
-import iconThinking from '../../assets/thinking_emoji.png';
 
+import {EmojiProvider, Emoji} from 'react-apple-emojis';
+import emojiData from '../../lib/data.json';
+import iconThinking from '../../assets/thinking_emoji.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar} from '@fortawesome/free-solid-svg-icons';
 
@@ -45,37 +47,37 @@ const Home = () => {
         {
             idx: 0,
             name: '전체보기',
-            icon: '😋🍴',
+            icon: ['face-savoring-food', 'fork-and-knife'],
         },
         {
             idx: 1,
             name: '한식',
-            icon: '🍚',
+            icon: 'cooked-rice',
         },
         {
             idx: 2,
             name: '중식',
-            icon: '🥟',
+            icon: 'dumpling',
         },
         {
             idx: 3,
             name: '일식',
-            icon: '🍣',
+            icon: 'sushi',
         },
         {
             idx: 4,
             name: '양식',
-            icon: '🍝',
+            icon: 'spaghetti',
         },
         {
             idx: 5,
             name: '분식',
-            icon: '🥠',
+            icon: 'fried-shrimp',
         },
         {
             idx: 6,
             name: '아시안 매장',
-            icon: '🍜',
+            icon: 'steaming-bowl',
         },
     ];
 
@@ -237,7 +239,14 @@ const Home = () => {
                             key={item.idx}
                         >
                             {item.name}
-                            <p className="mt-2 lg:mt-6 text-3xl lg:text-5xl">{item.icon}</p>
+                            <p className="mt-2 lg:mt-6 text-3xl lg:text-5xl">
+                                <EmojiProvider data={emojiData}>
+                                    <Emoji
+                                        name={item.idx !== 0 ? item.icon : item.icon[0]}
+                                        className="mx-auto w-[65px]"
+                                    />
+                                </EmojiProvider>
+                            </p>
                         </Link>
                     ))}
                 </div>
