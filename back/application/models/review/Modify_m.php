@@ -31,18 +31,9 @@ class Modify_m extends CI_Model {
 
         return $q->row();
     }
-
-    function setUsedTags($tag) {
-        $tag = json_decode($tag, true);
-        foreach ($tag as $idx) {
-            $this->db->set('used', 'used+1', FALSE);
-            $this->db->where('idx', $idx);
-            $this->db->update('T_tag');
-        }
-    }
-
+    
     function setReveiw($ridx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
-        $this->db->where('ridx', $ridx);
+        $this->db->where('idx', $ridx);
         $this->db->update('T_review', [
             'menu'          => $menu,
             'star'          => $star,

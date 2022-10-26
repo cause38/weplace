@@ -11,6 +11,7 @@ class Write extends RestController {
     {
         parent::__construct();
         $this->load->model('review/write_m');
+        $this->load->model('common/review_m');
     }
 
     public function index_get() {
@@ -90,7 +91,7 @@ class Write extends RestController {
 
 
         // tag 사용량 증가
-        $this->write_m->setUsedTags($tag);
+        $this->review_m->setUsedTags($tag);
 
         if (!$shopIdx) {
             // shop 등록
@@ -106,7 +107,7 @@ class Write extends RestController {
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->write_m->setReviewImg($ridx, $data['file_name']);
+            $this->review_m->setReviewImg($ridx, $data['file_name']);
         }
 
         $this->response([

@@ -68,16 +68,18 @@ class Modify extends RestController {
         ]);
     }
 
-    public function index_put() {
+    public function index_post() {
         $this->load->model('common/shop_m');
 
-        $ridx         = trim($this->put('ridx'))         ?: $this->response(['state' => 401, 'msg' => '리뷰를 선택해주세요.']);
-        $menu         = trim($this->put('menu'))         ?: $this->response(['state' => 402, 'msg' => '메뉴명을 입력해주세요.']);
-        $star         = trim($this->put('star'))         ?: $this->response(['state' => 403, 'msg' => '별점을 선택해주세요.']);
-        $comment      = trim($this->put('comment'))      ?: $this->response(['state' => 404, 'msg' => '한줄평을 입력해주세요.']);
-        $comment_good = trim($this->put('comment_good')) ?: $this->response(['state' => 405, 'msg' => '장점을 입력해주세요.']);
-        $comment_bad  = trim($this->put('comment_bad'))  ?: $this->response(['state' => 406, 'msg' => '단점을 입력해주세요.']);
-        $tag          = $this->put('tag') ?? []; // option
+        $shopIdx      = trim($this->post('idx'));
+        $ridx         = trim($this->post('ridx'))         ?: $this->response(['state' => 401, 'msg' => '리뷰를 선택해주세요.']);
+        $menu         = trim($this->post('menu'))         ?: $this->response(['state' => 402, 'msg' => '메뉴명을 입력해주세요.']);
+        $star         = trim($this->post('star'))         ?: $this->response(['state' => 403, 'msg' => '별점을 선택해주세요.']);
+        $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 404, 'msg' => '한줄평을 입력해주세요.']);
+        $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 405, 'msg' => '장점을 입력해주세요.']);
+        $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 406, 'msg' => '단점을 입력해주세요.']);
+        $tag          = explode(',', trim($this->post('tag') ?: '')); // option
+        foreach($tag as $k => $v) $tag[$k] = (int)trim($v);
 
         $isMyReview = $this->review_m->checkReview($this->idx, $ridx);
         if (!$isMyReview) $this->response(['state' => 407, 'msg' => '비정상적인 접근입니다.']);
@@ -106,13 +108,13 @@ class Modify extends RestController {
         }
 
         // 기존 리뷰 태그 확인
-        $reviewTag = getReviewTag($ridx);
+        $reviewTag = $this->review_m->getReviewTag($ridx);
 
         // 신규 사용 리뷰 확인
         $newTag = array_values(array_diff($tag, $reviewTag));
 
         // tag 사용량 증가
-        $this->modify_m->setUsedTags($newTag);
+        $this->review_m->setUsedTags($newTag);
 
         // shop tag 병합
         $shopTag = $newTag + $this->shop_m->getTags($shopIdx);

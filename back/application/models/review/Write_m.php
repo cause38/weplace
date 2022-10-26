@@ -17,14 +17,6 @@ class Write_m extends CI_Model {
         return $this->db->get()->result();
     }
 
-    function setUsedTags($tag) {
-        foreach ($tag as $idx) {
-            $this->db->set('used', 'used+1', FALSE);
-            $this->db->where('idx', $idx);
-            $this->db->update('T_tag');
-        }
-    }
-
     function setReview($uidx, $sidx, $menu, $star, $comment, $comment_good, $comment_bad, $tag) {
         $this->db->insert('T_review', [
             'uidx'          => $uidx,
@@ -38,13 +30,6 @@ class Write_m extends CI_Model {
         ]);
 
         return $this->db->insert_id();
-    }
-
-    function setReviewImg($idx, $fileName) {
-        $this->db->insert('T_image', [
-            'ridx' => $idx,
-            'image' => UPLOAD_PATH . 'review/' . $fileName
-        ]);
     }
 }
 ?>
