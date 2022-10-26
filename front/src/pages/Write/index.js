@@ -8,7 +8,7 @@ import axios from 'axios';
 const Write = () => {
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(useLocation().search);
-    const sidx = parseInt(searchParams.get('idx'));
+    const sidx = searchParams.get('idx');
     const ridx = searchParams.get('ridx');
     const token = sessionStorage.getItem('token');
     const locationArr = ['성동구'];
@@ -18,6 +18,8 @@ const Write = () => {
         x: '127.048455023259',
         y: '37.5464770743083',
     };
+
+    const [cidx, setCidx] = useState(0);
 
     // 카테고리 목록
     const [isModify, setIsModify] = useState(false);
@@ -115,21 +117,23 @@ const Write = () => {
                 if (modifyMode) {
                     // category str => int
                     let newCidx = 0;
-                    categoryData.forEach(item => {
+                    categoryData.forEach(async item => {
                         if (item.name === data.review.category) {
                             newCidx = parseInt(item.idx);
                         }
                     });
 
+                    await setCidx(newCidx);
+
                     // modify tag data setting
                     setTagList([...data.review.tag]);
-                    setValue({
+                    await setValue({
                         ...value,
                         idx: sidx,
                         name: data.review.name,
                         base: data.review.base,
                         floor: parseInt(data.review.floor),
-                        cidx: newCidx,
+                        cidx,
                         address: data.review.address,
                         menu: data.review.menu,
                         star: parseInt(data.review.star),
