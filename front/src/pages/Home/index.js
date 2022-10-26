@@ -23,7 +23,7 @@ const Home = () => {
     const [lever, setLever] = useState(false);
 
     // 슬롯머신 메뉴
-    const [menuList, setMenuList] = useState([
+    const menuList = [
         '제육볶음',
         '순대국',
         '보쌈',
@@ -37,7 +37,7 @@ const Home = () => {
         '돈까스',
         '피자',
         '뚝배기 불고기',
-    ]);
+    ];
 
     // 최신리뷰 데이터
     const [newReviewData, setNewReviewData] = useState([]);
@@ -133,7 +133,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="pt-28 pb-7 md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
+            <div className="pt-[100px] pb-5 md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
                 <div className="container-wb relative my-10 py-0 sm:px-0 flex flex-col justify-center items-center gap-10 w-full ">
                     <img
                         src={iconThinking}
@@ -146,7 +146,7 @@ const Home = () => {
                         className="hidden md:block absolute w-36 -bottom-20 md:right-10 right-0 animate-reverse-spin"
                     />
                     <h3
-                        className="text-4xl md:text-5xl font-semibold text-orange-400 mb-0 md:mb-10"
+                        className="text-4xl md:text-5xl font-semibold text-orange-400 mb-6 md:mb-10"
                         style={{textShadow: '1px 1px 0px #ea580c'}}
                     >
                         오늘의 메뉴는?
@@ -168,16 +168,16 @@ const Home = () => {
                                 </ul>
                             </div>
                         </div>
-                        <div className="absolute right-0 bottom-2 w-2/12 h-3/5 overflow-visible">
+                        <div className="absolute right-[1px] bottom-2 w-2/12 h-3/5 overflow-visible">
                             <div className="absolute right-0 bottom-0 w-full h-full bg-orange-500 rounded-r-lg z-1"></div>
                             <button
                                 id="lever"
                                 onClick={handleLever}
                                 disabled={lever}
-                                className="absolute -top-[110px] left-1/2 -translate-x-1/2 w-[40px] z-10 flex flex-col-reverse items-center cursor-pointer"
+                                className="absolute -top-[110px] left-1/2 -translate-x-1/2 z-10 flex flex-col-reverse items-center cursor-pointer"
                             >
                                 <div className="w-[10px] h-[30px] bg-orange-600"></div>
-                                <div className="bar w-[10px] h-[70px] bg-stone-300"></div>
+                                <div className="bar w-[10px] h-[75px] -mt-[5px] bg-stone-300"></div>
                                 <div className="circle w-[40px] h-[40px] bg-yellow-400 rounded-full"></div>
                             </button>
                         </div>
@@ -229,7 +229,7 @@ const Home = () => {
                     ))}
                 </Swiper>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4 text-center text-lg font-semibold text-orange-500">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 mt-4 text-center text-lg font-semibold text-orange-500">
                     {categoryArr.map(item => (
                         <Link
                             to={`/category/${item.idx}`}
@@ -243,7 +243,7 @@ const Home = () => {
                                 <EmojiProvider data={emojiData}>
                                     <Emoji
                                         name={item.idx !== 0 ? item.icon : item.icon[0]}
-                                        className="mx-auto w-[65px]"
+                                        className="mx-auto w-[40px] lg:w-[65px]"
                                     />
                                 </EmojiProvider>
                             </p>
