@@ -361,13 +361,12 @@ const Write = () => {
         const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
         let formData = new FormData();
-        console.log(value);
         for (let key in value) {
-            if (!Array.isArray(value[key])) {
+            if (key !== 'reviewImg') {
                 formData.append(key, value[key]);
             } else {
-                value[key].forEach(item => {
-                    formData.append(`${key}[]`, item);
+                value[key].forEach(img => {
+                    formData.append(key, img);
                 });
             }
         }
@@ -375,7 +374,7 @@ const Write = () => {
         axios
             .post(url, formData, {
                 headers: {
-                    'Content-Type': `multipart/form-data; `,
+                    'Content-Type': 'multipart/form-data',
                 },
             })
             .then(function (res) {
