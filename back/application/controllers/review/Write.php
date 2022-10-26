@@ -107,7 +107,7 @@ class Write extends RestController {
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->review_m->setReviewImg($ridx, $data['file_name']);
+            $this->review_m->setReviewImage($ridx, $data['file_name']);
         }
 
         $this->response([

@@ -22,11 +22,16 @@ class Review_m extends CI_Model {
         return $this->db->get()->result();
     }
 
-    function setReviewImg($idx, $fileName) {
+    function setReviewImage($idx, $fileName) {
         $this->db->insert('T_image', [
             'ridx' => $idx,
             'image' => UPLOAD_PATH . 'review/' . $fileName
         ]);
+    }
+
+    function deleteReviewImage($ridx) {
+        $this->db->where('ridx', $ridx);
+        $this->db->delete('T_image');
     }
 
     function getReviewTag($ridx) {
@@ -36,7 +41,7 @@ class Review_m extends CI_Model {
 
         return $this->db->get()->tag ?? [];
     }
-    
+
     function setUsedTags($tag) {
         foreach ($tag as $idx) {
             $this->db->set('used', 'used+1', FALSE);

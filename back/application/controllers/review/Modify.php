@@ -121,19 +121,20 @@ class Modify extends RestController {
         $this->shop_m->setTags($shopIdx, $shopTag);
 
         // review 등록
-        $ridx = $this->modify_m->setReveiw($ridx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
+        $this->modify_m->setReveiw($ridx, $menu, $star, $comment, $comment_good, $comment_bad, $tag);
 
         // 기존 review 이미지 삭제
         $images = $this->review_m->getReviewImage($ridx);
         foreach ($images as $img) {
             $image = explode(API_PATH, $img->image);
-            $image = end($image);
+            $image = './'.end($image);
             unlink($image);
         }
+        $this->review_m->deleteReviewImage($ridx);
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->review_m->setReviewImg($ridx, $data['file_name']);
+            $this->review_m->setReviewImage($ridx, $data['file_name']);
         }
 
         $this->response([
