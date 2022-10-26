@@ -178,14 +178,14 @@ const Home = () => {
                             >
                                 <div className="w-[10px] h-[30px] bg-orange-600"></div>
                                 <div className="bar w-[10px] h-[75px] -mt-[5px] bg-stone-300"></div>
-                                <div className="circle w-[40px] h-[40px] bg-yellow-400 rounded-full"></div>
+                                <div className="relaitve z-10 circle w-[40px] h-[40px] bg-yellow-400 rounded-full"></div>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="container-wb mt-0 pb-8 lg:pb-12">
-                <div className="flex gap-2 justify-between items-center my-4">
+                <div className="flex gap-2 items-center my-4 relative -mb-[29px] z-10 max-w-[135px]">
                     <h3 className="text-xl font-bold">최신 리뷰</h3>
                     <Link
                         to={'/category/0'}
@@ -195,6 +195,7 @@ const Home = () => {
                     </Link>
                 </div>
                 <Swiper
+                    className="pt-10"
                     modules={[Navigation, Pagination, A11y]}
                     spaceBetween={25}
                     slidesPerView={1.2}

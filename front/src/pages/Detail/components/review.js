@@ -75,9 +75,9 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
             </div>
 
             <div className="w-full mb-6">
-                <div className="px-4 flex flex-col gap-3">
+                <div className="sm:px-2 flex flex-col gap-3">
                     <div className="flex gap-2 justify-between items-center w-full">
-                        <div className="flex gap-2">
+                        <div className="flex gap-3">
                             <span className="text-sm rounded-full px-4 py-1 bg-orange-500 text-white">{data.menu}</span>
                             <span className={`${data.image.length <= 0 ? 'hidden' : ''} text-orange-500`}>
                                 <FontAwesomeIcon icon={faImage} />
