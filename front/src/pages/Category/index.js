@@ -358,13 +358,13 @@ const Category = () => {
 
     return (
         <>
-            <div className="flex-col category-container">
+            <div className="flex flex-col category-container">
                 <section className="category-nav">
                     <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.name} />
                 </section>
 
                 <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
-                    <div className="max-w-6xl flex">
+                    <div className="max-w-6xl flex scrollBar">
                         <div
                             className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                             onClick={handleDrop}
@@ -409,7 +409,7 @@ const Category = () => {
                             {onlyLike ? '💘 찜한가게' : '🤍 찜한가게'}
                         </button>
 
-                        <div className="mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll tag-container">
+                        <div className="scrollbar mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll tag-container">
                             {tagList?.map(data => {
                                 return (
                                     <button
