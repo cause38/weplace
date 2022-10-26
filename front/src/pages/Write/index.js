@@ -8,7 +8,7 @@ import axios from 'axios';
 const Write = () => {
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(useLocation().search);
-    const sidx = parseInt(searchParams.get('idx'));
+    const sidx = searchParams.get('idx');
     const ridx = searchParams.get('ridx');
     const token = sessionStorage.getItem('token');
     const locationArr = ['성동구'];
@@ -18,6 +18,8 @@ const Write = () => {
         x: '127.048455023259',
         y: '37.5464770743083',
     };
+
+    const [cidx, setCidx] = useState(0);
 
     // 카테고리 목록
     const [isModify, setIsModify] = useState(false);
@@ -115,21 +117,23 @@ const Write = () => {
                 if (modifyMode) {
                     // category str => int
                     let newCidx = 0;
-                    categoryData.forEach(item => {
+                    categoryData.forEach(async item => {
                         if (item.name === data.review.category) {
                             newCidx = parseInt(item.idx);
                         }
                     });
 
+                    await setCidx(newCidx);
+
                     // modify tag data setting
                     setTagList([...data.review.tag]);
-                    setValue({
+                    await setValue({
                         ...value,
                         idx: sidx,
                         name: data.review.name,
                         base: data.review.base,
                         floor: parseInt(data.review.floor),
-                        cidx: newCidx,
+                        cidx,
                         address: data.review.address,
                         menu: data.review.menu,
                         star: parseInt(data.review.star),
@@ -137,7 +141,6 @@ const Write = () => {
                         comment_good: data.review.comment_good,
                         comment_bad: data.review.comment_bad,
                         tag: data.review.tag,
-                        reviewImg: data.review.image,
                         ridx: parseInt(data.review.ridx),
                     });
                 } else {
@@ -150,13 +153,21 @@ const Write = () => {
 
     // 첨부이미지 -> base64 파일로 변환
     useEffect(() => {
-        if (files) {
-            setBase64s([]);
-            Array.from(files).forEach((image, idx) => {
-                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
-            });
-            setValue({...value, ['reviewImg']: [...files]});
-        }
+        Array.from(files).forEach(image => {
+            // 중복 파일 체크
+            if (Base64s.length > 0) {
+                const newFileArr = Base64s.map(item => item.img);
+                if (newFileArr.includes(image)) {
+                    alert('중복 이미지가 포함되어 있습니다.');
+                    return false;
+                } else {
+                    encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
+                }
+            } else {
+                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
+            }
+        });
+        setValue({...value, ['reviewImg']: [...files]});
     }, [files]);
 
     const encodeFileToBase64 = image => {
@@ -226,6 +237,8 @@ const Write = () => {
             label.classList.remove('bg-white', 'text-orange-600', 'border-orange-300');
             label.classList.add('bg-orange-500', 'border-transparent', 'text-white');
         });
+
+        setValue({...value, ['tag']: [...tagList]});
     }, [tagList]);
 
     // 태그 목록 더보기 애니메이션
@@ -335,13 +348,19 @@ const Write = () => {
         }
 
         for (let key in data) {
-            const dataValue =
-                key === 'idx' || key === 'cidx' || key === 'floor' || key === 'star' ? parseInt(data[key]) : data[key];
-
-            newValue = {...newValue, [key]: dataValue};
+            if (key !== 'star') {
+                const dataValue =
+                    key === 'idx' || key === 'cidx' || key === 'floor' ? parseFloat(data[key]) : data[key];
+                newValue = {...newValue, [key]: dataValue};
+            } else {
+                console.log('star', data.star);
+            }
         }
 
+        console.log('newvalue', newValue);
+
         setValue({...value, ...newValue});
+        console.log('value', value);
         setModalVisible(false);
 
         // 검색 모달 초기화
@@ -355,13 +374,12 @@ const Write = () => {
         const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
         let formData = new FormData();
-        console.log(value);
         for (let key in value) {
-            if (key !== 'reviewImg' || key !== 'tag') {
+            if (key !== 'reviewImg') {
                 formData.append(key, value[key]);
             } else {
-                value[key].forEach(item => {
-                    formData.append(`${key}[]`, item);
+                value[key].forEach(img => {
+                    formData.append(`${key}[]`, img);
                 });
             }
         }
@@ -369,7 +387,7 @@ const Write = () => {
         axios
             .post(url, formData, {
                 headers: {
-                    'Content-Type': `multipart/form-data; `,
+                    'Content-Type': 'multipart/form-data',
                 },
             })
             .then(function (res) {
@@ -781,7 +799,7 @@ const Write = () => {
                         onClick={handleSubmit}
                         className="px-6 md:px-8 py-2 md:py-2.5 leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                     >
-                        저장
+                        {isModify ? '수정' : '저장'}
                     </button>
                 </div>
             </form>

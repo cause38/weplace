@@ -62,7 +62,8 @@ class Write extends RestController {
         $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 407, 'msg' => '한줄평을 입력해주세요.']);
         $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 408, 'msg' => '장점을 입력해주세요.']);
         $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 409, 'msg' => '단점을 입력해주세요.']);
-        $tag          = $this->post('tag') ?? []; // option
+        $tag          = explode(',', trim($this->post('tag') ?: '')); // option
+        foreach($tag as $k => $v) $tag[$k] = (int)trim($v);
 
         
         // image
@@ -105,7 +106,7 @@ class Write extends RestController {
 
         // review 이미지 등록
         foreach ($this->upload->get_multi_upload_data() as $data) {
-            $this->review_m->setReviewImg($ridx, $data['file_name']);
+            $this->write_m->setReviewImg($ridx, $data['file_name']);
         }
 
         $this->response([
