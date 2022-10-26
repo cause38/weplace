@@ -366,7 +366,7 @@ const Write = () => {
                 formData.append(key, value[key]);
             } else {
                 value[key].forEach(img => {
-                    formData.append(key, img);
+                    formData.append(`${key}[]`, img);
                 });
             }
         }
