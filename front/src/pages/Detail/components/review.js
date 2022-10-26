@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
+import ImgBox from './imgBox';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import {faStar, faChevronUp, faChevronDown, faPlus} from '@fortawesome/free-solid-svg-icons';
 import {faImage, faThumbsUp, faThumbsDown, faPenToSquare, faTrashCan} from '@fortawesome/free-regular-svg-icons';
 
 const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, getReviewData}) => {
@@ -48,7 +49,7 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
 
     return (
         <div className="relative flex flex-col gap-5 mt-4 p-4 py-5 bg-white shadow-lg rounded">
-            <div className="flex gap-1 justify-between border border-gray-100 rounded-full p-2 py-1 pr-5">
+            <div className="flex gap-1 justify-between border border-gray-200 rounded-full p-2 py-1 pr-5">
                 <div className="flex gap-3 items-center">
                     <span
                         className="w-[50px] h-[50px] bg-orange-300 rounded-full p-2"
@@ -108,13 +109,13 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
 
                 <div className="moreData w-full mt-5 mb-2 hidden">
                     <div className="flex flex-col sm:flex-row gap-2">
-                        <div className="flex gap-3 items-center w-full border p-2 rounded-full">
+                        <div className="flex gap-3 items-center w-full border border-gray-200 p-2 rounded-full">
                             <span className="w-[40px] h-[40px] bg-green-100 text-green-400 rounded-full p-2 text-center">
                                 <FontAwesomeIcon icon={faThumbsUp} />
                             </span>
                             <p>{data.comment_good}</p>
                         </div>
-                        <div className="flex gap-3 items-center w-full border p-2 rounded-full">
+                        <div className="flex gap-3 items-center w-full border border-gray-200 p-2 rounded-full">
                             <span className="w-[40px] h-[40px] bg-red-100 text-red-400 rounded-full p-2 text-center">
                                 <FontAwesomeIcon icon={faThumbsDown} />
                             </span>
@@ -123,14 +124,7 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                     </div>
                     <div className="flex gap-2 mt-4">
                         {data.image.length > 0 &&
-                            data.image.map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    className="w-[100px] h-[100px] border p-2 hover:bg-orange-200 cursor-pointer"
-                                    onClick={() => handleImg(item)}
-                                    style={{background: `url(${item}) no-repeat center/auto 90%`}}
-                                ></div>
-                            ))}
+                            data.image.map((item, idx) => <ImgBox item={item} handleImg={handleImg} />)}
                     </div>
                 </div>
             </div>
