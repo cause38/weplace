@@ -141,7 +141,6 @@ const Write = () => {
                         comment_good: data.review.comment_good,
                         comment_bad: data.review.comment_bad,
                         tag: data.review.tag,
-                        reviewImg: data.review.image,
                         ridx: parseInt(data.review.ridx),
                     });
                 } else {
@@ -154,13 +153,21 @@ const Write = () => {
 
     // 첨부이미지 -> base64 파일로 변환
     useEffect(() => {
-        if (files) {
-            setBase64s([]);
-            Array.from(files).forEach((image, idx) => {
-                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
-            });
-            setValue({...value, ['reviewImg']: [...files]});
-        }
+        Array.from(files).forEach(image => {
+            // 중복 파일 체크
+            if (Base64s.length > 0) {
+                const newFileArr = Base64s.map(item => item.img);
+                if (newFileArr.includes(image)) {
+                    alert('중복 이미지가 포함되어 있습니다.');
+                    return false;
+                } else {
+                    encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
+                }
+            } else {
+                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
+            }
+        });
+        setValue({...value, ['reviewImg']: [...files]});
     }, [files]);
 
     const encodeFileToBase64 = image => {
@@ -341,13 +348,19 @@ const Write = () => {
         }
 
         for (let key in data) {
-            const dataValue =
-                key === 'idx' || key === 'cidx' || key === 'floor' || key === 'star' ? parseInt(data[key]) : data[key];
-
-            newValue = {...newValue, [key]: dataValue};
+            if (key !== 'star') {
+                const dataValue =
+                    key === 'idx' || key === 'cidx' || key === 'floor' ? parseFloat(data[key]) : data[key];
+                newValue = {...newValue, [key]: dataValue};
+            } else {
+                console.log('star', data.star);
+            }
         }
 
+        console.log('newvalue', newValue);
+
         setValue({...value, ...newValue});
+        console.log('value', value);
         setModalVisible(false);
 
         // 검색 모달 초기화
@@ -786,7 +799,7 @@ const Write = () => {
                         onClick={handleSubmit}
                         className="px-6 md:px-8 py-2 md:py-2.5 leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                     >
-                        저장
+                        {isModify ? '수정' : '저장'}
                     </button>
                 </div>
             </form>
