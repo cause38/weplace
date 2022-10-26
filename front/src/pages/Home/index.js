@@ -158,7 +158,7 @@ const Home = () => {
                     </h3>
                     <div className="relative flex items-center w-full w-lg:w-1/3 max-w-[500px]">
                         <div className="w-10/12 p-6 py-8 bg-orange-400 rounded-lg shadow-md">
-                            <div className="relative h-[120px] overflow-hidden bg-white rounded-lg shadow-inner text-4xl font-bold text-orange-500 text-center">
+                            <div className="relative h-[120px] overflow-hidden bg-white rounded-lg shadow-inner shadow-gray-300 text-4xl font-bold text-orange-500 text-center">
                                 <ul className="slot-box absolute w-full">
                                     <li className="h-[150px] leading-[120px]">START!</li>
                                     <li className="h-[120px] leading-[120px]">냉면</li>
@@ -181,7 +181,7 @@ const Home = () => {
                                 disabled={lever}
                                 className="absolute -top-[110px] left-1/2 -translate-x-1/2 z-10 flex flex-col-reverse items-center cursor-pointer"
                             >
-                                <div className="w-[10px] h-[30px] bg-orange-600"></div>
+                                <div className="w-[10px] h-[30px] bg-orange-600 shadow-inner"></div>
                                 <div className="bar w-[10px] h-[75px] -mt-[5px] bg-stone-300"></div>
                                 <div className="relaitve z-10 circle w-[40px] h-[40px]">
                                     <svg viewBox="0 0 114 355" version="1.1">
@@ -244,8 +244,8 @@ const Home = () => {
                         </button>
                     </div>
                     {newReviewData.map((data, idx) => (
-                        <SwiperSlide className="bg-white rounded-lg p-5 py-6 shadow-lg" key={idx}>
-                            <Link to={`/detail/${data.idx}`}>
+                        <SwiperSlide className="bg-white rounded-lg shadow-lg" key={idx}>
+                            <Link to={`/detail/${data.idx}`} className="block p-5 py-6">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
                                         {data.menu}
