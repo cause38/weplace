@@ -215,6 +215,7 @@ const Home = () => {
                     style={{paddingBottom: '20px'}}
                     modules={[Navigation, Pagination, A11y]}
                     slidesPerView={1.2}
+                    spaceBetween={25}
                     navigation={{
                         prevEl: prevBtn.current,
                         nextEl: nextBtn.current,
