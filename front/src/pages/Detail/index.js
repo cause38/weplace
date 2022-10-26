@@ -10,13 +10,10 @@ import {faHeart, faStar, faLocationDot, faArrowUpRightFromSquare} from '@fortawe
 const Detail = () => {
     const idx = parseInt(useParams().id);
     const token = sessionStorage.getItem('token');
+    const qs = require('qs');
 
     // store data
     const [review, setReview] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalImg, setModalImg] = useState('');
-    const [moreToggle, setMoreToggle] = useState(false);
-    const [isFavorite, setIsFavorite] = useState(false);
     const [store, setStore] = useState({
         address: '',
         base: '',
@@ -32,6 +29,19 @@ const Detail = () => {
         url: '',
     });
 
+    // 이미지 모달
+    const [modalVisible, setModalVisible] = useState(false);
+
+    // 이미지 모달 src
+    const [modalImg, setModalImg] = useState('');
+
+    // 리뷰 more
+    const [moreToggle, setMoreToggle] = useState(false);
+
+    // 찜 관리
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    // 리뷰 데이터
     const getReviewData = () => {
         axios.get(`http://place-api.weballin.com/review/view`, {params: {idx, token}}).then(res => {
             if (res.status === 200) {
@@ -46,15 +56,47 @@ const Detail = () => {
         getReviewData();
     }, []);
 
+    // 리뷰 more 버튼 관리
     const handleReviewToggle = e => {
         const more = e.currentTarget.previousElementSibling.querySelector('.moreData');
         setMoreToggle(!moreToggle);
         more.classList.toggle('hidden');
     };
 
+    // 이미지 확대
     const handleImg = img => {
         setModalVisible(true);
         setModalImg(img);
+    };
+
+    // 찜 목록
+    const handleFavorite = e => {
+        const url = 'http://place-api.weballin.com/favorite';
+        const data = {token, idx};
+
+        if (!isFavorite) {
+            // 추가
+            axios.post(url, data).then(async res => await setFavorite(res));
+        } else {
+            // 삭제
+            const options = {
+                headers: {'content-type': 'application/x-www-form-urlencoded'},
+                data: qs.stringify(data),
+            };
+            axios.delete(url, options).then(async res => await setFavorite(res));
+        }
+    };
+
+    // 찜 목록 추가 / 삭제 공통 함수
+    const setFavorite = res => {
+        if (res.status === 200) {
+            alert(res.data.msg);
+            getReviewData();
+        } else if (res.data.state === 400 || res.data.state === 401) {
+            alert(res.data.msg);
+        } else {
+            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+        }
     };
 
     return (
@@ -77,10 +119,12 @@ const Detail = () => {
                     <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
                         {store.category}
                     </span>
-                    <FontAwesomeIcon
-                        icon={faHeart}
-                        className={`${isFavorite ? 'text-red-400' : 'text-gray-400'} text-xl`}
-                    />
+                    <button onClick={handleFavorite}>
+                        <FontAwesomeIcon
+                            icon={faHeart}
+                            className={`${isFavorite ? 'text-red-400' : 'text-gray-400'} text-xl`}
+                        />
+                    </button>
                 </div>
                 <h3 className="text-2xl font-bold mt-3 mb-1">{store.name}</h3>
                 <p>{`${store.address} ${store.base} ${store.floor}층`}</p>

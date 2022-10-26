@@ -8,7 +8,7 @@ import axios from 'axios';
 const Write = () => {
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(useLocation().search);
-    const sidx = searchParams.get('idx');
+    const sidx = parseInt(searchParams.get('idx'));
     const ridx = searchParams.get('ridx');
     const token = sessionStorage.getItem('token');
     const locationArr = ['성동구'];
@@ -30,9 +30,6 @@ const Write = () => {
 
     // 선택한 태그 목록
     const [tagList, setTagList] = useState([]);
-
-    // form 이미지 첨부
-    const [imgList, setImgList] = useState([]);
 
     // 미리보기 이미지 첨부
     const [files, setFiles] = useState([]);
@@ -78,61 +75,87 @@ const Write = () => {
     const tagBox = useRef();
     const fileInput = useRef();
 
-    // 로그인 체크 후 카테고리, 태그 목록 set
+    /**
+     * =====:: default data get ::=====
+     *
+     * 로그인 체크 후
+     * 등록 -> 카테고리, 태그 목록
+     * 수정 -> 카테고리, 태그 목록 / 기존 리뷰 데이터
+     *
+     * ================================
+     *  */
     useEffect(() => {
-        if (token === null) {
-            navigate('/login');
-        } else {
-            // get 카테고리, 태그 목록
-            axios.get('http://place-api.weballin.com/review/write').then(res => {
-                if (res.status === 200) {
-                    setCategoryData(res.data.data.category);
-                    setTagData(res.data.data.tag);
-                }
-            });
+        const fetchData = async () => {
+            if (token === null) {
+                navigate('/login');
+            } else {
+                const modifyMode = sidx !== '' && sidx !== null ? true : false;
 
-            if (sidx !== null) {
-                setIsModify(true);
-                setIsReadOnly(true);
-                axios
-                    .get(`http://place-api.weballin.com/review/modify`, {params: {token, idx: sidx, ridx: ridx}})
-                    .then(res => {
-                        if (res.status === 200) {
-                            const data = res.data.data.review;
-                            setValue({
-                                ...value,
-                                name: data.name,
-                                base: data.base,
-                                floor: parseInt(data.floor),
-                                cidx: data.category,
-                                address: data.address,
-                                menu: data.menu,
-                                star: parseInt(data.star),
-                                comment: data.comment,
-                                comment_good: data.comment_good,
-                                comment_bad: data.comment_bad,
-                                tag: data.tag,
-                                reviewImg: data.image,
-                                rdix: data.rdix,
-                            });
+                if (modifyMode) {
+                    setIsModify(true);
+                    setIsReadOnly(true);
+                }
+
+                const url = `http://place-api.weballin.com/review/${modifyMode ? 'modify' : 'write'}`;
+                const params = modifyMode ? {params: {token, idx: sidx, ridx: ridx}} : '';
+
+                // 수정모드에서도 기본 카테고리 데이터 필요하여 세팅
+                if (modifyMode) getDefalutData('http://place-api.weballin.com/review/write', '', false);
+                await getDefalutData(url, params, modifyMode);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const getDefalutData = (url, params, modifyMode) => {
+        axios.get(url, params).then(async res => {
+            if (res.status === 200) {
+                const data = res.data.data;
+                if (modifyMode) {
+                    // category str => int
+                    let newCidx = 0;
+                    categoryData.forEach(item => {
+                        if (item.name === data.review.category) {
+                            newCidx = parseInt(item.idx);
                         }
                     });
+
+                    // modify tag data setting
+                    setTagList([...data.review.tag]);
+                    setValue({
+                        ...value,
+                        idx: sidx,
+                        name: data.review.name,
+                        base: data.review.base,
+                        floor: parseInt(data.review.floor),
+                        cidx: newCidx,
+                        address: data.review.address,
+                        menu: data.review.menu,
+                        star: parseInt(data.review.star),
+                        comment: data.review.comment,
+                        comment_good: data.review.comment_good,
+                        comment_bad: data.review.comment_bad,
+                        tag: data.review.tag,
+                        reviewImg: data.review.image,
+                        ridx: parseInt(data.review.ridx),
+                    });
+                } else {
+                    setCategoryData(data.category);
+                    setTagData(data.tag);
+                }
             }
-        }
-    }, []);
+        });
+    };
 
     // 첨부이미지 -> base64 파일로 변환
     useEffect(() => {
         if (files) {
             setBase64s([]);
-            setImgList([]);
-            Array.from(files).forEach(image => {
+            Array.from(files).forEach((image, idx) => {
                 encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {image: image, url: data}]));
             });
-
-            const imgArr = Base64s.map(item => item.image);
-            setImgList(imgArr);
-            setValue({...value, ['reviewImg']: imgList});
+            setValue({...value, ['reviewImg']: [...files]});
         }
     }, [files]);
 
@@ -166,28 +189,44 @@ const Write = () => {
         fileInput.current.files = dataTranster.files;
     };
 
-    // 태그 토글 시 애니메이션
-    const handleTag = e => {
-        const tagValue = e.target.nextSibling.value;
+    // tag toggle event
+    const handleTag = async e => {
         let newTagList = tagList;
 
-        e.target.classList.toggle('on');
+        const tagFunc = () => {
+            const tagValue = parseInt(e.target.nextSibling.value);
 
-        if (e.target.classList.contains('on')) {
-            e.target.classList.remove('bg-white', 'text-orange-600', 'border-orange-300');
-            e.target.classList.add('bg-orange-500', 'border-transparent', 'text-white');
+            if (tagList.indexOf(tagValue) < 0) {
+                newTagList.push(tagValue);
+            } else {
+                newTagList = newTagList.filter(item => item !== tagValue);
+            }
+        };
 
-            newTagList.push(parseInt(tagValue));
-        } else {
-            e.target.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
-            e.target.classList.add('bg-white', 'text-orange-600', 'border-orange-300');
-
-            newTagList = newTagList.filter(item => item !== tagValue);
-        }
-
-        setTagList(newTagList);
-        setValue({...value, ['tag']: newTagList});
+        tagFunc();
+        await setTagList([...newTagList]);
     };
+
+    // 선택한 태그에 클래스 적용
+    useEffect(() => {
+        let newTagList = tagList;
+
+        // 초기화
+        const labels = document.querySelectorAll('.tagLabel');
+        labels.forEach(item => {
+            item.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
+            item.classList.add('bg-white', 'text-orange-600', 'border-orange-300');
+        });
+
+        newTagList.forEach(idx => {
+            const tag = document.getElementById(`tag_${idx}`);
+            const label = tag.previousSibling;
+
+            // 태그리스트 라벨 클래스 적용
+            label.classList.remove('bg-white', 'text-orange-600', 'border-orange-300');
+            label.classList.add('bg-orange-500', 'border-transparent', 'text-white');
+        });
+    }, [tagList]);
 
     // 태그 목록 더보기 애니메이션
     const handleTagMore = e => {
@@ -315,12 +354,30 @@ const Write = () => {
         const msg = isModify ? '수정' : '등록';
         const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
+        let formData = new FormData();
+        console.log(value);
+        for (let key in value) {
+            if (key !== 'reviewImg' || key !== 'tag') {
+                formData.append(key, value[key]);
+            } else {
+                value[key].forEach(item => {
+                    formData.append(`${key}[]`, item);
+                });
+            }
+        }
+
         axios
-            .post(url, value)
+            .post(url, formData, {
+                headers: {
+                    'Content-Type': `multipart/form-data; `,
+                },
+            })
             .then(function (res) {
-                handleSearchBtn();
+                console.log(res);
+                !isModify && handleSearchBtn();
+
                 if (res.data.state === 200) {
-                    if (window.confirm(`리뷰가 ${msg}되었습니다`)) { 
+                    if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
                         navigate(`/detail/${res.data.data.shopIdx}`);
                     }
                 } else {
@@ -685,7 +742,7 @@ const Write = () => {
                                         <label
                                             onClick={handleTag}
                                             htmlFor={`tag_${item.idx}`}
-                                            className="w-full h-full rounded-full px-4 py-1 bg-white text-orange-600 border border-orange-300 font-medium transition-colors cursor-pointer hover:bg-orange-500 hover:border-transparent hover:text-white"
+                                            className="tagLabel w-full h-full rounded-full px-4 py-1 bg-white text-orange-600 border border-orange-300 font-medium transition-colors cursor-pointer hover:bg-orange-500 hover:border-transparent hover:text-white"
                                         >
                                             {`# ${item.name}`}
                                         </label>
