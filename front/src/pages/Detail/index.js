@@ -121,7 +121,7 @@ const Detail = () => {
                     <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
                         {store.category}
                     </span>
-                    <button onClick={handleFavorite}>
+                    <button onClick={handleFavorite} className={`${token === null ? 'hidden' : ''}`}>
                         <FontAwesomeIcon
                             icon={faHeart}
                             className={`${isFavorite ? 'text-red-400' : 'text-gray-400'} text-xl`}
