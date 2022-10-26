@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 import {Swiper, SwiperSlide} from 'swiper/react';
-import {Navigation, Pagination, A11y} from 'swiper';
+import SwiperCore, {Navigation, Pagination, A11y} from 'swiper';
 import axios from 'axios';
 
 import {EmojiProvider, Emoji} from 'react-apple-emojis';
 import emojiData from '../../lib/data.json';
 import iconThinking from '../../assets/thinking_emoji.png';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faStar} from '@fortawesome/free-solid-svg-icons';
+import {faStar, faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons';
 
 import 'styles/home.css';
 import 'swiper/css';
@@ -21,6 +21,13 @@ const Home = () => {
 
     // 슬롯머신 버튼
     const [lever, setLever] = useState(false);
+
+    // 최신리뷰 데이터
+    const [newReviewData, setNewReviewData] = useState([]);
+
+    // swiper button custom
+    const prevBtn = useRef(null);
+    const nextBtn = useRef(null);
 
     // 슬롯머신 메뉴
     const menuList = [
@@ -38,9 +45,6 @@ const Home = () => {
         '피자',
         '뚝배기 불고기',
     ];
-
-    // 최신리뷰 데이터
-    const [newReviewData, setNewReviewData] = useState([]);
 
     // 카테고리 리스트
     const categoryArr = [
@@ -88,6 +92,7 @@ const Home = () => {
                 setNewReviewData(res.data.data.reviews);
             }
         });
+        SwiperCore.use([Navigation]);
     }, []);
 
     // 최신리뷰 클릭 시 상세페이지
@@ -133,7 +138,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="pt-[100px] pb-[40px] md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
+            <div className="pt-[100px] pb-[30px] md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
                 <div className="container-wb relative my-10 py-0 sm:px-0 flex flex-col justify-center items-center gap-10 w-full ">
                     <img
                         src={iconThinking}
@@ -178,7 +183,19 @@ const Home = () => {
                             >
                                 <div className="w-[10px] h-[30px] bg-orange-600"></div>
                                 <div className="bar w-[10px] h-[75px] -mt-[5px] bg-stone-300"></div>
-                                <div className="relaitve z-10 circle w-[40px] h-[40px] bg-yellow-400 rounded-full"></div>
+                                <div className="relaitve z-10 circle w-[40px] h-[40px]">
+                                    <svg viewBox="0 0 114 355" version="1.1">
+                                        <g>
+                                            <circle fill="#F0A830" cx="57" cy="57" r="57"></circle>
+                                            <path
+                                                d="M102.570209,40.1833305 C102.676794,40.0838119 102.777304,39.9779482 102.871517,39.8656698 C105.889032,36.2695351 101.304331,27.4546828 92.6313004,20.177146 C83.9582698,12.8996092 74.4812099,9.91524313 71.4636947,13.5113778 C71.3644458,13.629658 71.273421,13.753584 71.1904954,13.8829152 C76.2444491,16.5602964 82.1808506,20.6036755 88.1462014,25.6091992 C94.0729258,30.5823114 99.0593916,35.6922002 102.570209,40.1833305 Z"
+                                                id="highlight"
+                                                fill="#FFFFFF"
+                                                transform="translate(87.494931, 26.085223) rotate(7.000000) translate(-87.494931, -26.085223) "
+                                            ></path>
+                                        </g>
+                                    </svg>
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -195,11 +212,14 @@ const Home = () => {
                     </Link>
                 </div>
                 <Swiper
-                    className="pt-10"
+                    className="pt-10 pb-4"
                     modules={[Navigation, Pagination, A11y]}
                     spaceBetween={25}
                     slidesPerView={1.2}
-                    navigation
+                    navigation={{
+                        prevEl: prevBtn.current,
+                        nextEl: nextBtn.current,
+                    }}
                     breakpoints={{
                         768: {
                             width: 768,
@@ -207,6 +227,22 @@ const Home = () => {
                         },
                     }}
                 >
+                    <div className="flex justify-end gap-2 mb-3">
+                        <button
+                            type="button"
+                            className="swiper-custom-button w-[30px] h-[30px] flex justify-center items-center bg-orange-400 text-white rounded-full transition hover:bg-orange-400/[.8]"
+                            ref={prevBtn}
+                        >
+                            <FontAwesomeIcon icon={faAngleLeft} />
+                        </button>
+                        <button
+                            type="button"
+                            className="swiper-custom-button w-[30px] h-[30px] flex justify-center items-center bg-orange-400 text-white rounded-full transition hover:bg-orange-400/[.8]"
+                            ref={nextBtn}
+                        >
+                            <FontAwesomeIcon icon={faAngleRight} />
+                        </button>
+                    </div>
                     {newReviewData.map((data, idx) => (
                         <SwiperSlide className="bg-white rounded-lg p-5 py-6 shadow-lg" key={idx}>
                             <Link to={`/detail/${data.idx}`}>
