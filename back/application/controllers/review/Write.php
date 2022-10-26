@@ -63,6 +63,7 @@ class Write extends RestController {
         $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 408, 'msg' => '장점을 입력해주세요.']);
         $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 409, 'msg' => '단점을 입력해주세요.']);
         $tag          = explode(',', trim($this->post('tag') ?: '')); // option
+        foreach($tag as $k => $v) $tag[$k] = (int)trim($v);
 
         
         // image
