@@ -363,7 +363,7 @@ const Write = () => {
         let formData = new FormData();
         console.log(value);
         for (let key in value) {
-            if (key !== 'reviewImg' || key !== 'tag') {
+            if (!Array.isArray(value[key])) {
                 formData.append(key, value[key]);
             } else {
                 value[key].forEach(item => {
@@ -372,28 +372,28 @@ const Write = () => {
             }
         }
 
-        // axios
-        //     .post(url, formData, {
-        //         headers: {
-        //             'Content-Type': `multipart/form-data; `,
-        //         },
-        //     })
-        //     .then(function (res) {
-        //         console.log(res);
-        //         !isModify && handleSearchBtn();
+        axios
+            .post(url, formData, {
+                headers: {
+                    'Content-Type': `multipart/form-data; `,
+                },
+            })
+            .then(function (res) {
+                console.log(res);
+                !isModify && handleSearchBtn();
 
-        //         if (res.data.state === 200) {
-        //             if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
-        //                 navigate(`/detail/${res.data.data.shopIdx}`);
-        //             }
-        //         } else {
-        //             alert(res.data.msg);
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         console.error(error);
-        //         alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-        //     });
+                if (res.data.state === 200) {
+                    if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
+                        navigate(`/detail/${res.data.data.shopIdx}`);
+                    }
+                } else {
+                    alert(res.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
     };
 
     return (
