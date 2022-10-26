@@ -357,10 +357,7 @@ const Write = () => {
             }
         }
 
-        console.log('newvalue', newValue);
-
         setValue({...value, ...newValue});
-        console.log('value', value);
         setModalVisible(false);
 
         // 검색 모달 초기화
@@ -391,7 +388,6 @@ const Write = () => {
                 },
             })
             .then(function (res) {
-                console.log(res);
                 !isModify && handleSearchBtn();
 
                 if (res.data.state === 200) {
@@ -556,7 +552,7 @@ const Write = () => {
             </div>
 
             <form name="frm">
-                <div className="bg-white p-8 rounded-lg shadow-lg">
+                <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg">
                     <div className="flex flex-col gap-4">
                         <div>
                             <label className="inline-block text-gray-700 mb-2" htmlFor="storeName">

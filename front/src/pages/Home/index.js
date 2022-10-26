@@ -133,7 +133,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="pt-[100px] pb-5 md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
+            <div className="pt-[100px] pb-[40px] md:pt-40 md:pb-20 font-sans-g pb-20 bg-orange-100">
                 <div className="container-wb relative my-10 py-0 sm:px-0 flex flex-col justify-center items-center gap-10 w-full ">
                     <img
                         src={iconThinking}
