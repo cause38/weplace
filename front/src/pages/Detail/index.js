@@ -175,9 +175,9 @@ const Detail = () => {
                 </div>
             </div>
             {review.length > 0 &&
-                review.map(item => (
+                review.map((item, index) => (
                     <Review
-                        key={item.idx}
+                        key={index}
                         idx={idx}
                         token={token}
                         sIdx={store.idx}
