@@ -360,7 +360,7 @@ const Category = () => {
         <>
             <div className="flex flex-col category-container">
                 <section className="category-nav">
-                    <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.name} />
+                    <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.idx} />
                 </section>
 
                 <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
