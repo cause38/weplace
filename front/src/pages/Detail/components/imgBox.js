@@ -10,7 +10,7 @@ const ImgBox = ({item, handleImg}) => {
             onClick={() => handleImg(item)}
             onMouseOver={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
-            style={{background: `url(${item}) no-repeat center/auto 90%`}}
+            style={{background: `url('${item}') no-repeat center/auto 90%`}}
         >
             <div
                 className={`${

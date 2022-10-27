@@ -124,7 +124,7 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                     </div>
                     <div className="flex gap-2 mt-4">
                         {data.image.length > 0 &&
-                            data.image.map((item, idx) => <ImgBox item={item} handleImg={handleImg} />)}
+                            data.image.map((item, idx) => <ImgBox key={idx} item={item} handleImg={handleImg} />)}
                     </div>
                 </div>
             </div>
