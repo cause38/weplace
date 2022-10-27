@@ -358,8 +358,8 @@ const Category = () => {
 
     return (
         <>
-            <div className="flex flex-col category-container">
-                <section className="category-nav">
+            <div className="flex flex-col category-container bg-orange-100">
+                <section className="category-nav mt-[80px] bg-white">
                     <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.idx} />
                 </section>
 
