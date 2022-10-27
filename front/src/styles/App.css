@@ -21,6 +21,12 @@
             padding: 40px;
         }
     }
+    body::-webkit-scrollbar {width: 15px;}
+    body::-webkit-scrollbar-button {width:8px;height:0;background:transparent;}
+    body::-webkit-scrollbar-track {background-color:transparent;}
+    body::-webkit-scrollbar-thumb {background-color: rgba(251, 146, 60, 0.8);background-clip: padding-box;}
+    body::-webkit-scrollbar-thumb:hover {background-color: rgba(251, 146, 60, 1);cursor: default;}
+
     .scrollbar::-webkit-scrollbar {width: 15px;}
     .scrollbar::-webkit-scrollbar-button {width:8px;height:0;background:transparent;}
     .scrollbar::-webkit-scrollbar-track {background-color:transparent;border-radius: 30px;}
