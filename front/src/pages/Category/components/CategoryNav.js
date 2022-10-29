@@ -1,21 +1,15 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {useLocation, useNavigate, useParams} from 'react-router-dom';
-import {Fragment} from 'react';
-
-import {Swiper, SwiperSlide} from 'swiper/react';
-import 'swiper/css';
+import {useLocation, useNavigate} from 'react-router-dom';
+import ScrollContainer from 'react-indiana-drag-scroll';
 
 const CategoryNav = ({data, currentCategory}) => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
-    const swiperRef = useRef(null);
-    const [swiper, setSwiper] = useState();
-    const [cidx, setCidx] = useState(0);
 
     useEffect(() => {
         if (currentCategory !== undefined) {
-            const current = document.querySelector(`.swiper-slide[data-id="${currentCategory}"]`);
-            handleSwiperMove(current, currentCategory);
+            const current = document.querySelector(`.navItem[data-id="${currentCategory}"] span`);
+            handleCurrentClass(current);
         } else {
             return;
         }
@@ -23,71 +17,44 @@ const CategoryNav = ({data, currentCategory}) => {
 
     // 카테고리 선택 시, 카테고리 변경
     const handleCategoryId = (e, category) => {
-        handleSwiperMove(e.currentTarget, category.idx);
+        handleCurrentClass(e.currentTarget.querySelector('span'));
         navigate(`/category/${category.idx}`, {state: {pathname: pathname}});
     };
 
-    useEffect(() => {
-        if (swiperRef) {
-            swiperRef.current.swiper.update();
-        }
-    }, [cidx]);
+    const handleCurrentClass = current => {
+        const items = document.querySelectorAll('.navItem span');
+        items.forEach(item => {
+            item.classList.remove('bg-orange-400', 'text-white', 'border-transparent');
+            item.classList.add('text-orange-400', 'border-orange-400');
+        });
+        current.classList.remove('text-orange-400', 'border-orange-400');
+        current.classList.add('bg-orange-400', 'text-white', 'border-transparent');
 
-    const handleSwiperMove = (current, idx) => {
-        setCidx(idx);
-
-        const slides = document.querySelectorAll('.swiper-slide');
-        slides.forEach(item => item.setAttribute('data-active', false));
-        current.setAttribute('data-active', true);
+        current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center',
+        });
     };
 
     return (
-        <Fragment>
-            {cidx > 6 ? (
-                <article className="mx-auto overflow-auto scrollBar flex max-w-6xl p-2 cursor-pointer" key={data.idx}>
-                    <Swiper
-                        ref={swiperRef}
-                        slidesPerView={'auto'}
-                        centeredSlides
-                        onSwiper={swiper => setSwiper(swiper)}
+        <ScrollContainer className="scroll-container container-wb py-4 px-0 my-0 overflow-auto flex gap-2 whitespace-nowrap cursor-pointer">
+            {data.map((category, i) => {
+                return (
+                    <button
+                        type="button"
+                        key={i}
+                        data-id={category.idx}
+                        onClick={e => handleCategoryId(e, category)}
+                        className="navItem"
                     >
-                        {data.map((category, i) => {
-                            return (
-                                <SwiperSlide
-                                    style={{width: 'auto'}}
-                                    key={i}
-                                    data-id={category.idx}
-                                    onClick={e => handleCategoryId(e, category)}
-                                >
-                                    <span className="inline-block font-semibold py-1 sm:py-2 px-4 sm:px-6 rounded-full m-1">
-                                        {category.name}
-                                    </span>
-                                </SwiperSlide>
-                            );
-                        })}
-                    </Swiper>
-                </article>
-            ) : (
-                <article className="mx-auto overflow-auto scrollBar flex max-w-6xl p-2 cursor-pointer" key={data.idx}>
-                    <Swiper ref={swiperRef} slidesPerView={'auto'} onSwiper={swiper => setSwiper(swiper)}>
-                        {data.map((category, i) => {
-                            return (
-                                <SwiperSlide
-                                    style={{width: 'auto'}}
-                                    key={i}
-                                    data-id={category.idx}
-                                    onClick={e => handleCategoryId(e, category)}
-                                >
-                                    <span className="inline-block font-semibold py-1 sm:py-2 px-4 sm:px-6 rounded-full m-1">
-                                        {category.name}
-                                    </span>
-                                </SwiperSlide>
-                            );
-                        })}
-                    </Swiper>
-                </article>
-            )}
-        </Fragment>
+                        <span className="inline-block font-semibold py-1 sm:py-2 px-4 sm:px-6 rounded-full text-orange-400 border border-orange-400">
+                            {category.name}
+                        </span>
+                    </button>
+                );
+            })}
+        </ScrollContainer>
     );
 };
 

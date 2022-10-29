@@ -1,3 +1,6 @@
+.category {
+    min-height: calc(100vh - 340px);
+}
 .category-nav .swiper-slide span {
   border: 1px solid  #f97316;
   color: #f97316;

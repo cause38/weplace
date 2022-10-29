@@ -1,8 +1,11 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Link, useParams, useNavigate, useLocation} from 'react-router-dom';
+import axios from 'axios';
 
 import CategoryNav from './components/CategoryNav';
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faHeart, faStar, faLocationDot, faFileLines} from '@fortawesome/free-solid-svg-icons';
 import dropdown from '../../assets/dropdown.svg';
 import dropdownActive from '../../assets/dropdownActive.svg';
 import selected from '../../assets/selected.svg';
@@ -253,15 +256,8 @@ const Category = () => {
         e.target.classList.toggle('on');
 
         if (e.target.classList.contains('on')) {
-            e.target.classList.remove('border-orange-300');
-            e.target.classList.add(
-                'border-transparent',
-                'text-orange-500',
-                'underline',
-                'underline-offset-4',
-                'font-semibold',
-                'cursor-pointer'
-            );
+            e.target.classList.remove('bg-white', 'text-orange-400');
+            e.target.classList.add('bg-orange-400', 'text-white', 'font-semibold');
 
             newTagList.push(parseInt(tagValue));
             setSendTagList(newTagList);
@@ -304,15 +300,8 @@ const Category = () => {
                     });
             }
         } else {
-            e.target.classList.remove(
-                'border-transparent',
-                'text-orange-500',
-                'underline',
-                'underline-offset-4',
-                'font-semibold',
-                'cursor-pointer'
-            );
-            e.target.classList.add('border-orange-300');
+            e.target.classList.add('bg-white', 'text-orange-400');
+            e.target.classList.remove('bg-orange-400', 'text-white', 'font-semibold');
 
             const filtered = newTagList.filter(item => item !== parseInt(tagValue));
             setSendTagList(filtered);
@@ -363,116 +352,150 @@ const Category = () => {
                     <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.idx} />
                 </section>
 
-                <section className="max-w-6xl mx-auto my-0 flex w-full p-[20px] overflow-hidden">
-                    <div className="max-w-6xl flex scrollBar">
-                        <div
-                            className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                            onClick={handleDrop}
-                        >
-                            <span className="">{selectedSorting}</span>
-                            <div className="flex">
-                                {!isDrop ? (
-                                    <img alt="dropdown" src={dropdown} />
-                                ) : (
-                                    <img alt="dropdown" src={dropdownActive} />
-                                )}
-                            </div>
-                        </div>
-                        <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
-                        {isDrop && (
-                            <div className="absolute top-[180px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <ul className="">
-                                    {SORTING.map((data, key) => {
-                                        return (
-                                            <li
-                                                key={key}
-                                                onClick={e => handleSorting(e, key)}
-                                                value={data.name}
-                                                className={
-                                                    newSorting[key] === true
-                                                        ? 'font-semibold cursor-pointer'
-                                                        : 'cursor-pointer'
-                                                }
-                                            >
-                                                <div className="block px-4 py-2 text-sm flex justify-between">
-                                                    <p className="">{data.name}</p>
-                                                    {newSorting[key] === true && <img alt="selected" src={selected} />}
-                                                </div>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                        )}
-
-                        <button className="mx-[20px]" onClick={e => showOnlyLike(e)}>
-                            {onlyLike ? '💘 찜한가게' : '🤍 찜한가게'}
-                        </button>
-
-                        <div className="scrollbar mx-[20px] w-[calc(100%-300px)] flex items-center flex-wrap h-11 overflow-y-scroll tag-container">
-                            {tagList?.map(data => {
-                                return (
-                                    <button
-                                        ref={tagRef}
-                                        onClick={e => handleTag(e, data.idx)}
-                                        key={data.idx}
-                                        value={data.name}
-                                        className="hash min-w-fit mr-5 hover:underline underline-offset-4"
-                                    >
-                                        #{data.name}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
+                <section className="container-wb h-[104px] mx-auto my-0 py-4 px-0 scrollbar flex items-center flex-wrap gap-4 gap-y-3 overflow-auto">
+                    {tagList?.map(data => {
+                        return (
+                            <button
+                                ref={tagRef}
+                                onClick={e => handleTag(e, data.idx)}
+                                key={data.idx}
+                                value={data.name}
+                                className="bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300"
+                            >
+                                # {data.name}
+                            </button>
+                        );
+                    })}
                 </section>
             </div>
-            <section className="category max-w-6xl mx-auto">
-                <section
-                    className={
-                        storeList?.length > 0
-                            ? 'flex grow flex-wrap mb-[20px] '
-                            : 'flex justify-center items-center h-[calc(100vh-352px)]'
-                    }
-                >
+            <section className="category container-wb px-0 mt-0" style={{minHeight: 'calc(100vh - 340px)'}}>
+                <div className="flex justify-between items-center mb-4">
+                    <div
+                        className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border bg-white px-4 py-2 font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                        onClick={handleDrop}
+                    >
+                        <span className="">{selectedSorting}</span>
+                        <div className="flex">
+                            {!isDrop ? (
+                                <img alt="dropdown" src={dropdown} />
+                            ) : (
+                                <img alt="dropdown" src={dropdownActive} />
+                            )}
+                        </div>
+                    </div>
+                    <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
+                    {isDrop && (
+                        <div className="absolute top-[180px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <ul className="">
+                                {SORTING.map((data, key) => {
+                                    return (
+                                        <li
+                                            key={key}
+                                            onClick={e => handleSorting(e, key)}
+                                            value={data.name}
+                                            className={
+                                                newSorting[key] === true
+                                                    ? 'font-semibold cursor-pointer'
+                                                    : 'cursor-pointer'
+                                            }
+                                        >
+                                            <div className="block px-4 py-2 text-sm flex justify-between">
+                                                <p className="">{data.name}</p>
+                                                {newSorting[key] === true && <img alt="selected" src={selected} />}
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
+
+                    <button
+                        className="border bg-white rounded px-4 py-2 font-medium shadow-sm rounded-md hover:bg-gray-50"
+                        onClick={e => showOnlyLike(e)}
+                    >
+                        <FontAwesomeIcon
+                            icon={faHeart}
+                            className={`${onlyLike ? 'text-red-400' : 'text-gray-400'} mr-2`}
+                        />
+                        찜한 가게
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
                     {storeList?.length > 0 ? (
                         storeList.map((data, key) => {
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                             return (
-                                <Link key={idx} to={`/detail/${idx}`}>
-                                    <div
-                                        className={
-                                            'h-[170px] w-[265px] min-w-[265px] my-[10px] mx-[5px] bg-white rounded-[20px] shadow-md overflow-hidden'
-                                        }
-                                    >
-                                        <div className="p-[10px] h-full flex flex-col justify-between">
+                                <Link
+                                    key={idx}
+                                    to={`/detail/${idx}`}
+                                    className="w-full bg-white rounded-xl shadow-md overflow-hidden"
+                                >
+                                    <div className="p-4 h-full flex flex-col justify-between gap-4">
+                                        <div className="flex flex-col gap-4">
                                             <div className="flex justify-between">
-                                                <h3 className="w-fit px-[5px] py-[2px] rounded bg-orange-400 text-white text-[14px]">
+                                                <h3 className="px-3 py-1 rounded-full bg-orange-400 text-white text-sm">
                                                     {category}
                                                 </h3>
-                                                <p className="flex items-center text-[14px]">&#128681; {distance}분</p>
+                                                <button
+                                                    onClick={e => {
+                                                        e.preventDefault();
+                                                        console.log('click');
+                                                    }}
+                                                    className="flex items-center text-sm hover:opacity-75"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faHeart}
+                                                        className={`${
+                                                            isFavorite ? 'text-red-400' : 'text-gray-400'
+                                                        } text-xl`}
+                                                    />
+                                                </button>
                                             </div>
-                                            <div>
-                                                <p className="text-2xl font-bold">{name}</p>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span>⭐{star}</span>
-                                                <span>&#128221;{review}</span>
-                                                <span>{isFavorite === true ? '💘' : '🤍'}</span>
-                                            </div>
-                                            <div className="h-11 overflow-y-auto store-tag-container">
-                                                <div className="flex flex-wrap max-h-fit">
-                                                    {tag.map((data, id) => {
-                                                        return (
-                                                            <span
-                                                                key={id}
-                                                                className="rounded min-w-fit text-sm rounded-full p-1 bg-white text-orange-600 underline underline-offset-4 font-medium"
-                                                            >
-                                                                #{data}
-                                                            </span>
-                                                        );
-                                                    })}
+                                            <p className="text-2xl font-bold line-clamp-2 break-keep">{name}</p>
+                                        </div>
+                                        <div>
+                                            <div className="flex gap-3 justify-between mb-3">
+                                                <div className="flex gap-2 items-center">
+                                                    <span className="w-10 h-10 rounded-full flex justify-center items-center bg-yellow-100">
+                                                        <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
+                                                    </span>
+                                                    {star}
                                                 </div>
+                                                <div className="flex gap-2 items-center">
+                                                    <span className="w-10 h-10 rounded-full flex justify-center items-center bg-purple-100">
+                                                        <FontAwesomeIcon
+                                                            icon={faFileLines}
+                                                            className="text-purple-400"
+                                                        />
+                                                    </span>
+                                                    {review}
+                                                </div>
+                                                <div className="flex gap-2 items-center">
+                                                    <span className="w-10 h-10 rounded-full flex justify-center items-center bg-teal-100">
+                                                        <FontAwesomeIcon
+                                                            icon={faLocationDot}
+                                                            className="text-teal-400"
+                                                        />
+                                                    </span>
+                                                    {distance}분
+                                                </div>
+                                            </div>
+                                            <div className="h-[80px] overflow-y-auto scrollbar flex flex-wrap items-start gap-2 bg-orange-100 rounded-md p-2">
+                                                {tag && tag.length > 0 ? (
+                                                    tag.map((data, id) => (
+                                                        <span
+                                                            key={id}
+                                                            className="rounded text-sm rounded-full p-1 px-2 bg-white shadow-sm shadow-orange-400 text-orange-500"
+                                                        >
+                                                            # {data}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <div className="flex justify-center items-center w-full h-full text-orange-400 font-light">
+                                                        등록된 태그가 없습니다
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -484,7 +507,7 @@ const Category = () => {
                     ) : (
                         <p className="h-[calc(100vh - 352px)]">작성된 리뷰가 없습니다😭</p>
                     )}
-                </section>
+                </div>
             </section>
         </>
     );
