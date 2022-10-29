@@ -1,9 +1,10 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Link, useParams, useNavigate, useLocation} from 'react-router-dom';
-import axios from 'axios';
 
 import CategoryNav from './components/CategoryNav';
 
+import {EmojiProvider, Emoji} from 'react-apple-emojis';
+import emojiData from '../../lib/data.json';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeart, faStar, faLocationDot, faFileLines} from '@fortawesome/free-solid-svg-icons';
 import dropdown from '../../assets/dropdown.svg';
@@ -368,10 +369,13 @@ const Category = () => {
                     })}
                 </section>
             </div>
-            <section className="category container-wb px-0 mt-0" style={{minHeight: 'calc(100vh - 340px)'}}>
-                <div className="flex justify-between items-center mb-4">
+            <section
+                className="category container-wb px-0 py-6 mt-0 flex flex-col justify-between gap-4"
+                style={{minHeight: 'calc(100vh - 340px)'}}
+            >
+                <div className="flex justify-between items-center">
                     <div
-                        className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border bg-white px-4 py-2 font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                        className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border bg-white px-4 py-2 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                         onClick={handleDrop}
                     >
                         <span className="">{selectedSorting}</span>
@@ -411,7 +415,7 @@ const Category = () => {
                     )}
 
                     <button
-                        className="border bg-white rounded px-4 py-2 font-medium shadow-sm rounded-md hover:bg-gray-50"
+                        className="border bg-white rounded px-4 py-2 shadow-sm rounded-md hover:bg-gray-50"
                         onClick={e => showOnlyLike(e)}
                     >
                         <FontAwesomeIcon
@@ -421,7 +425,13 @@ const Category = () => {
                         찜한 가게
                     </button>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
+                <div
+                    className={`${
+                        storeList?.length > 0
+                            ? 'grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6'
+                            : 'flex justify-center items-center grow'
+                    }`}
+                >
                     {storeList?.length > 0 ? (
                         storeList.map((data, key) => {
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
@@ -502,10 +512,13 @@ const Category = () => {
                                 </Link>
                             );
                         })
-                    ) : onlyLike ? (
-                        <p className="h-[calc(100vh - 352px)]">찜한 가게가 없습니다😭</p>
                     ) : (
-                        <p className="h-[calc(100vh - 352px)]">작성된 리뷰가 없습니다😭</p>
+                        <div className="flex gap-1">
+                            {onlyLike ? '찜한 가게' : '작성된 리뷰'}가 없습니다
+                            <EmojiProvider data={emojiData}>
+                                <Emoji name={'crying-face'} className="w-[24px] h-[24px]" />
+                            </EmojiProvider>
+                        </div>
                     )}
                 </div>
             </section>
