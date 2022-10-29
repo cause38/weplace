@@ -9,9 +9,6 @@ import {useRecoilState} from '../../node_modules/recoil/';
 const Header = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
-    const getToken = sessionStorage.getItem('token');
-    const getName = sessionStorage.getItem('name');
-    const getProfileImg = sessionStorage.getItem('profileImg');
 
     // 로그인 정보
     const [isLogin, setisLogin] = useState(true);
@@ -46,7 +43,7 @@ const Header = () => {
     };
 
     useEffect(() => {
-        getToken !== null ? setisLogin(true) : setisLogin(false);
+        token !== null ? setisLogin(true) : setisLogin(false);
         setProfile(profile);
         setNickname(nickName);
 
@@ -54,7 +51,7 @@ const Header = () => {
         return () => {
             document.removeEventListener('click', e => handleBodyClick(e));
         };
-    }, [getToken, profile, nickName]);
+    }, [token, profile, nickName]);
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
