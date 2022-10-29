@@ -6,8 +6,8 @@ const CategoryNav = ({data, currentCategory}) => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
 
+    // category list scroll
     const container = useRef(null);
-    const [curIdx, setCurIdx] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
 
     useEffect(() => {
@@ -39,19 +39,9 @@ const CategoryNav = ({data, currentCategory}) => {
             block: 'center',
             inline: 'center',
         });
-
-        setCurIdx(idx);
     };
 
-    useEffect(() => {
-        console.log(curIdx);
-    }, [curIdx]);
-    useEffect(() => {
-        console.log(scrollLeft);
-    }, [scrollLeft]);
-
     // category list scroll
-
     const handleScroll = () => {
         if (container) {
             setScrollLeft(container.current.scrollLeft);
