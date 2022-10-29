@@ -107,8 +107,8 @@ const Detail = () => {
                 title=""
                 contents={
                     <>
-                        <div className="h-[70vh] overflow-auto scrollbar">
-                            <div className="flex flex-col items-center justify-center min-h-full border rounded p-2">
+                        <div className="min-h-[50vh] max-h-[70vh] overflow-auto scrollbar flex flex-col">
+                            <div className="grow flex flex-col justify-center border rounded p-2 box-border">
                                 <img src={modalImg} alt="리뷰이미지" className="w-full h-auto mx-auto" />
                             </div>
                         </div>

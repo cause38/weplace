@@ -53,7 +53,7 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                 <div className="flex gap-3 items-center">
                     <span
                         className="w-[50px] h-[50px] bg-orange-300 rounded-full p-2"
-                        style={{background: `url('${data.thumb}') center/cover`}}
+                        style={{background: `url('${data.thumb}') no-repeat center/cover`}}
                     ></span>
                     <p className="text-lg">{data.name}</p>
                     <div className={`${data.isMine ? '' : 'hidden'} flex gap-2`}>
@@ -124,7 +124,7 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                     </div>
                     <div className="flex gap-2 mt-4">
                         {data.image.length > 0 &&
-                            data.image.map((item, idx) => <ImgBox item={item} handleImg={handleImg} />)}
+                            data.image.map((item, idx) => <ImgBox key={idx} item={item} handleImg={handleImg} />)}
                     </div>
                 </div>
             </div>
