@@ -350,10 +350,12 @@ const Category = () => {
         <>
             <div className="flex flex-col category-container bg-orange-100">
                 <section className="category-nav mt-[80px] bg-white">
-                    <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.idx} />
+                    <div className="container-wb py-4 my-0">
+                        <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.idx} />
+                    </div>
                 </section>
 
-                <section className="container-wb h-[104px] mx-auto my-0 py-4 px-0 scrollbar flex items-center flex-wrap gap-4 gap-y-3 overflow-auto">
+                <section className="container-wb h-[104px] mx-auto my-0 py-4 scrollbar flex items-center flex-wrap gap-4 gap-y-3 overflow-auto">
                     {tagList?.map(data => {
                         return (
                             <button
@@ -370,7 +372,7 @@ const Category = () => {
                 </section>
             </div>
             <section
-                className="category container-wb px-0 py-6 mt-0 flex flex-col justify-between gap-4"
+                className="category container-wb py-6 mt-0 flex flex-col justify-between gap-4"
                 style={{minHeight: 'calc(100vh - 340px)'}}
             >
                 <div className="flex justify-between items-center">
