@@ -5,7 +5,10 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 const CategoryNav = ({data, currentCategory}) => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
+
+    const container = useRef(null);
     const [curIdx, setCurIdx] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0);
 
     useEffect(() => {
         if (currentCategory !== undefined) {
@@ -40,36 +43,37 @@ const CategoryNav = ({data, currentCategory}) => {
         setCurIdx(idx);
     };
 
-    // category list scroll
-    // const categoryRef = useRef(null);
-    // const categoryScroll = useState(0);
-    // useEffect(() => {
-    //     if (categoryRef) {
-    //         categoryRef.current.addEventListener('scroll', e => {
-    //             console.log(e);
-    //         });
-    //     } else {
-    //         return;
-    //     }
-    // }, [categoryScroll]);
+    useEffect(() => {
+        console.log(curIdx);
+    }, [curIdx]);
+    useEffect(() => {
+        console.log(scrollLeft);
+    }, [scrollLeft]);
 
-    const handleScroll = e => {
-        console.log(e);
+    // category list scroll
+
+    const handleScroll = () => {
+        if (container) {
+            setScrollLeft(container.current.scrollLeft);
+        }
     };
 
     return (
         <div
             className={`relative ${
-                curIdx > 3 &&
-                "before:content-[''] before:block before:w-6 before:h-full before:absolute before:top-0 before:left-0 before:bg-gradient-to-r from-white to-transparent "
-            } 
-                            ${
-                                curIdx < data.length - 4 &&
-                                "after:content-[''] after:block after:w-6 after:h-full after:absolute after:top-0 after:right-0 after:bg-gradient-to-l from-white to-transparent"
-                            }`}
+                scrollLeft > 0
+                    ? "before:content-[''] before:block before:w-6 before:h-full before:absolute before:top-0 before:left-0 before:bg-gradient-to-r from-white to-transparent "
+                    : ' '
+            }${
+                scrollLeft < 883
+                    ? "after:content-[''] after:block after:w-6 after:h-full after:absolute after:top-0 after:right-0 after:bg-gradient-to-l from-white to-transparent"
+                    : ' '
+            }`}
         >
             <ScrollContainer
-                onScroll={e => handleScroll}
+                ref={container}
+                onScroll={() => handleScroll()}
+                onClick={() => handleScroll()}
                 className="scroll-container overflow-auto flex gap-2 whitespace-nowrap cursor-pointer"
             >
                 {data.map((category, i) => {
