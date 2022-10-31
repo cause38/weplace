@@ -112,7 +112,6 @@ const Category = () => {
         if (token === '') {
             setOnlyLike(false);
             if (window.confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
-                alert('로그인 창으로 이동');
                 navigate('/login', {state: {pathname: pathname}});
             } else {
                 return;
