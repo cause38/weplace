@@ -10,8 +10,6 @@ const FindPassword = () => {
     const navigate = useNavigate();
     const {pathname} = useLocation();
 
-    console.log('pathnameFind', pathname);
-
     // input value
     const [id, setId] = useState(''); // 아이디
     const [verifyId, setVerifyId] = useState(''); // 인증번호

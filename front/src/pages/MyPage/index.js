@@ -19,14 +19,6 @@ const MyPage = () => {
     //  토큰
     const [token, setToken] = useState(0);
 
-    // 프로필 이미지 url
-    // const [profileImg, setProfileImg] = useRecoilState(profileImgValue);
-
-    // 프로필 닉네임
-    // const [name, setName] = useRecoilState(nameValue);
-
-    // console.log('recoilva', recoilValue);
-
     // 유저 이미지
     const [userImg, setUserImg] = useRecoilState(profileImgValue);
 
@@ -68,7 +60,6 @@ const MyPage = () => {
                 })
                 .then(res => {
                     if (res.data.state === 200) {
-                        console.log('res.data', res.data.data);
                         setNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
@@ -152,8 +143,6 @@ const MyPage = () => {
         const formData = new FormData();
         formData.append('profileImg', file);
         formData.append('token', token);
-
-        console.log(file);
 
         axios
             .post('http://place-api.weballin.com/mypage/changeProfileImg', formData, {

@@ -352,8 +352,6 @@ const Write = () => {
                 const dataValue =
                     key === 'idx' || key === 'cidx' || key === 'floor' ? parseFloat(data[key]) : data[key];
                 newValue = {...newValue, [key]: dataValue};
-            } else {
-                console.log('star', data.star);
             }
         }
 
