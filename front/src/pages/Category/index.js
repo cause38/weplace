@@ -469,22 +469,19 @@ const Category = () => {
                                         <div>
                                             <div className="flex gap-3 justify-between mb-3">
                                                 <div className="flex gap-2 items-center">
-                                                    <span className="w-10 h-10 rounded-full flex justify-center items-center bg-yellow-100">
+                                                    <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-yellow-100">
                                                         <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
                                                     </span>
                                                     {star}
                                                 </div>
                                                 <div className="flex gap-2 items-center">
-                                                    <span className="w-10 h-10 rounded-full flex justify-center items-center bg-purple-100">
-                                                        <FontAwesomeIcon
-                                                            icon={faFileLines}
-                                                            className="text-purple-400"
-                                                        />
+                                                    <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-red-100">
+                                                        <FontAwesomeIcon icon={faFileLines} className="text-red-400" />
                                                     </span>
                                                     {review}
                                                 </div>
                                                 <div className="flex gap-2 items-center">
-                                                    <span className="w-10 h-10 rounded-full flex justify-center items-center bg-teal-100">
+                                                    <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-teal-100">
                                                         <FontAwesomeIcon
                                                             icon={faLocationDot}
                                                             className="text-teal-400"

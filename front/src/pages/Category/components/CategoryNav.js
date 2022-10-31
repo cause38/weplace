@@ -8,7 +8,6 @@ const CategoryNav = ({data, currentCategory}) => {
 
     // category list scroll
     const container = useRef(null);
-    const [scrollLeft, setScrollLeft] = useState(0);
 
     useEffect(() => {
         if (currentCategory !== undefined) {
@@ -41,48 +40,27 @@ const CategoryNav = ({data, currentCategory}) => {
         });
     };
 
-    // category list scroll
-    const handleScroll = () => {
-        if (container) {
-            setScrollLeft(container.current.scrollLeft);
-        }
-    };
-
     return (
-        <div
-            className={`relative ${
-                scrollLeft > 0
-                    ? "before:content-[''] before:block before:w-6 before:h-full before:absolute before:top-0 before:left-0 before:bg-gradient-to-r from-white to-transparent "
-                    : ' '
-            }${
-                scrollLeft < 883
-                    ? "after:content-[''] after:block after:w-6 after:h-full after:absolute after:top-0 after:right-0 after:bg-gradient-to-l from-white to-transparent"
-                    : ' '
-            }`}
+        <ScrollContainer
+            ref={container}
+            className="scroll-container overflow-auto flex gap-2 whitespace-nowrap cursor-pointer"
         >
-            <ScrollContainer
-                ref={container}
-                onScroll={() => handleScroll()}
-                onClick={() => handleScroll()}
-                className="scroll-container overflow-auto flex gap-2 whitespace-nowrap cursor-pointer"
-            >
-                {data.map((category, i) => {
-                    return (
-                        <button
-                            type="button"
-                            key={i}
-                            data-id={category.idx}
-                            onClick={e => handleCategoryId(e, category)}
-                            className="navItem"
-                        >
-                            <span className="inline-block font-semibold py-1 sm:py-2 px-4 sm:px-6 rounded-full text-orange-400 border border-orange-400">
-                                {category.name}
-                            </span>
-                        </button>
-                    );
-                })}
-            </ScrollContainer>
-        </div>
+            {data.map((category, i) => {
+                return (
+                    <button
+                        type="button"
+                        key={i}
+                        data-id={category.idx}
+                        onClick={e => handleCategoryId(e, category)}
+                        className="navItem"
+                    >
+                        <span className="inline-block font-semibold py-1 sm:py-2 px-4 sm:px-6 rounded-full text-orange-400 border border-orange-400">
+                            {category.name}
+                        </span>
+                    </button>
+                );
+            })}
+        </ScrollContainer>
     );
 };
 
