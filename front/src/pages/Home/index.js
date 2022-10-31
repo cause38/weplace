@@ -14,7 +14,6 @@ import 'styles/home.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'styles/swiper-custom.css';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -212,10 +211,11 @@ const Home = () => {
                     </Link>
                 </div>
                 <Swiper
-                    className="pt-10 pb-4"
+                    className="flex flex-col-reverse"
+                    style={{paddingBottom: '20px'}}
                     modules={[Navigation, Pagination, A11y]}
-                    spaceBetween={25}
                     slidesPerView={1.2}
+                    spaceBetween={25}
                     navigation={{
                         prevEl: prevBtn.current,
                         nextEl: nextBtn.current,
@@ -230,21 +230,21 @@ const Home = () => {
                     <div className="flex justify-end gap-2 mb-3">
                         <button
                             type="button"
-                            className="swiper-custom-button w-[30px] h-[30px] flex justify-center items-center bg-orange-400 text-white rounded-full transition hover:bg-orange-400/[.8]"
+                            className="swiper-custom-button w-[30px] h-[30px] flex justify-center items-center bg-orange-400 text-white rounded-full transition hover:bg-orange-400/[.8] disabled:opacity-50"
                             ref={prevBtn}
                         >
                             <FontAwesomeIcon icon={faAngleLeft} />
                         </button>
                         <button
                             type="button"
-                            className="swiper-custom-button w-[30px] h-[30px] flex justify-center items-center bg-orange-400 text-white rounded-full transition hover:bg-orange-400/[.8]"
+                            className="swiper-custom-button w-[30px] h-[30px] flex justify-center items-center bg-orange-400 text-white rounded-full transition hover:bg-orange-400/[.8] disabled:opacity-50"
                             ref={nextBtn}
                         >
                             <FontAwesomeIcon icon={faAngleRight} />
                         </button>
                     </div>
                     {newReviewData.map((data, idx) => (
-                        <SwiperSlide className="bg-white rounded-lg shadow-lg" key={idx}>
+                        <SwiperSlide className="main-slide bg-white rounded-lg shadow-lg" key={idx}>
                             <Link to={`/detail/${data.idx}`} className="block p-5 py-6">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full">

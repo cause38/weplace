@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPlus} from '@fortawesome/free-solid-svg-icons';
+import {faMagnifyingGlassPlus} from '@fortawesome/free-solid-svg-icons';
 
 const ImgBox = ({item, handleImg}) => {
     const [visible, setVisible] = useState(false);
@@ -15,9 +15,9 @@ const ImgBox = ({item, handleImg}) => {
             <div
                 className={`${
                     visible ? 'opacity-100' : 'opacity-0'
-                } transition absolute w-full h-full bg-orange-100/50 text-orange-400 top-0 left-0 flex justify-center items-center`}
+                } transition absolute w-full h-full bg-gray-300/50 text-orange-400 top-0 left-0 flex justify-center items-center`}
             >
-                <FontAwesomeIcon icon={faPlus} />
+                <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
             </div>
         </div>
     );

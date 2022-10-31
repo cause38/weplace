@@ -1,8 +1,0 @@
-.swiper {
-  display: flex;
-  flex-direction: column-reverse;
-  padding-bottom: 20px;
-}
-.swiper-custom-button:disabled {
-  opacity: .5;
-}

@@ -1,68 +1,11 @@
-.category-nav {
-    margin-top: 80px;
-    width: 100%;
-    /* max-width: 1024px; */
-    background-color: white;
-}
-
 .category {
-    width: 100%;
-    padding: 0 20px;
+    min-height: calc(100vh - 340px);
 }
-
-.drop-box {
-    top: 190px;
-    width: 95px;
-    z-index: 10;
+.category-nav .swiper-slide span {
+  border: 1px solid  #f97316;
+  color: #f97316;
 }
-
-.category-container {
-    background-color: antiquewhite;
-}
-
-/* .category-nav-container::-webkit-scrollbar {
-    width: 10px;
-}
-.category-nav-container::-webkit-scrollbar-thumb {
-    background-color: rgb(249 115 22);
-    border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
-}
-.category-nav-container::-webkit-scrollbar-track {
-    background-color: rgb(253 186 116);
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
-} */
-
-.tag-container::-webkit-scrollbar {
-    width: 10px;
-}
-.tag-container::-webkit-scrollbar-thumb {
-    background-color: rgb(249 115 22);
-    border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
-    box-shadow: inset 0px 0px 5px white;
-}
-.tag-container::-webkit-scrollbar-track {
-    background-color: rgb(253 186 116);
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
-}
-
-.store-tag-container::-webkit-scrollbar {
-    width: 10px;
-}
-.store-tag-container::-webkit-scrollbar-thumb {
-    background-color: rgb(249 115 22);
-    border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
-    box-shadow: inset 0px 0px 5px white;
-}
-.store-tag-container::-webkit-scrollbar-track {
-    background-color: rgb(253 186 116);
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
+.category-nav .swiper-slide[data-active="true"] span {
+  background-color: #f97316;
+  color: #fff !important;
 }
