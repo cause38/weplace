@@ -372,7 +372,7 @@ const Category = () => {
                 </section>
             </div>
             <section
-                className="category container-wb py-6 mt-0 flex flex-col justify-between gap-4"
+                className="category container-wb py-6 mt-0 flex flex-col gap-4"
                 style={{minHeight: 'calc(100vh - 340px)'}}
             >
                 <div className="flex justify-between items-center">
@@ -430,7 +430,7 @@ const Category = () => {
                 <div
                     className={`${
                         storeList?.length > 0
-                            ? 'grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6'
+                            ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6'
                             : 'flex justify-center items-center grow'
                     }`}
                 >
