@@ -73,7 +73,8 @@ const Category = () => {
         const resetClassName = document.getElementsByClassName('hash');
 
         for (let i = 0; i < resetClassName.length; i++) {
-            resetClassName[i].className = 'bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300';
+            resetClassName[i].className =
+                'hash bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300';
         }
 
         setSelectedSorting(selectedSorting);
@@ -363,7 +364,7 @@ const Category = () => {
                                 onClick={e => handleTag(e, data.idx)}
                                 key={data.idx}
                                 value={data.name}
-                                className="bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300"
+                                className="hash bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300"
                             >
                                 # {data.name}
                             </button>
