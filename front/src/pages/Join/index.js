@@ -35,7 +35,6 @@ const Join = () => {
     // 닉네임변경
     const [isResetNickName, setIsResetNickName] = useState(false);
 
-    console.log('pathNameJoin', pathname);
     // 뒤로가기
     const goBack = () => {
         navigate('/login', {state: {pathname: pathname}});
@@ -58,13 +57,11 @@ const Join = () => {
         if (form.id.value === '') {
             alert('이메일 주소를 입력해 주십시오.');
             form.id.focus();
-            console.log('입력없음 체크');
             return false;
         } else {
             if (!checkEmail(form.id.value)) {
                 alert('이메일 주소를 바르게 입력해 주십시오.');
                 form.id.focus();
-                console.log('제대로 입력안함');
                 return false;
             } else {
                 // 인증요청
@@ -78,9 +75,7 @@ const Join = () => {
                     })
                         .then(res => res.json())
                         .then(response => {
-                            console.log('resr?', response);
                             if (response.state === 200) {
-                                console.log('200', response.msg);
                                 alert(response.msg);
                                 setIsSendVerifyEmail(true);
                             } else if (response.state === 401) {
@@ -109,7 +104,6 @@ const Join = () => {
             })
             .then(response => {
                 if (response.data.state === 200) {
-                    console.log('200', response.data.msg);
                     alert(response.data.msg);
                     setIsIdValid(true);
                     setIsSendVerifyEmail(true);
@@ -134,7 +128,6 @@ const Join = () => {
     // 닉네임 중복 확인
     const handleName = () => {
         const name = nickName.toString();
-        console.log('name', name);
         if (nickName.length <= 0) {
             alert('닉네임을 입력 해 주세요.');
         } else {
@@ -165,7 +158,6 @@ const Join = () => {
 
     // 비밀번호 확인
     const handlePwMatch = e => {
-        console.log('e', e.target.value);
         setCfmPassword(e.target.value);
         if (e.target.value !== password) {
             setIsSamePw(false);
