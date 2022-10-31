@@ -54,6 +54,11 @@ const Category = () => {
                 });
                 setCurrentCategory(current);
             });
+
+        document.addEventListener('click', e => handleBodyClick(e));
+        return () => {
+            document.removeEventListener('click', e => handleBodyClick(e));
+        };
     }, []);
 
     // 카테고리 리스트 클릭 시, 카테고리 변경 & 필터기능 리셋
@@ -346,6 +351,17 @@ const Category = () => {
         }
     };
 
+    const handleBodyClick = e => {
+        if (!e.target.closest('div').classList.contains('dropMenu')) {
+            setIsDrop(false);
+        }
+    };
+
+    const handleFavorite = e => {
+        e.preventDefault();
+        console.log('click');
+    };
+
     return (
         <>
             <div className="flex flex-col category-container bg-orange-100">
@@ -377,44 +393,43 @@ const Category = () => {
             >
                 <div className="flex justify-between items-center">
                     <div
-                        className="cursor-pointer flex w-[120px] justify-between items-center rounded-md border bg-white px-4 py-2 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                        className="dropMenu relative cursor-pointer flex w-[130px] justify-between items-center rounded-md border bg-white px-4 py-2 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                         onClick={handleDrop}
                     >
                         <span className="">{selectedSorting}</span>
-                        <div className="flex">
+                        <div className="dropMenu flex">
                             {!isDrop ? (
                                 <img alt="dropdown" src={dropdown} />
                             ) : (
                                 <img alt="dropdown" src={dropdownActive} />
                             )}
                         </div>
+                        {isDrop && (
+                            <div className="dropMenu absolute top-[45px] left-0 z-10 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <ul className="">
+                                    {SORTING.map((data, key) => {
+                                        return (
+                                            <li
+                                                key={key}
+                                                onClick={e => handleSorting(e, key)}
+                                                value={data.name}
+                                                className={
+                                                    newSorting[key] === true
+                                                        ? 'font-semibold cursor-pointer'
+                                                        : 'cursor-pointer'
+                                                }
+                                            >
+                                                <div className="block px-4 py-2 text-sm flex justify-between">
+                                                    <p className="">{data.name}</p>
+                                                    {newSorting[key] === true && <img alt="selected" src={selected} />}
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        )}
                     </div>
-                    <div className={isDrop ? '' : null} onClick={() => setIsDrop(false)} />
-                    {isDrop && (
-                        <div className="absolute top-[180px] z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <ul className="">
-                                {SORTING.map((data, key) => {
-                                    return (
-                                        <li
-                                            key={key}
-                                            onClick={e => handleSorting(e, key)}
-                                            value={data.name}
-                                            className={
-                                                newSorting[key] === true
-                                                    ? 'font-semibold cursor-pointer'
-                                                    : 'cursor-pointer'
-                                            }
-                                        >
-                                            <div className="block px-4 py-2 text-sm flex justify-between">
-                                                <p className="">{data.name}</p>
-                                                {newSorting[key] === true && <img alt="selected" src={selected} />}
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    )}
 
                     <button
                         className="border bg-white rounded px-4 py-2 shadow-sm rounded-md hover:bg-gray-50"
@@ -450,10 +465,7 @@ const Category = () => {
                                                     {category}
                                                 </h3>
                                                 <button
-                                                    onClick={e => {
-                                                        e.preventDefault();
-                                                        console.log('click');
-                                                    }}
+                                                    onClick={e => handleFavorite(e)}
                                                     className="flex items-center text-sm hover:opacity-75"
                                                 >
                                                     <FontAwesomeIcon
