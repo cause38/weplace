@@ -266,6 +266,15 @@ const Home = () => {
                     ))}
                 </Swiper>
 
+                <div className="flex gap-2 items-center my-4 mt-6">
+                    <h3 className="text-xl font-bold">카테고리</h3>
+                    <Link
+                        to={'/category/0'}
+                        className="font-semibold p-[1px] px-2 pb-1 rounded-full text-xs text-white bg-stone-400 hover:bg-orange-400 transition-colors"
+                    >
+                        more
+                    </Link>
+                </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 mt-4 text-center text-lg font-semibold text-orange-500">
                     {categoryArr.map(item => (
                         <Link
