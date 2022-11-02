@@ -16,12 +16,11 @@ const UserInfo = ({
     handleNickName,
 }) => {
     return (
-        <div className="flex mt-[20px] max-w-[890px] bg-white rounded-[20px] p-[20px] shadow-md">
-            <div className="min-w-[120px] w-[15%]">
-                <img
-                    className="min-w-[100%] max-h-[130px] min-h-[130px] rounded-[50%] overflow-hidden "
-                    src={userImg}
-                />
+        <div className="flex flex-col justify-center items-center md:flex-row gap-8 mt-4 bg-white rounded-lg p-8 shadow-md">
+            <div>
+                <div className="w-36 h-36">
+                    <img className="w-full h-full rounded-[50%] overflow-hidden" src={userImg} />
+                </div>
                 <form className="h-[30px] mt-[10px]" encType="multipart.form-data">
                     <input
                         id="file"
@@ -36,7 +35,7 @@ const UserInfo = ({
                     <Button contents="프로필 사진 변경" onClick={handleProfileImg} />
                 </form>
             </div>
-            <div className="userInfo flex ml-[10%] mb-[50px] items-end w-[85%] justify-between">
+            <div className="userInfo flex mb:mb-10 items-end w-[85%] justify-between">
                 <div className="flex flex-col justify-center w-[80%]">
                     <div className="flex items-center">
                         <div className="min-w-[70px] w-[20%]">아이디</div>
