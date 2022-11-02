@@ -31,6 +31,7 @@ class Lists extends RestController {
         $category = trim($this->get('category') ?? 0);
         $filter   = trim($this->get('filter') ?? 'recent');
         $favorite = trim($this->get('favorite') ?? false);
+        $favorite = $favorite === 'true' ? true : false;
         $tag      = json_decode(trim($this->get('tag') ?? '[]'), true);
         $token    = trim($this->get('token') ?? '');
         $idx      = 0;
