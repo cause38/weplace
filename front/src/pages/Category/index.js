@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {Link, useParams, useNavigate, useLocation} from 'react-router-dom';
 
 import CategoryNav from './components/CategoryNav';
+import Store from './components/Store';
 
 import {EmojiProvider, Emoji} from 'react-apple-emojis';
 import emojiData from '../../lib/data.json';
@@ -19,6 +20,8 @@ const Category = () => {
     const {pathname} = useLocation();
     const tagRef = useRef();
     const token = sessionStorage.getItem('token') || '';
+
+    const qs = require('qs');
 
     const [categoryList, setCategoryList] = useState([]);
     const [currentCategory, setCurrentCategory] = useState([]);
@@ -123,45 +126,26 @@ const Category = () => {
             }
         } else {
             setOnlyLike(!onlyLike);
-            if (!onlyLike) {
-                fetch(
-                    `${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-type': 'application/json',
-                        },
+            fetch(
+                `${
+                    API.categoryList
+                }?token=${token}&favorite=${!onlyLike}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                }
+            )
+                .then(res => res.json())
+                .then(data => {
+                    if (data.state === 200) {
+                        setStoreList(data.data);
+                    } else if (data.state === 400) {
+                        console.error(data.msg);
+                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
                     }
-                )
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.state === 200) {
-                            setStoreList(data.data);
-                        } else if (data.state === 400) {
-                            console.error(data.msg);
-                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-                        }
-                    });
-            } else {
-                fetch(
-                    `${API.categoryList}?token=${token}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-type': 'application/json',
-                        },
-                    }
-                )
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.state === 200) {
-                            setStoreList(data.data);
-                        } else if (data.state === 400) {
-                            console.error(data.msg);
-                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-                        }
-                    });
-            }
+                });
         }
     };
 
@@ -357,9 +341,94 @@ const Category = () => {
         }
     };
 
-    const handleFavorite = e => {
+    // 개별 찜 선택
+    const handleCheckeLike = (e, idx, isFavorite) => {
         e.preventDefault();
-        console.log('click');
+        const switchedValue = changeSortingVal(selectedSorting);
+
+        if (id === undefined) {
+            return;
+        }
+
+        if (token === '') {
+            setOnlyLike(false);
+            if (window.confirm('로그인 후 이용 가능합니다. 로그인 하시겠습니까?')) {
+                navigate('/login', {state: {pathname: pathname}});
+            } else {
+                return;
+            }
+        } else {
+            if (isFavorite === false) {
+                fetch(`${API.favorite}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/x-www-form-urlencoded',
+                    },
+                    body: qs.stringify({idx: idx, token: token}),
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.state === 200) {
+                            fetch(
+                                `${API.categoryList}?token=${token}&favorite=${onlyLike}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                                {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-type': 'application/x-www-form-urlencoded',
+                                    },
+                                }
+                            )
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.state === 200) {
+                                        setStoreList(data.data);
+                                    } else if (data.state === 400) {
+                                        console.error(data.msg);
+                                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                                    }
+                                });
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                        }
+                    });
+            } else {
+                fetch(`${API.favorite}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-type': 'application/x-www-form-urlencoded',
+                    },
+                    body: qs.stringify({idx: idx, token: token}),
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert(data.msg);
+                        if (data.state === 200) {
+                            fetch(
+                                `${API.categoryList}?token=${token}&favorite=${onlyLike}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                                {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-type': 'application/json',
+                                    },
+                                }
+                            )
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.state === 200) {
+                                        setStoreList(data.data);
+                                    } else if (data.state === 400) {
+                                        console.error(data.msg);
+                                        alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                                    }
+                                });
+                        } else if (data.state === 400) {
+                            console.error(data.msg);
+                            alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+                        }
+                    });
+            }
+        }
     };
 
     return (
@@ -453,74 +522,19 @@ const Category = () => {
                         storeList.map((data, key) => {
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                             return (
-                                <Link
+                                <Store
                                     key={idx}
-                                    to={`/detail/${idx}`}
-                                    className="w-full bg-white rounded-xl shadow-md overflow-hidden"
-                                >
-                                    <div className="p-4 h-full flex flex-col justify-between gap-4">
-                                        <div className="flex flex-col gap-4">
-                                            <div className="flex justify-between">
-                                                <h3 className="px-3 py-1 rounded-full bg-orange-400 text-white text-sm">
-                                                    {category}
-                                                </h3>
-                                                <button
-                                                    onClick={e => handleFavorite(e)}
-                                                    className="flex items-center text-sm hover:opacity-75"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faHeart}
-                                                        className={`${
-                                                            isFavorite ? 'text-red-400' : 'text-gray-400'
-                                                        } text-xl`}
-                                                    />
-                                                </button>
-                                            </div>
-                                            <p className="text-2xl font-bold line-clamp-2 break-keep">{name}</p>
-                                        </div>
-                                        <div>
-                                            <div className="flex gap-3 justify-between mb-3">
-                                                <div className="flex gap-2 items-center">
-                                                    <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-yellow-100">
-                                                        <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
-                                                    </span>
-                                                    {star}
-                                                </div>
-                                                <div className="flex gap-2 items-center">
-                                                    <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-red-100">
-                                                        <FontAwesomeIcon icon={faFileLines} className="text-red-400" />
-                                                    </span>
-                                                    {review}
-                                                </div>
-                                                <div className="flex gap-2 items-center">
-                                                    <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-teal-100">
-                                                        <FontAwesomeIcon
-                                                            icon={faLocationDot}
-                                                            className="text-teal-400"
-                                                        />
-                                                    </span>
-                                                    {distance}분
-                                                </div>
-                                            </div>
-                                            <div className="h-[80px] overflow-y-auto scrollbar flex flex-wrap items-start gap-2 bg-orange-100 rounded-md p-2">
-                                                {tag && tag.length > 0 ? (
-                                                    tag.map((data, id) => (
-                                                        <span
-                                                            key={id}
-                                                            className="rounded text-sm rounded-full p-1 px-2 bg-white shadow-sm shadow-orange-400 text-orange-500"
-                                                        >
-                                                            # {data}
-                                                        </span>
-                                                    ))
-                                                ) : (
-                                                    <div className="flex justify-center items-center w-full h-full text-orange-400 font-light">
-                                                        등록된 태그가 없습니다
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
+                                    idx={idx}
+                                    category={category}
+                                    name={name}
+                                    distance={distance}
+                                    star={star}
+                                    review={review}
+                                    favorite={favorite}
+                                    isFavorite={isFavorite}
+                                    tag={tag}
+                                    handleCheckeLike={handleCheckeLike}
+                                />
                             );
                         })
                     ) : (
