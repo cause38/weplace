@@ -55,7 +55,7 @@ const Header = () => {
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
-            <div className="container-wb max-w-6xl px-6 py-4 mx-auto my-0 h-full">
+            <div className="container-wb my-0 h-full">
                 <div className="relative h-full flex items-center justify-between">
                     <div className="flex items-center justify-between">
                         <div className="text-xl font-semibold text-orange-600">
