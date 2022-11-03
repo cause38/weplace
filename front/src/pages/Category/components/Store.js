@@ -8,7 +8,7 @@ const Store = ({idx, category, name, distance, star, review, favorite, isFavorit
         <div className="flex relative">
             <button
                 onClick={e => handleCheckeLike(e, idx, isFavorite)}
-                className="absolute flex items-center py-5 px-3 right-[16px] text-sm hover:opacity-75"
+                className="absolute flex items-center py-5 px-3 right-4 text-sm hover:opacity-75"
             >
                 <FontAwesomeIcon
                     icon={faHeart}

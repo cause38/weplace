@@ -13,7 +13,7 @@ const UserInfo = ({
     setChangedNickName,
     nameInput,
     handleCheckedName,
-    handleNickName,
+    handleFocusingName,
 }) => {
     return (
         <div className="flex flex-col justify-center items-center md:flex-row md:flex md:justify-evenly gap-8 mt-4 bg-white rounded-lg p-5 shadow-md">
@@ -37,15 +37,15 @@ const UserInfo = ({
             </div>
             <div className="flex-col justify-between align-center md:flex-row md:flex md:items-center">
                 <div className=" flex-col mb-10 items-center md:flex-row ">
-                    <div className="flex flex-col justify-center w-[80%] mr-7">
+                    <div className="flex flex-col justify-center w-4/5 mr-7">
                         <div className="flex items-center">
-                            <div className="min-w-[70px] w-[20%]">아이디</div>
+                            <div className="min-w-[70px] w-1/5">아이디</div>
                             <div className="w-full">
-                                <p className="ml-[5px]">{userId}</p>
+                                <p className="ml-1.5">{userId}</p>
                             </div>
                         </div>
-                        <div className="flex mt-[20px] items-center">
-                            <div className="min-w-[70px] w-[20%]">
+                        <div className="flex mt-5 items-center">
+                            <div className="min-w-[70px] w-1/5">
                                 <p>닉네임</p>
                             </div>
                             {isChangeNickName ? (
@@ -68,6 +68,7 @@ const UserInfo = ({
                                         value={nickName || ''}
                                         ariaLabel="name"
                                         onChange={setChangedNickName}
+                                        nameInput={nameInput}
                                         readOnly="readOnly"
                                     />
                                 </div>
@@ -76,12 +77,12 @@ const UserInfo = ({
                     </div>
                 </div>
                 {isChangeNickName ? (
-                    <div className="h-[40px] w-full min-w-[100px] md:w-5">
+                    <div className="h-10 w-full min-w-[100px] md:w-5">
                         <Button contents="닉네임 변경" onClick={handleCheckedName} />
                     </div>
                 ) : (
-                    <div className="h-[40px] w-full min-w-[100px] md:w-5">
-                        <Button contents="닉네임 변경" onClick={handleNickName} />
+                    <div className="h-10 w-full min-w-[100px] md:w-5">
+                        <Button contents="닉네임 변경" onClick={handleFocusingName} />
                     </div>
                 )}
             </div>

@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import {useRecoilState} from '../../../node_modules/recoil/';
 import {tokenValue, profileImgValue, nameValue} from 'atoms/state';
+import API from 'config';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Login = () => {
     // 유저정보 가져와서 세션저장
     const handleUser = id => {
         axios
-            .get(`http://place-api.weballin.com/mypage/myInfo`, {
+            .get(`${API.myInfo}`, {
                 params: {
                     token: id,
                 },
@@ -72,7 +73,7 @@ const Login = () => {
             alert(`비밀번호를 입력해 주세요.`);
         } else {
             axios
-                .post('http://place-api.weballin.com/auth/login', {
+                .post(`${API.login}`, {
                     id: id,
                     pw: pw,
                 })
@@ -99,13 +100,13 @@ const Login = () => {
         }
     };
 
-    // 회원가입
+    // 회원가입페이지로 이동
     const setRegister = () => {
         navigate('/join');
     };
 
     return (
-        <div className="container-wb">
+        <div className="container-wb flex justify-center items-center h-[calc(100ch-156px)]">
             <div className="w-full max-w-lg mx-auto overflow-hidden">
                 <div className="">
                     <h2 className="text-3xl font-bold text-center text-orange-600 ">Login</h2>
@@ -129,10 +130,10 @@ const Login = () => {
                             />
                         </div>
                         <div className="flex items-center justify-between mt-4">
-                            <div className="w-[45%] h-[40px]">
+                            <div className="w-[45%] h-10">
                                 <Button contents="회원가입" onClick={setRegister} />
                             </div>
-                            <div className="w-[45%] h-[40px]">
+                            <div className="w-[45%] h-10">
                                 <Button contents="로그인" onClick={setLogin} />
                             </div>
                         </div>
