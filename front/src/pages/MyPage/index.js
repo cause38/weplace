@@ -25,8 +25,11 @@ const MyPage = () => {
     // 유저 아이디
     const [userId, setUserId] = useState();
 
-    // 유저 닉네임
+    // 유저 닉네임 상태관리
     const [nickName, setNickName] = useRecoilState(nameValue);
+
+    // 유저 변경된 닉네임
+    const [changedNickName, setChangedNickName] = useState();
 
     // 닉네임 변경 설정
     const [isChangeNickName, setIsChangeNickName] = useState(false);
@@ -60,7 +63,8 @@ const MyPage = () => {
                 })
                 .then(res => {
                     if (res.data.state === 200) {
-                        setNickName(res.data.data.basic.name);
+                        setChangedNickName(res.data.data.basic.name);
+                        // setChangedNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
                         // setReviews(MY_REVIEW);
@@ -77,15 +81,15 @@ const MyPage = () => {
     // 닉네임 인풋창 활성화
     const handleNickName = e => {
         setIsChangeNickName(true);
-        setNickName(e.target.value);
+        setChangedNickName(e.target.value);
         nameInput.current?.focus();
     };
 
     // 닉네임 변경
     const handleCheckedName = () => {
-        const name = nickName.toString();
+        const name = changedNickName.toString();
 
-        if (nickName.length <= 0) {
+        if (changedNickName.length <= 0) {
             alert('닉네임을 입력 해 주세요.');
         } else {
             fetch(`http://place-api.weballin.com/mypage/changeName`, {
@@ -107,6 +111,7 @@ const MyPage = () => {
                             .then(res => {
                                 if (res.data.state === 200) {
                                     sessionStorage.setItem('name', res.data.data.basic.name);
+                                    setNickName(res.data.data.basic.name);
                                 } else if (res.data.state === 400) {
                                     alert(res.data.data.msg);
                                 }
@@ -223,30 +228,34 @@ const MyPage = () => {
             data: qs.stringify(data),
         };
         // axios(options);
-        axios.delete(url, options).then(response => {
-            if (response.data.state === 200) {
-                alert(response.data.msg);
-                axios
-                    .get(`http://place-api.weballin.com/mypage/myInfo`, {
-                        params: {
-                            token: token,
-                        },
-                    })
-                    .then(res => {
-                        if (res.data.state === 200) {
-                            setFavoriteList(res.data.data.favorites);
-                        } else if (res.data.state === 400) {
-                            alert(res.data.data.msg);
-                        }
-                    });
-            } else if (response.data.state === 400) {
-                alert(response.data.msg);
-            } else if (response.data.state === 401) {
-                alert(response.data.msg);
-            } else if (response.data.state === 402) {
-                alert(response.data.msg);
-            }
-        });
+        if (window.confirm('찜목록에서 삭제하시겠습니까?')) {
+            axios.delete(url, options).then(response => {
+                if (response.data.state === 200) {
+                    alert(response.data.msg);
+                    axios
+                        .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                            params: {
+                                token: token,
+                            },
+                        })
+                        .then(res => {
+                            if (res.data.state === 200) {
+                                setFavoriteList(res.data.data.favorites);
+                            } else if (res.data.state === 400) {
+                                alert(res.data.data.msg);
+                            }
+                        });
+                } else if (response.data.state === 400) {
+                    alert(response.data.msg);
+                } else if (response.data.state === 401) {
+                    alert(response.data.msg);
+                } else if (response.data.state === 402) {
+                    alert(response.data.msg);
+                }
+            });
+        } else {
+            return;
+        }
     };
 
     // 리뷰 수정
@@ -273,8 +282,8 @@ const MyPage = () => {
                             handleProfileImg={handleProfileImg}
                             userId={userId}
                             isChangeNickName={isChangeNickName}
-                            nickName={nickName}
-                            setNickName={setNickName}
+                            nickName={changedNickName}
+                            setChangedNickName={setChangedNickName}
                             nameInput={nameInput}
                             handleCheckedName={handleCheckedName}
                             handleNickName={handleNickName}
