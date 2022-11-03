@@ -14,7 +14,7 @@ const API = {
     //마이페이지
     myInfo: `${BASE_URL}/mypage/myInfo`,
     changeName: `${BASE_URL}/mypage/changeName`,
-    changeProfile: `${BASE_URL}/mypage/chagneProfileImg`,
+    changeProfile: `${BASE_URL}/mypage/changeProfileImg`,
     deleteReview: `${BASE_URL}/mypage/deleteReview`,
     deleteFavorite: `${BASE_URL}/mypage/deleteFavorite`,
 };
