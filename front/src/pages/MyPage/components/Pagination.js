@@ -5,7 +5,7 @@ const Pagination = ({total, limit, page, setPage}) => {
 
     return (
         <>
-            <article className="flex justify-end items-center m-[10px] gap-[10px]">
+            <article className="flex justify-end items-center m-2.5 gap-2.5">
                 <button
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}

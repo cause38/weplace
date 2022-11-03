@@ -434,7 +434,7 @@ const Category = () => {
     return (
         <>
             <div className="flex flex-col category-container bg-orange-100">
-                <section className="category-nav mt-[80px] bg-white">
+                <section className="category-nav mt-20 bg-white">
                     <div className="container-wb py-4 my-0">
                         <CategoryNav data={categoryList} currentCategory={currentCategory[0]?.idx} />
                     </div>
@@ -462,7 +462,7 @@ const Category = () => {
             >
                 <div className="flex justify-between items-center">
                     <div
-                        className="dropMenu relative cursor-pointer flex w-[130px] justify-between items-center rounded-md border bg-white px-4 py-2 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                        className="dropMenu relative cursor-pointer flex w-32 justify-between items-center rounded-md border bg-white px-4 py-2 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                         onClick={handleDrop}
                     >
                         <span className="">{selectedSorting}</span>
@@ -474,7 +474,7 @@ const Category = () => {
                             )}
                         </div>
                         {isDrop && (
-                            <div className="dropMenu absolute top-[45px] left-0 z-10 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="dropMenu absolute top-11 left-0 z-10 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <ul className="">
                                     {SORTING.map((data, key) => {
                                         return (
@@ -541,7 +541,7 @@ const Category = () => {
                         <div className="flex gap-1">
                             {onlyLike ? '찜한 가게' : '작성된 리뷰'}가 없습니다
                             <EmojiProvider data={emojiData}>
-                                <Emoji name={'crying-face'} className="w-[24px] h-[24px]" />
+                                <Emoji name={'crying-face'} className="w-6 h-6" />
                             </EmojiProvider>
                         </div>
                     )}

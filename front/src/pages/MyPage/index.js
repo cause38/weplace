@@ -9,6 +9,7 @@ import axios from '../../../node_modules/axios/index';
 
 import {profileImgValue, nameValue} from 'atoms/state';
 import {useRecoilState} from '../../../node_modules/recoil/';
+import API from 'config';
 
 const MyPage = () => {
     const navigate = useNavigate();
@@ -56,7 +57,7 @@ const MyPage = () => {
         } else {
             setToken(getToken);
             axios
-                .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                .get(`${API.myInfo}`, {
                     params: {
                         token: getToken,
                     },
@@ -64,11 +65,8 @@ const MyPage = () => {
                 .then(res => {
                     if (res.data.state === 200) {
                         setChangedNickName(res.data.data.basic.name);
-                        // setChangedNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
-                        // setReviews(MY_REVIEW);
-                        // setFavoriteList(MY_FAVORITE);
                         setReviews(res.data.data.reviews);
                         setFavoriteList(res.data.data.favorites);
                     } else if (res.data.state === 400) {
@@ -79,7 +77,7 @@ const MyPage = () => {
     }, []);
 
     // 닉네임 인풋창 활성화
-    const handleNickName = e => {
+    const handleFocusingName = e => {
         setIsChangeNickName(true);
         setChangedNickName(e.target.value);
         nameInput.current?.focus();
@@ -92,7 +90,7 @@ const MyPage = () => {
         if (changedNickName.length <= 0) {
             alert('닉네임을 입력 해 주세요.');
         } else {
-            fetch(`http://place-api.weballin.com/mypage/changeName`, {
+            fetch(`${API.changeName}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({token: token, name: name}),
@@ -103,7 +101,7 @@ const MyPage = () => {
                         alert(response.msg);
                         setIsChangeNickName(false);
                         axios
-                            .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                            .get(`${API.myInfo}`, {
                                 params: {
                                     token: token,
                                 },
@@ -150,16 +148,16 @@ const MyPage = () => {
         formData.append('token', token);
 
         axios
-            .post('http://place-api.weballin.com/mypage/changeProfileImg', formData, {
+            .post(`${API.changeProfile}`, formData, {
                 headers: {
-                    'Content-Type': `multipart/form-data; `,
+                    'Content-Type': `multipart/form-data`,
                 },
             })
             .then(res => {
                 if (res.data.state === 200) {
                     alert(res.data.msg);
                     axios
-                        .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                        .get(`${API.myInfo}`, {
                             params: {
                                 token: token,
                             },
@@ -185,7 +183,7 @@ const MyPage = () => {
         e.preventDefault();
 
         const data = {token: token, idx: parseInt(idx)};
-        const url = 'http://place-api.weballin.com/mypage/deleteReview';
+        const url = `${API.deleteReview}`;
         const options = {
             headers: {'content-type': 'application/x-www-form-urlencoded'},
             data: qs.stringify(data),
@@ -195,7 +193,7 @@ const MyPage = () => {
             if (response.data.state === 200) {
                 alert(response.data.msg);
                 axios
-                    .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                    .get(`${API.myInfo}`, {
                         params: {
                             token: token,
                         },
@@ -222,7 +220,7 @@ const MyPage = () => {
         e.preventDefault();
 
         const data = {token: token, idx: parseInt(idx)};
-        const url = 'http://place-api.weballin.com/mypage/deleteFavorite';
+        const url = `${API.deleteFavorite}`;
         const options = {
             headers: {'content-type': 'application/x-www-form-urlencoded'},
             data: qs.stringify(data),
@@ -233,7 +231,7 @@ const MyPage = () => {
                 if (response.data.state === 200) {
                     alert(response.data.msg);
                     axios
-                        .get(`http://place-api.weballin.com/mypage/myInfo`, {
+                        .get(`${API.myInfo}`, {
                             params: {
                                 token: token,
                             },
@@ -274,7 +272,7 @@ const MyPage = () => {
                 <main className="container-wb">
                     <h1 className="text-3xl font-bold text-orange-600">마이페이지</h1>
                     <section className="mt-9">
-                        <h2 className="text-[20px] font-semibold text-orange-700">기본 정보</h2>
+                        <h2 className="text-xl font-semibold text-orange-700">기본 정보</h2>
                         <UserInfo
                             userImg={userImg}
                             imageInput={imageInput}
@@ -286,21 +284,21 @@ const MyPage = () => {
                             setChangedNickName={setChangedNickName}
                             nameInput={nameInput}
                             handleCheckedName={handleCheckedName}
-                            handleNickName={handleNickName}
+                            handleFocusingName={handleFocusingName}
                         />
                     </section>
                     <section className="mt-14">
-                        <h2 className="text-[20px] font-semibold text-orange-700">내 리뷰✍</h2>
+                        <h2 className="text-xl font-semibold text-orange-700">내 리뷰✍</h2>
                         {reviews?.length > 0 ? (
                             <Reviews reviews={reviews} goToWrite={goToWrite} handleDeleteReview={handleDeleteReview} />
                         ) : (
-                            <div className="flex items-center h-[50px] justify-center">
+                            <div className="flex items-center h-12 justify-center">
                                 <p>작성한 리뷰가 없습니다.😥</p>
                             </div>
                         )}
                     </section>
                     <section className="mt-14">
-                        <h2 className="text-[20px] font-semibold text-orange-700">찜 목록&#128150;</h2>
+                        <h2 className="text-xl font-semibold text-orange-700">찜 목록&#128150;</h2>
                         {favoriteList?.length > 0 ? (
                             <Favorites
                                 favoriteList={favoriteList}
@@ -308,7 +306,7 @@ const MyPage = () => {
                                 goToDetail={goToDetail}
                             />
                         ) : (
-                            <div className="flex items-center h-[50px] justify-center">
+                            <div className="flex items-center h-12 justify-center">
                                 <p>찜한 가게가 없습니다.😥</p>
                             </div>
                         )}
@@ -320,59 +318,3 @@ const MyPage = () => {
 };
 
 export default MyPage;
-
-const MY_REVIEW = [
-    {
-        idx: '1',
-        menu: '뚝배기 불고기',
-        star: '2',
-        name: '일차돌 뚝섬역점',
-        comment: '짜다',
-        wdate: '2022-09-27',
-    },
-    {
-        idx: '2',
-        menu: '뚝배기 불고기',
-        star: '4',
-        name: '일차돌 뚝섬역점',
-        comment: '짜다',
-        wdate: '2022-09-27',
-    },
-    {
-        idx: '3',
-        menu: '뚝배기 불고기',
-        star: '3',
-        name: '일차돌 뚝섬역점',
-        comment: '짜다',
-        wdate: '2022-09-27',
-    },
-    {
-        idx: '4',
-        menu: '뚝배기 불고기',
-        star: '3',
-        name: '일차돌 뚝섬역점',
-        comment: '짜다',
-        wdate: '2022-09-27',
-    },
-];
-
-const MY_FAVORITE = [
-    {
-        idx: 1,
-        category: '한식',
-        name: '일차돌 뚝섬역점',
-        star: '4.0',
-        review: '1',
-        favorite: '1',
-        wdate: '2022-09-27',
-    },
-    {
-        idx: 2,
-        category: '한식',
-        name: '일차돌 뚝섬역점',
-        star: '4.0',
-        review: '1',
-        favorite: '1',
-        wdate: '2022-09-27',
-    },
-];
