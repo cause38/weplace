@@ -2,7 +2,7 @@ import React from 'react';
 import {Fragment} from 'react';
 import Button from './button';
 
-const InputBox = ({id, name, type, value, onChange, placeholder, ariaLabel, readOnly}) => {
+const InputBox = ({id, name, type, value, onChange, placeholder, ariaLabel, readOnly, nameInput}) => {
     return (
         <Fragment>
             {readOnly ? (
@@ -54,6 +54,7 @@ const InputBox = ({id, name, type, value, onChange, placeholder, ariaLabel, read
                         aria-label={ariaLabel}
                         value={value}
                         onChange={e => onChange(e.target.value)}
+                        ref={nameInput}
                     />
                 </div>
             )}

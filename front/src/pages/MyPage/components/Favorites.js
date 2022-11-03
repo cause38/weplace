@@ -13,7 +13,7 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
     const offset = (page - 1) * limit;
 
     return (
-        <div className=" mt-[20px] flex flex-col max-w-[890px] w-fit">
+        <div className=" mt-[20px] flex flex-col w-full">
             <div
                 className={
                     favoriteList?.length > 0
@@ -28,22 +28,22 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
                             <div
                                 className={
                                     idx > 1
-                                        ? ' flex w-full min-w-[280px] mb-2.5 ml-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
-                                        : ' flex min-w-[280px] mb-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
+                                        ? ' flex w-full min-w-[315px] mb-2.5  bg-white rounded-[20px] shadow-md overflow-hidden'
+                                        : ' flex min-w-[315px] mb-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
                                 }
                             >
                                 <div
                                     className={
                                         favoriteList?.length < 0
                                             ? 'absolute cursor-pointer mt-5 p-2 hover:opacity-50'
-                                            : 'absolute cursor-pointer mt-9 p-2 hover:opacity-50'
+                                            : 'absolute cursor-pointer mt-11 p-2 hover:opacity-50'
                                     }
                                     onClick={e => handleDeleteFavorite(e, idx)}
                                 >
-                                    <span className="text-red-600 text-6xl">&#128150; </span>
+                                    <span className="text-red-600 text-5xl">&#128150; </span>
                                 </div>
                                 <div
-                                    className="w-full ml-24 p-4 cursor-pointer hover:bg-orange-400 hover:text-white"
+                                    className="w-full ml-20 p-4 cursor-pointer hover:bg-orange-400 hover:text-white"
                                     onClick={goToDetail}
                                 >
                                     <div className="flex justify-between ">

@@ -10,13 +10,13 @@ const UserInfo = ({
     userId,
     isChangeNickName,
     nickName,
-    setNickName,
+    setChangedNickName,
     nameInput,
     handleCheckedName,
     handleNickName,
 }) => {
     return (
-        <div className="flex flex-col justify-center items-center md:flex-row md:flex  gap-8 mt-4 bg-white rounded-lg p-5 shadow-md">
+        <div className="flex flex-col justify-center items-center md:flex-row md:flex md:justify-evenly gap-8 mt-4 bg-white rounded-lg p-5 shadow-md">
             <div>
                 <div className="w-36 h-36">
                     <img className="w-full h-full rounded-full overflow-hidden" src={userImg} />
@@ -56,8 +56,8 @@ const UserInfo = ({
                                         value={nickName || ''}
                                         ariaLabel="name"
                                         placeholder={nickName}
-                                        onChange={setNickName}
-                                        ref={nameInput}
+                                        onChange={setChangedNickName}
+                                        nameInput={nameInput}
                                     />
                                 </div>
                             ) : (
@@ -67,7 +67,7 @@ const UserInfo = ({
                                         type="text"
                                         value={nickName || ''}
                                         ariaLabel="name"
-                                        onChange={setNickName}
+                                        onChange={setChangedNickName}
                                         readOnly="readOnly"
                                     />
                                 </div>
