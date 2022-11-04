@@ -158,7 +158,6 @@ const Write = () => {
             encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
         });
         setValue({...value, ['reviewImg']: [...files]});
-        console.log(Base64s);
     }, [files]);
 
     const encodeFileToBase64 = image => {
