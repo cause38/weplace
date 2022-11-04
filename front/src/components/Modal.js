@@ -3,8 +3,8 @@ import {React, useEffect} from 'react';
 const Modal = ({visible, setModalVisible, contents, title}) => {
     useEffect(() => {
         visible
-            ? document.body.classList.add('overflow-y-hidden')
-            : document.body.classList.remove('overflow-y-hidden');
+            ? document.body.classList.add('overflow-y-hidden', 'touch-none', 'overscroll-none')
+            : document.body.classList.remove('overflow-y-hidden', 'touch-none', 'overscroll-none');
     }, [visible]);
 
     return (
