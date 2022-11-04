@@ -153,19 +153,9 @@ const Write = () => {
 
     // 첨부이미지 -> base64 파일로 변환
     useEffect(() => {
+        setBase64s([]);
         Array.from(files).forEach(image => {
-            // 중복 파일 체크
-            if (Base64s.length > 0) {
-                const newFileArr = Base64s.map(item => item.img);
-                if (newFileArr.includes(image)) {
-                    alert('중복 이미지가 포함되어 있습니다.');
-                    return false;
-                } else {
-                    encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
-                }
-            } else {
-                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
-            }
+            encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
         });
         setValue({...value, ['reviewImg']: [...files]});
     }, [files]);
@@ -220,25 +210,29 @@ const Write = () => {
 
     // 선택한 태그에 클래스 적용
     useEffect(() => {
-        let newTagList = tagList;
+        if (tagList.length > 0) {
+            let newTagList = tagList;
 
-        // 초기화
-        const labels = document.querySelectorAll('.tagLabel');
-        labels.forEach(item => {
-            item.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
-            item.classList.add('bg-white', 'text-orange-600', 'border-orange-300');
-        });
+            // 초기화
+            const labels = document.querySelectorAll('.tagLabel');
+            labels.forEach(item => {
+                item.classList.remove('bg-orange-500', 'border-transparent', 'text-white');
+                item.classList.add('bg-white', 'text-orange-600', 'border-orange-300');
+            });
 
-        newTagList.forEach(idx => {
-            const tag = document.getElementById(`tag_${idx}`);
-            const label = tag.previousSibling;
+            newTagList.forEach(idx => {
+                if (idx !== 0) {
+                    const tag = document.getElementById(`tag_${idx}`);
+                    const label = tag.previousSibling;
 
-            // 태그리스트 라벨 클래스 적용
-            label.classList.remove('bg-white', 'text-orange-600', 'border-orange-300');
-            label.classList.add('bg-orange-500', 'border-transparent', 'text-white');
-        });
+                    // 태그리스트 라벨 클래스 적용
+                    label.classList.remove('bg-white', 'text-orange-600', 'border-orange-300');
+                    label.classList.add('bg-orange-500', 'border-transparent', 'text-white');
+                }
+            });
 
-        setValue({...value, ['tag']: [...tagList]});
+            setValue({...value, ['tag']: [...tagList]});
+        }
     }, [tagList]);
 
     // 태그 목록 더보기 애니메이션

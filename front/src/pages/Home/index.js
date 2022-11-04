@@ -244,7 +244,7 @@ const Home = () => {
                         </button>
                     </div>
                     {newReviewData.map((data, idx) => (
-                        <SwiperSlide className="main-slide bg-white rounded-lg shadow-lg" key={idx}>
+                        <SwiperSlide className="main-slide bg-white rounded-lg shadow-md" key={idx}>
                             <Link to={`/detail/${data.idx}`} className="block p-5 py-6">
                                 <div className="flex justify-between items-center mb-3">
                                     <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
@@ -281,7 +281,7 @@ const Home = () => {
                             to={`/category/${item.idx}`}
                             className={`${
                                 item.idx <= 0 ? 'col-span-2 ' : ''
-                            } bg-white shadow-lg rounded-lg p-5 lg:p-10`}
+                            } bg-white shadow-md rounded-lg p-5 lg:p-10`}
                             key={item.idx}
                         >
                             {item.name}

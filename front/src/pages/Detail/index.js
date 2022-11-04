@@ -90,7 +90,6 @@ const Detail = () => {
     // 찜 목록 추가 / 삭제 공통 함수
     const setFavorite = res => {
         if (res.status === 200) {
-            alert(res.data.msg);
             getReviewData();
         } else if (res.data.state === 400 || res.data.state === 401) {
             alert(res.data.msg);
@@ -100,7 +99,107 @@ const Detail = () => {
     };
 
     return (
-        <div className="container-wb">
+        <div className="container-wb max-w-full p-0">
+            <div className="bg-orange-200 bg-opacity-50">
+                <div className="container-wb py-10 lg:py-16 mt-0">
+                    <div className="flex justify-between items-center">
+                        <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
+                            {store.category}
+                        </span>
+                        <button
+                            onClick={handleFavorite}
+                            className={`${token === null ? 'hidden' : ''} w-8 h-8 translate-x-[6px]`}
+                        >
+                            <FontAwesomeIcon
+                                icon={faHeart}
+                                className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
+                            />
+                        </button>
+                    </div>
+                    <div className="text-stone-800">
+                        <h3 className="text-2xl font-bold mt-3 mb-1">{store.name}</h3>
+                        <p>{`${store.address} ${store.base} ${store.floor}층`}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-5">
+                        {store.tag.length > 0 &&
+                            store.tag.map((tag, idx) => (
+                                <span
+                                    key={idx}
+                                    className="text-sm rounded-full px-4 py-1 bg-white text-orange-600 shadow-sm shadow-orange-300 font-medium"
+                                >
+                                    #{tag}
+                                </span>
+                            ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className="container-wb mt-0 pt-0">
+                <div className="flex gap-3 sm:gap-5 my-5 sm:my-6">
+                    <div className="flex sm:flex-col justify-between sm:justify-center items-center gap-2 sm:gap-1 w-full px-3 py-3 sm:p-5 bg-white rounded-lg shadow-md">
+                        <span className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 text-yellow-400 rounded-full flex justify-center items-center text-center text-xs">
+                            <FontAwesomeIcon icon={faStar} />
+                        </span>
+                        <p
+                            className="sm:text-lg sm:font-bold text-gray-700 text-center"
+                            style={{width: 'calc(100% - 40px)'}}
+                        >
+                            {store.star}
+                        </p>
+                        <p className="hidden sm:block">별점</p>
+                    </div>
+                    <div className="flex sm:flex-col justify-between sm:justify-center items-center gap-2 sm:gap-1 w-full px-3 py-3 sm:p-5 bg-white rounded-lg shadow-md">
+                        <span className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 text-red-400 rounded-full flex justify-center items-center text-center text-xs">
+                            <FontAwesomeIcon icon={faHeart} />
+                        </span>
+                        <p
+                            className="sm:text-lg sm:font-bold text-gray-700 text-center"
+                            style={{width: 'calc(100% - 40px)'}}
+                        >
+                            {store.favorite}
+                        </p>
+                        <p className="hidden sm:block">찜</p>
+                    </div>
+                    <div className="flex sm:flex-col justify-between sm:justify-center items-center gap-2 sm:gap-1 w-full px-3 py-3 sm:p-5 bg-white rounded-lg shadow-md">
+                        <a
+                            href={store.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="relative w-8 h-8 sm:w-10 sm:h-10 bg-teal-100 text-teal-400 rounded-full flex justify-center items-center text-cente text-xsr"
+                        >
+                            <FontAwesomeIcon icon={faLocationDot} />
+                            <FontAwesomeIcon
+                                className="absolute text-sm -right-[1px] -top-[1px]"
+                                icon={faArrowUpRightFromSquare}
+                            />
+                        </a>
+                        <p
+                            className="sm:text-lg sm:font-bold text-gray-700 text-center"
+                            style={{width: 'calc(100% - 40px)'}}
+                        >
+                            {store.distance}분
+                        </p>
+                        <p className="hidden sm:block">예상 거리</p>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-6">
+                    {review.length > 0 &&
+                        review.map((item, index) => (
+                            <Review
+                                key={index}
+                                idx={idx}
+                                token={token}
+                                sIdx={store.idx}
+                                data={item}
+                                more={moreToggle}
+                                getReviewData={getReviewData}
+                                handleReviewToggle={handleReviewToggle}
+                                handleImg={handleImg}
+                            />
+                        ))}
+                </div>
+            </div>
+
             <Modal
                 visible={modalVisible}
                 setModalVisible={setModalVisible}
@@ -108,86 +207,13 @@ const Detail = () => {
                 contents={
                     <>
                         <div className="min-h-[50vh] max-h-[70vh] overflow-auto scrollbar flex flex-col">
-                            <div className="grow flex flex-col justify-center border rounded p-2 box-border">
+                            <div className="grow flex flex-col justify-center border rounded-lg p-2 box-border">
                                 <img src={modalImg} alt="리뷰이미지" className="w-full h-auto mx-auto" />
                             </div>
                         </div>
                     </>
                 }
             />
-
-            <div className="bg-white rounded p-6 pt-7 shadow-lg">
-                <div className="flex justify-between items-center">
-                    <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
-                        {store.category}
-                    </span>
-                    <button onClick={handleFavorite} className={`${token === null ? 'hidden' : ''}`}>
-                        <FontAwesomeIcon
-                            icon={faHeart}
-                            className={`${isFavorite ? 'text-red-400' : 'text-gray-400'} text-xl`}
-                        />
-                    </button>
-                </div>
-                <h3 className="text-2xl font-bold mt-3 mb-1">{store.name}</h3>
-                <p>{`${store.address} ${store.base} ${store.floor}층`}</p>
-                <div className="flex flex-wrap gap-2 mt-5">
-                    {store.tag.length > 0 &&
-                        store.tag.map((tag, idx) => (
-                            <span
-                                key={idx}
-                                className="text-sm rounded-full px-4 py-1 bg-white text-orange-600 border border-orange-300 font-medium"
-                            >
-                                #{tag}
-                            </span>
-                        ))}
-                </div>
-            </div>
-            <div className="flex gap-5 mt-4">
-                <div className="flex sm:flex-col justify-center items-center gap-2 sm:gap-1 w-full p-2 py-3 sm:p-5 bg-white rounded shadow-lg">
-                    <span className="w-[40px] h-[40px] bg-yellow-100 text-yellow-400 rounded-full p-2 text-center">
-                        <FontAwesomeIcon icon={faStar} />
-                    </span>
-                    <p className="sm:text-lg sm:font-bold text-gray-700">{store.star}</p>
-                    <p className="hidden sm:block">별점</p>
-                </div>
-                <div className="flex sm:flex-col justify-center items-center gap-2 sm:gap-1 w-full p-2 py-3 sm:p-5 bg-white rounded shadow-lg">
-                    <span className="w-[40px] h-[40px] bg-red-100 text-red-400 rounded-full p-2 text-center">
-                        <FontAwesomeIcon icon={faHeart} />
-                    </span>
-                    <p className="sm:text-lg sm:font-bold text-gray-700">{store.favorite}</p>
-                    <p className="hidden sm:block">찜</p>
-                </div>
-                <div className="flex sm:flex-col justify-center items-center gap-2 sm:gap-1 w-full p-2 py-3 sm:p-5 bg-white rounded shadow-lg">
-                    <a
-                        href={store.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative w-[40px] h-[40px] bg-teal-100 text-teal-400 rounded-full p-2 text-center"
-                    >
-                        <FontAwesomeIcon icon={faLocationDot} />
-                        <FontAwesomeIcon
-                            className="absolute text-sm -right-[1px] -top-[1px]"
-                            icon={faArrowUpRightFromSquare}
-                        />
-                    </a>
-                    <p className="sm:text-lg sm:font-bold text-gray-700">{store.distance}분</p>
-                    <p className="hidden sm:block">예상 거리</p>
-                </div>
-            </div>
-            {review.length > 0 &&
-                review.map((item, index) => (
-                    <Review
-                        key={index}
-                        idx={idx}
-                        token={token}
-                        sIdx={store.idx}
-                        data={item}
-                        more={moreToggle}
-                        getReviewData={getReviewData}
-                        handleReviewToggle={handleReviewToggle}
-                        handleImg={handleImg}
-                    />
-                ))}
         </div>
     );
 };

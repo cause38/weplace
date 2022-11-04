@@ -1,39 +1,17 @@
 import React from 'react';
-import {Link} from '../../node_modules/react-router-dom/dist/index';
+import {Link, useLocation} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faPenToSquare} from '@fortawesome/free-regular-svg-icons';
+import {useEffect} from 'react';
 
 const FloatingBtn = () => {
     return (
         <div>
             <Link
                 to="/write"
-                className="fixed bottom-24 right-24 w-12 h-12 flex justify-center items-center text-xl font-bold transition-colors bg-orange-400 hover:bg-orange-500 text-white rounded-full shadow-md shadow-gray-300"
+                className="fixed bottom-24 right-24 w-12 h-12 flex justify-center items-center text-xl font-bold transition-colors bg-orange-400 hover:bg-orange-500 text-white rounded-full shadow-md shadow-orange-300 transition-colors"
             >
-                <div className="w-3/5 h-3/5">
-                    <svg
-                        height="100%"
-                        style={{
-                            fillRule: 'evenodd',
-                            clipRule: 'evenodd',
-                            strokeLinejoin: 'round',
-                            strokeMiterlimit: 2,
-                            color: 'white',
-                        }}
-                        version="1.1"
-                        viewBox="0 0 24 24"
-                        width="100%"
-                    >
-                        <g id="Icon">
-                            <path
-                                d="M12,3.25l-5,0c-1.26,-0 -2.468,0.5 -3.359,1.391c-0.891,0.891 -1.391,2.099 -1.391,3.359c0,2.713 0,6.287 0,9c-0,1.26 0.5,2.468 1.391,3.359c0.891,0.891 2.099,1.391 3.359,1.391c2.713,0 6.287,0 9,0c1.26,0 2.468,-0.5 3.359,-1.391c0.891,-0.891 1.391,-2.099 1.391,-3.359c0,-2.404 0,-5 0,-5c0,-0.414 -0.336,-0.75 -0.75,-0.75c-0.414,-0 -0.75,0.336 -0.75,0.75c0,-0 0,2.596 0,5c0,0.862 -0.342,1.689 -0.952,2.298c-0.609,0.61 -1.436,0.952 -2.298,0.952c-2.713,0 -6.287,0 -9,0c-0.862,0 -1.689,-0.342 -2.298,-0.952c-0.61,-0.609 -0.952,-1.436 -0.952,-2.298c0,-2.713 0,-6.287 0,-9c-0,-0.862 0.342,-1.689 0.952,-2.298c0.609,-0.61 1.436,-0.952 2.298,-0.952l5,0c0.414,0 0.75,-0.336 0.75,-0.75c0,-0.414 -0.336,-0.75 -0.75,-0.75Z"
-                                fill="currentColor"
-                            />
-                            <path
-                                d="M7.47,11.227l8.171,-8.172c1.074,-1.073 2.815,-1.073 3.889,0c0.455,0.456 0.959,0.96 1.415,1.415c1.073,1.074 1.073,2.815 -0,3.889c-2.667,2.666 -8.172,8.171 -8.172,8.171c-0.141,0.141 -0.331,0.22 -0.53,0.22l-4.243,0c-0.414,0 -0.75,-0.336 -0.75,-0.75l0,-4.243c-0,-0.199 0.079,-0.389 0.22,-0.53Zm7.287,-5.166l-6.007,6.007l0,3.182l3.182,0l6.007,-6.007l-3.182,-3.182Zm4.243,2.121l0.884,-0.884c0.488,-0.488 0.488,-1.28 -0,-1.768c-0.455,-0.455 -0.959,-0.959 -1.414,-1.414c-0.488,-0.488 -1.28,-0.488 -1.768,0l-0.884,0.884l3.182,3.182Z"
-                                fill="currentColor"
-                            />
-                        </g>
-                    </svg>
-                </div>
+                <FontAwesomeIcon icon={faPenToSquare} />
             </Link>
         </div>
     );
