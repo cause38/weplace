@@ -6,7 +6,8 @@ import {useRecoilState} from '../../node_modules/recoil/';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowRightToBracket} from '@fortawesome/free-solid-svg-icons';
-import iconHandshake from '../assets/waving-hand.png';
+import {EmojiProvider, Emoji} from 'react-apple-emojis';
+import emojiData from '../lib/data.json';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -70,7 +71,9 @@ const Header = () => {
                 </div>
                 <div className={`hidden ${isLogin && 'sm:flex'} gap-1 justify-center items-center text-gray-700`}>
                     <strong className="bg-orange-100 px-1 text-orange-500">{nickName}</strong>님, 안녕하세요!
-                    <img src={iconHandshake} className="inline-block w-6" />
+                    <EmojiProvider data={emojiData}>
+                        <Emoji name={'waving-hand'} className="mx-auto w-[22px]" />
+                    </EmojiProvider>
                 </div>
                 <div className="flex items-end gap-3">
                     <button
