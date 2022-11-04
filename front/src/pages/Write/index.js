@@ -153,21 +153,12 @@ const Write = () => {
 
     // 첨부이미지 -> base64 파일로 변환
     useEffect(() => {
+        setBase64s([]);
         Array.from(files).forEach(image => {
-            // 중복 파일 체크
-            if (Base64s.length > 0) {
-                const newFileArr = Base64s.map(item => item.img);
-                if (newFileArr.includes(image)) {
-                    alert('중복 이미지가 포함되어 있습니다.');
-                    return false;
-                } else {
-                    encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
-                }
-            } else {
-                encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
-            }
+            encodeFileToBase64(image).then(data => setBase64s(prev => [...prev, {img: image, url: data}]));
         });
         setValue({...value, ['reviewImg']: [...files]});
+        console.log(Base64s);
     }, [files]);
 
     const encodeFileToBase64 = image => {
