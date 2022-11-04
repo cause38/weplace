@@ -11,8 +11,6 @@ const Reviews = ({reviews, handleDeleteReview}) => {
     // 페이지
     const [page, setPage] = useState(1);
 
-    console.log('revew', reviews);
-
     const offset = (page - 1) * limit;
     return (
         <div className="mt-[20px] flex flex-col w-full">
@@ -34,7 +32,7 @@ const Reviews = ({reviews, handleDeleteReview}) => {
                                         : 'flex flex-col min-w-[315px] mb-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
                                 }
                             >
-                                <div className="p-5">
+                                <Link to={`/detail/${shopIdx}`} className="p-5">
                                     <div className="flex justify-between">
                                         <h3 className="w-fit p-2 rounded-[20px] bg-orange-400 text-white text-sm">
                                             {name}
@@ -60,8 +58,10 @@ const Reviews = ({reviews, handleDeleteReview}) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <p className="pl-1 text-2xl font-bold ">{comment}</p>
-                                </div>
+                                    <p className="pl-1 text-2xl font-bold h-[64px] line-clamp-2 break-keep">
+                                        {comment}
+                                    </p>
+                                </Link>
                                 <div className="flex justify-between h-10">
                                     <Link
                                         to={`/write?idx=${shopIdx}&ridx=${idx}`}
