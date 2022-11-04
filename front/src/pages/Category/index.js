@@ -402,7 +402,6 @@ const Category = () => {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        alert(data.msg);
                         if (data.state === 200) {
                             fetch(
                                 `${API.categoryList}?token=${token}&favorite=${onlyLike}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,

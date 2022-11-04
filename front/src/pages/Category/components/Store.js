@@ -5,21 +5,21 @@ import {faHeart, faStar, faLocationDot, faFileLines} from '@fortawesome/free-sol
 
 const Store = ({idx, category, name, distance, star, review, favorite, isFavorite, tag, handleCheckeLike}) => {
     return (
-        <div className="flex relative">
-            <button
-                onClick={e => handleCheckeLike(e, idx, isFavorite)}
-                className="absolute flex items-center py-5 px-3 right-4 text-sm hover:opacity-75"
-            >
-                <FontAwesomeIcon
-                    icon={faHeart}
-                    className={`${isFavorite ? 'text-red-400' : 'text-gray-400'} text-xl`}
-                />
-            </button>
+        <div className="flex">
             <Link to={`/detail/${idx}`} className="w-full bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-4 h-full flex flex-col justify-between gap-4">
                     <div className="flex flex-col gap-4">
                         <div className="flex justify-between">
                             <h3 className="px-3 py-1 rounded-full bg-orange-400 text-white text-sm">{category}</h3>
+                            <button
+                                onClick={e => handleCheckeLike(e, idx, isFavorite)}
+                                className="relative flex items-center text-sm hover:opacity-75"
+                            >
+                                <FontAwesomeIcon
+                                    icon={faHeart}
+                                    className={`${isFavorite ? 'text-red-400' : 'text-gray-400'} text-xl`}
+                                />
+                            </button>
                         </div>
                         <p className="text-2xl font-bold line-clamp-2 break-keep">{name}</p>
                     </div>

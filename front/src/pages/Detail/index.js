@@ -90,7 +90,6 @@ const Detail = () => {
     // 찜 목록 추가 / 삭제 공통 함수
     const setFavorite = res => {
         if (res.status === 200) {
-            alert(res.data.msg);
             getReviewData();
         } else if (res.data.state === 400 || res.data.state === 401) {
             alert(res.data.msg);
