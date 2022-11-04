@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 
-import InputBox from 'components/inputBox';
+import PasswordInput from './components/PasswordInput';
 import Button from 'components/button';
 
-import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
-import axios from '../../../node_modules/axios/index';
+import {useNavigate, useLocation} from '/node_modules/react-router-dom/dist/index';
+import axios from '/node_modules/axios/index';
 
 const FindPassword = () => {
     const navigate = useNavigate();
@@ -99,7 +99,6 @@ const FindPassword = () => {
                     alert(response.data.msg);
                     setIsIdValid(true);
                     setIsSendVerifyEmail(true);
-                    navigate('/');
                 } else if (response.data.state === 401) {
                     alert(response.data.msg);
                 } else if (response.data.state === 402) {
@@ -113,11 +112,11 @@ const FindPassword = () => {
     };
 
     // 비밀번호 일치 확인
-    const handlePwMatch = e => {
-        setCheckPw(e.target.value);
-        if (e.target.value !== newPw) {
+    const handlePwMatch = value => {
+        setCheckPw(value);
+        if (value !== newPw) {
             setIsSamePw(false);
-        } else if (e.target.value === newPw) {
+        } else if (value === newPw) {
             setIsSamePw(true);
         }
     };
@@ -186,16 +185,16 @@ const FindPassword = () => {
     };
 
     return (
-        <div className="container-wb">
-            <div className="w-full max-w-lg mx-auto overflow-hidden ">
+        <div className="mt-20 flex justify-center items-center  h-[calc(100vh-204px)] sm:h-[calc(100vh-188px)]">
+            <div className="bg-white w-full max-w-lg mx-auto bg-white shadow-lg rounded-lg px-5 py-11">
                 <div className="">
                     <h2 className="text-3xl font-bold text-center text-orange-600 ">비밀번호 찾기</h2>
                     <main className="flex mt-[10px]">
                         <form className="w-3/4" name="setPwForm">
                             <div className="flex ">
                                 {isSendVerifyEmail ? (
-                                    <div className="mt-4 w-full">
-                                        <InputBox
+                                    <div className="mt-4 w-full flex">
+                                        <PasswordInput
                                             id="id"
                                             type="email"
                                             value={id}
@@ -206,8 +205,8 @@ const FindPassword = () => {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="mt-4 w-full">
-                                        <InputBox
+                                    <div className="mt-4 w-full flex">
+                                        <PasswordInput
                                             id="id"
                                             type="email"
                                             value={id}
@@ -220,8 +219,8 @@ const FindPassword = () => {
                                 )}
                             </div>
                             {isIdValid ? (
-                                <div className="mt-4 w-full">
-                                    <InputBox
+                                <div className="mt-4 w-full flex">
+                                    <PasswordInput
                                         id="verifyId"
                                         type="text"
                                         value={verifyId}
@@ -232,8 +231,8 @@ const FindPassword = () => {
                                     />
                                 </div>
                             ) : (
-                                <div className="mt-4 w-full">
-                                    <InputBox
+                                <div className="mt-4 w-full flex">
+                                    <PasswordInput
                                         id="verifyId"
                                         type="text"
                                         value={verifyId}
@@ -243,8 +242,8 @@ const FindPassword = () => {
                                     />
                                 </div>
                             )}
-                            <div className="mt-4 w-full">
-                                <InputBox
+                            <div className="mt-4 w-full flex">
+                                <PasswordInput
                                     id="newPw"
                                     type="password"
                                     value={newPw}
@@ -253,30 +252,23 @@ const FindPassword = () => {
                                     onChange={setNewPw}
                                 />
                             </div>
-                            <div className="w-full mt-4 flex ">
-                                <label
-                                    htmlFor="비밀번호 확인"
-                                    className="w-2/5 pl-1 py-2 mt-2 text-slate-600 text-sm font-semibold placeholder-gray-500 bg-slate-200 border rounded-md focus:border-blue-400  focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                                >
-                                    비밀번호 확인
-                                </label>
-                                <input
+                            <div className="mt-4 w-full flex">
+                                <PasswordInput
                                     id="checkPw"
-                                    className={
-                                        'block w-[62%]  pl-1 py-2  mt-2 ml-[-5px] text-gray-700 text-xs placeholder-gray-500 bg-white border rounded-md focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300'
-                                    }
-                                    name="비밀번호 확인"
                                     type="password"
-                                    aria-label="confirm-password"
                                     value={checkPw}
+                                    ariaLabel="confirm-password"
+                                    name="비밀번호 확인"
                                     onChange={e => handlePwMatch(e)}
                                 />
                             </div>
-                            {isSamePw === true ? null : (
-                                <p className="absolute mt-1 text-red-600 text-[10px] ">
-                                    * 비밀번호가 일치 하지 않습니다.
-                                </p>
-                            )}
+                            {checkPw.length > 0 ? (
+                                isSamePw === true ? null : (
+                                    <p className="absolute mt-1 text-red-600 text-[10px] ">
+                                        * 비밀번호가 일치 하지 않습니다.
+                                    </p>
+                                )
+                            ) : null}
                         </form>
                         <div className="mt-4 w-1/4">
                             {isSendVerifyEmail ? (
