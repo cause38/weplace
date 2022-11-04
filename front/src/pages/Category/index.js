@@ -439,20 +439,22 @@ const Category = () => {
                     </div>
                 </section>
 
-                <section className="container-wb h-[104px] mx-auto my-0 py-4 scrollbar flex items-center flex-wrap gap-4 gap-y-3 overflow-auto">
-                    {tagList?.map(data => {
-                        return (
-                            <button
-                                ref={tagRef}
-                                onClick={e => handleTag(e, data.idx)}
-                                key={data.idx}
-                                value={data.name}
-                                className="hash bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300"
-                            >
-                                # {data.name}
-                            </button>
-                        );
-                    })}
+                <section className="container-wb mx-auto my-0 py-0">
+                    <div className="h-[104px] scrollbar flex items-center flex-wrap gap-4 gap-y-3 py-4 overflow-auto">
+                        {tagList?.map(data => {
+                            return (
+                                <button
+                                    ref={tagRef}
+                                    onClick={e => handleTag(e, data.idx)}
+                                    key={data.idx}
+                                    value={data.name}
+                                    className="hash bg-white text-orange-400 p-1 px-4 rounded-full shadow-sm shadow-orange-300"
+                                >
+                                    # {data.name}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </section>
             </div>
             <section
@@ -464,17 +466,13 @@ const Category = () => {
                         className="dropMenu relative cursor-pointer flex w-32 justify-between items-center rounded-md border bg-white px-4 py-2 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
                         onClick={handleDrop}
                     >
-                        <span className="">{selectedSorting}</span>
+                        <span>{selectedSorting}</span>
                         <div className="dropMenu flex">
-                            {!isDrop ? (
-                                <img alt="dropdown" src={dropdown} />
-                            ) : (
-                                <img alt="dropdown" src={dropdownActive} />
-                            )}
+                            <img alt="dropdown" src={!isDrop ? dropdown : dropdownActive} />
                         </div>
                         {isDrop && (
                             <div className="dropMenu absolute top-11 left-0 z-10 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <ul className="">
+                                <ul>
                                     {SORTING.map((data, key) => {
                                         return (
                                             <li
