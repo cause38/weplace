@@ -9,11 +9,11 @@ const Store = ({idx, category, name, distance, star, review, favorite, isFavorit
             <Link to={`/detail/${idx}`} className="w-full bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="p-4 h-full flex flex-col justify-between gap-4">
                     <div className="flex flex-col gap-4">
-                        <div className="flex justify-between">
-                            <h3 className="px-3 py-1 rounded-full bg-orange-400 text-white text-sm">{category}</h3>
+                        <div className="relative">
+                            <span className="px-3 py-1 rounded-full bg-orange-400 text-white text-sm">{category}</span>
                             <button
                                 onClick={e => handleCheckeLike(e, idx, isFavorite)}
-                                className="relative flex items-center text-sm hover:opacity-75"
+                                className="absolute w-8 h-8 right-0 top-1/2 -translate-y-1/2 translate-x-[6px] hover:opacity-75"
                             >
                                 <FontAwesomeIcon
                                     icon={faHeart}
@@ -44,12 +44,12 @@ const Store = ({idx, category, name, distance, star, review, favorite, isFavorit
                                 {distance}분
                             </div>
                         </div>
-                        <div className="h-[80px] overflow-y-auto scrollbar flex flex-wrap items-start gap-2 bg-orange-100 rounded-md p-2">
+                        <div className="h-[83px] overflow-y-auto scrollbar flex flex-wrap items-start gap-2 bg-orange-100 rounded-md p-2 text-sm">
                             {tag && tag.length > 0 ? (
                                 tag.map((data, id) => (
                                     <span
                                         key={id}
-                                        className="rounded text-sm rounded-full p-1 px-2 bg-white shadow-sm shadow-orange-400 text-orange-500"
+                                        className="rounded rounded-full p-1 pb-[0.33rem] px-3 bg-white shadow-sm shadow-orange-400 text-orange-500"
                                     >
                                         # {data}
                                     </span>
