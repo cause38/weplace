@@ -48,7 +48,7 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
     }, []);
 
     return (
-        <div className="relative flex flex-col gap-5 mt-4 p-4 py-5 bg-white shadow-lg rounded">
+        <div className="relative flex flex-col gap-5 p-4 py-5 bg-white shadow-md rounded-lg">
             <div className="flex gap-1 justify-between border border-gray-200 rounded-full p-2 py-1 pr-5">
                 <div className="flex gap-3 items-center">
                     <span
@@ -59,14 +59,14 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                     <div className={`${data.isMine ? '' : 'hidden'} flex gap-2`}>
                         <Link
                             to={`/write?idx=${sIdx}&ridx=${data.idx}`}
-                            className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full hover:bg-orange-50"
+                            className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full transition-colors hover:bg-orange-200 hover:bg-opacity-75"
                         >
                             <FontAwesomeIcon icon={faPenToSquare} />
                         </Link>
                         <button
                             type="button"
                             onClick={() => handleDelete(data.idx)}
-                            className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full hover:bg-orange-50"
+                            className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full transition-colors hover:bg-orange-200 hover:bg-opacity-75"
                         >
                             <FontAwesomeIcon icon={faTrashCan} />
                         </button>
