@@ -74,7 +74,7 @@ class Write extends RestController {
             'upload_path' => "./uploads/review/",
             'allowed_types' => "gif|jpg|png|jpeg|webp",
             'overwrite' => FALSE,
-            'max_size' => "10240000"
+            'max_size' => "10240"
         );
     
         $this->load->library('upload',$config);
