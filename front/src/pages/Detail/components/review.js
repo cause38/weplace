@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import ImgBox from './imgBox';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faStar, faChevronUp, faChevronDown, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import {faImage, faThumbsUp, faThumbsDown, faPenToSquare, faTrashCan} from '@fortawesome/free-regular-svg-icons';
 
 const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, getReviewData}) => {
@@ -113,13 +113,13 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                             <span className="min-w-[40px] min-h-[40px] bg-green-100 text-green-400 rounded-full p-2 text-center">
                                 <FontAwesomeIcon icon={faThumbsUp} />
                             </span>
-                            <p className="break-keep">{data.comment_good}</p>
+                            <p>{data.comment_good}</p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3 p-4 sm:p-3 items-center w-full border bg-gray-50 rounded-lg">
                             <span className="min-w-[40px] min-h-[40px] bg-red-100 text-red-400 rounded-full p-2 text-center">
                                 <FontAwesomeIcon icon={faThumbsDown} />
                             </span>
-                            <p className="break-keep">{data.comment_bad}</p>
+                            <p>{data.comment_bad}</p>
                         </div>
                     </div>
                     <div className="flex gap-2 mt-4">

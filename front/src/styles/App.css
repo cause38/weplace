@@ -7,6 +7,7 @@
         min-width: 360px;
         font-family: 'Noto Sans CJK KR';
     }
+    body * {word-break: keep-all;} 
     #root {
         min-height: 100vh;
     }
@@ -16,24 +17,12 @@
         margin: 80px auto 0;
         padding: 20px;
     }
-    /* .write-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-    } */
     @media (min-width: 768px) {
         .container-wb {
             padding: 40px;
             padding-bottom: 0;
         }
     }
-    /* @media (min-width: 1280px) {
-      .write-btn {
-        position: sticky;
-        top: 100%;
-        left: calc(100% - 90px);
-      }
-    } */
     body::-webkit-scrollbar {width: 10px;}
     body::-webkit-scrollbar-button {width: 8px;height: 0;background: transparent;}
     body::-webkit-scrollbar-track {background-color: transparent;}
