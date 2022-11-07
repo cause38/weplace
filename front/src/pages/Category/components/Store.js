@@ -38,6 +38,12 @@ const Store = ({idx, category, name, distance, star, review, favorite, isFavorit
                                 {review}
                             </div>
                             <div className="flex gap-2 items-center">
+                                <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-orange-100">
+                                    <FontAwesomeIcon icon={faHeart} className="text-red-400" />
+                                </span>
+                                {favorite}
+                            </div>
+                            <div className="flex gap-2 items-center">
                                 <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-teal-100">
                                     <FontAwesomeIcon icon={faLocationDot} className="text-teal-400" />
                                 </span>

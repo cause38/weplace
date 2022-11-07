@@ -74,7 +74,7 @@ const Join = () => {
             } else {
                 // 인증요청
                 if (isSendVerifyEmail === false) {
-                    fetch(`http://place-api.weballin.com/auth/registerCode`, {
+                    fetch(`${API.registerCode}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

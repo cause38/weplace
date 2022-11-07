@@ -201,7 +201,7 @@ const Category = () => {
 
         if (onlyLike) {
             fetch(
-                `${API.categoryList}?token=${token}&favorite="true"&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
+                `${API.categoryList}?token=${token}&favorite=${onlyLike}&filter=${switchedValue}&category=${id}&tag=[${sendTagList}]`,
                 {
                     method: 'GET',
                     headers: {
@@ -517,6 +517,7 @@ const Category = () => {
                 >
                     {storeList?.length > 0 ? (
                         storeList.map((data, key) => {
+                            console.log('data', data);
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                             return (
                                 <Store
