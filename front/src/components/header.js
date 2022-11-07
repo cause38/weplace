@@ -58,12 +58,12 @@ const Header = () => {
 
     return (
         <header className="h-20 fixed w-full bg-white border-b z-50">
-            <div className="container-wb my-0 h-full flex items-center justify-between">
+            <div className="container-wb my-0 py-0 h-full flex items-center justify-between">
                 <div className="flex items-center justify-between">
                     <div className="text-xl font-semibold text-orange-600">
                         <Link
                             to="/"
-                            className="text-2xl font-bold text-orange-600 transition-colors duration-300 transform lg:text-3xl hover:text-orange-700"
+                            className="text-2xl font-bold text-orange-600 transition-colors duration-300 transform lg:text-3xl"
                         >
                             Weplace
                         </Link>
