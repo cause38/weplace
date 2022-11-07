@@ -10,7 +10,7 @@ const FloatingBtn = () => {
         <div
             className={`${
                 pathname !== '/write' ? 'fixed xl:sticky' : 'hidden'
-            } bottom-5 right-5 md:bottom-10 md:right-10 xl:bottom-auto; xl:right-auto xl:top-full xl:left-full xl:-translate-x-[90px] z-[1000] w-[50px] h-[50px] flex justify-center items-center`}
+            } bottom-5 right-5 md:bottom-10 md:right-10 xl:bottom-auto; xl:right-auto xl:top-[calc(100%_-_100px)] xl:left-full xl:-translate-x-[90px] z-[1000] w-[50px] h-[50px] flex justify-center items-center`}
         >
             <Link
                 to="/write"
