@@ -144,12 +144,9 @@ const MyPage = () => {
 
         const ImageUrl = URL.createObjectURL(file);
 
-        console.log('file', file);
         const formData = new FormData();
         formData.append('profileImg', file);
         formData.append('token', token);
-
-        console.log('formData', formData.get('profileImg'));
 
         axios
             .post(`${API.changeProfile}`, formData, {
