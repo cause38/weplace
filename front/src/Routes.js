@@ -1,4 +1,4 @@
-import {useLocation, BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import './styles/App.css';
 
@@ -18,7 +18,7 @@ import Footer from './components/footer';
 function Switchs() {
     return (
         <Router>
-            <div className="xl:-mt-[50px] pb-10" style={{minHeight: 'calc(100vh - 74px)'}}>
+            <div id="wrapContents" className=" pb-10" style={{minHeight: 'calc(100vh - 74px)'}}>
                 <FloatingBtn />
                 <Header />
                 <Routes>

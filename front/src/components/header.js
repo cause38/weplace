@@ -24,6 +24,11 @@ const Header = () => {
     const [profile, setProfile] = useRecoilState(profileImgValue);
     const [nickName, setNickname] = useRecoilState(nameValue);
 
+    useEffect(() => {
+        const wrap = document.getElementById('wrapContents');
+        pathname !== '/write' ? wrap.classList.add('xl:-mt-[50px]') : wrap.classList.remove('xl:-mt-[50px]');
+    }, [pathname]);
+
     // logout
     const goLogOut = () => {
         const isHome = pathname === '/';
