@@ -1,7 +1,7 @@
 import React, {Fragment, useState} from 'react';
 import Pagination from './Pagination';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faHeart, faStar, faLocationDot, faFileLines} from '@fortawesome/free-solid-svg-icons';
+import {faHeart, faStar, faFileLines} from '@fortawesome/free-solid-svg-icons';
 
 const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
     // 화면에 보여줄 티켓 수
@@ -35,12 +35,12 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
                                 <div
                                     className={
                                         favoriteList?.length < 0
-                                            ? 'absolute cursor-pointer mt-5 p-2 hover:opacity-50'
-                                            : 'absolute cursor-pointer mt-11 p-2 hover:opacity-50'
+                                            ? 'absolute cursor-pointer mt-4 p-2 hover:opacity-50'
+                                            : 'absolute cursor-pointer mt-10 p-2 hover:opacity-50'
                                     }
                                     onClick={e => handleDeleteFavorite(e, idx)}
                                 >
-                                    <span className="text-red-600 text-5xl">&#128150; </span>
+                                    <FontAwesomeIcon icon={faHeart} className="text-red-400 text-6xl" />
                                 </div>
                                 <div
                                     className="w-full ml-20 p-4 cursor-pointer hover:bg-orange-400 hover:text-white"

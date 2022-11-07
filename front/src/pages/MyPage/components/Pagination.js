@@ -9,7 +9,7 @@ const Pagination = ({total, limit, page, setPage}) => {
                 <button
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
-                    className="pagination-button bg-gray-300 "
+                    className="py-1 px-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer hover:text-white"
                 >
                     &lt;
                 </button>
@@ -20,12 +20,16 @@ const Pagination = ({total, limit, page, setPage}) => {
                             key={i + 1}
                             onClick={() => setPage(i + 1)}
                             aria-current={page === i + 1 ? 'page' : null}
-                            className="pagination-button "
+                            className="py-1 px-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer hover:text-white"
                         >
                             {i + 1}
                         </button>
                     ))}
-                <button onClick={() => setPage(page + 1)} disabled={page === numPages} className="pagination-button ">
+                <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === numPages}
+                    className="py-1 px-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer hover:text-white"
+                >
                     &gt;
                 </button>
             </article>
