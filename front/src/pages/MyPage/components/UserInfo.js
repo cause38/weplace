@@ -49,7 +49,7 @@ const UserInfo = ({
                                 <p>닉네임</p>
                             </div>
                             {isChangeNickName ? (
-                                <div className="w-full min-w-fit">
+                                <div className="w-full min-w-fit min-w-[180px]">
                                     <InputBox
                                         id="nickName"
                                         type="text"

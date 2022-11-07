@@ -58,20 +58,20 @@ const Reviews = ({reviews, handleDeleteReview}) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <p className="pl-1 text-2xl font-bold h-[64px] line-clamp-2 break-keep">
+                                    <p className="pl-1 text-1xl font-bold h-[50px] line-clamp-2 break-keep">
                                         {comment}
                                     </p>
                                 </Link>
                                 <div className="flex justify-between h-10">
                                     <Link
                                         to={`/write?idx=${shopIdx}&ridx=${idx}`}
-                                        className="w-1/2 h-full text-center leading-10 text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:bg-gray-600"
+                                        className="w-1/2 h-full text-center leading-10 text-white bg-gray-400 shadow-md shadow-gray-300 hover:bg-gray-500 focus:outline-none focus:bg-gray-600"
                                         // onClick={() => goToWrite(idx, shopIdx)}
                                     >
                                         수정
                                     </Link>
                                     <button
-                                        className="w-1/2 h-full bg-orange-500 text-white hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                        className="w-1/2 h-full bg-orange-400 shadow-md shadow-orange-300 text-white hover:bg-orange-500 focus:outline-none focus:bg-orange-600"
                                         onClick={e => handleDeleteReview(e, idx)}
                                     >
                                         삭제
