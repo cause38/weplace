@@ -1,8 +1,9 @@
 import {React, useState, useEffect, useRef} from 'react';
-import {useLocation, useNavigate, useParams} from '../../../node_modules/react-router-dom/dist/index';
+import {useLocation, useNavigate} from '../../../node_modules/react-router-dom/dist/index';
 import InputBox from './components/InputBox';
 import SelectBox from './components/SelectBox';
 import Modal from 'components/Modal';
+import Alert from 'components/alert';
 import axios from 'axios';
 
 const Write = () => {
@@ -52,6 +53,10 @@ const Write = () => {
     const [searhStoreListMain, setSearhStoreListMain] = useState(false);
     const [searhStoreListSub, setSearhStoreListSub] = useState(false);
     const [isReadOnly, setIsReadOnly] = useState(false);
+
+    // 글 등록/수정 이후 confirm custom
+    const [visible, setVisible] = useState(false);
+    const [shopIdx, setShopIdx] = useState(null);
 
     // form data
     const [value, setValue] = useState({
@@ -359,7 +364,6 @@ const Write = () => {
     };
 
     const handleSubmit = () => {
-        const msg = isModify ? '수정' : '등록';
         const url = `http://place-api.weballin.com/review/${isModify ? 'modify' : 'write'}`;
 
         let formData = new FormData();
@@ -383,9 +387,8 @@ const Write = () => {
                 !isModify && handleSearchBtn();
 
                 if (res.data.state === 200) {
-                    if (window.confirm(`리뷰가 ${msg}되었습니다`)) {
-                        navigate(`/detail/${res.data.data.shopIdx}`);
-                    }
+                    setVisible(true);
+                    setShopIdx(res.data.data.shopIdx);
                 } else {
                     alert(res.data.msg);
                 }
@@ -396,8 +399,22 @@ const Write = () => {
             });
     };
 
+    const handleWriteAlert = () => {
+        navigate(`/detail/${shopIdx}`);
+    };
+
     return (
         <div className="container-wb">
+            <Alert
+                msg="저장이 완료되었습니다<br>리뷰로 이동하시겠습니까?"
+                type="confirm"
+                visible={visible}
+                setVisible={setVisible}
+                handleAlert={() => {
+                    handleWriteAlert();
+                }}
+            />
+
             <Modal
                 visible={modalVisible}
                 setModalVisible={setModalVisible}
