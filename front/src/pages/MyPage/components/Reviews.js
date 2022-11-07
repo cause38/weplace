@@ -39,14 +39,6 @@ const Reviews = ({reviews, handleDeleteReview}) => {
                                         </h3>
                                         <p className="flex items-center text-sm">{wdate}</p>
                                     </div>
-                                    <span className="star pl-1">
-                                        {[1, 2, 3, 4, 5].map(el => (
-                                            <i
-                                                key={el}
-                                                className={`fas fa-star fa-light ${el <= star && 'yellowStar'}`}
-                                            />
-                                        ))}
-                                    </span>
                                     <div className="flex justify-between">
                                         <p className="pl-1 font-medium underline underline-offset-2 italic">{menu}</p>
                                         <div className="flex justify-between">
