@@ -78,7 +78,7 @@ class Modify extends RestController {
         $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 404, 'msg' => '한줄평을 입력해주세요.']);
         $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 405, 'msg' => '장점을 입력해주세요.']);
         $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 406, 'msg' => '단점을 입력해주세요.']);
-        $tag          = explode(',', trim($this->post('tag') ?: '')); // option
+        $tag          = trim($this->post('tag') ?: '')    ? explode(',', trim($this->post('tag'))) : []; // option
         foreach($tag as $k => $v) $tag[$k] = (int)trim($v);
 
         $isMyReview = $this->review_m->checkReview($this->idx, $ridx);
@@ -92,7 +92,7 @@ class Modify extends RestController {
             'upload_path' => "./uploads/review/",
             'allowed_types' => "gif|jpg|png|jpeg|webp",
             'overwrite' => FALSE,
-            'max_size' => "10240000"
+            'max_size' => "10240"
         );
     
         $this->load->library('upload',$config);

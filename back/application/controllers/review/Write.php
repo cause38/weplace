@@ -63,7 +63,7 @@ class Write extends RestController {
         $comment      = trim($this->post('comment'))      ?: $this->response(['state' => 407, 'msg' => '한줄평을 입력해주세요.']);
         $comment_good = trim($this->post('comment_good')) ?: $this->response(['state' => 408, 'msg' => '장점을 입력해주세요.']);
         $comment_bad  = trim($this->post('comment_bad'))  ?: $this->response(['state' => 409, 'msg' => '단점을 입력해주세요.']);
-        $tag          = explode(',', trim($this->post('tag') ?: '')); // option
+        $tag          = trim($this->post('tag') ?: '')    ? explode(',', trim($this->post('tag'))) : []; // option
         foreach($tag as $k => $v) $tag[$k] = (int)trim($v);
 
         
@@ -74,7 +74,7 @@ class Write extends RestController {
             'upload_path' => "./uploads/review/",
             'allowed_types' => "gif|jpg|png|jpeg|webp",
             'overwrite' => FALSE,
-            'max_size' => "10240000"
+            'max_size' => "10240"
         );
     
         $this->load->library('upload',$config);

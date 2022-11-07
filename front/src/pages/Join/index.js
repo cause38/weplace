@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Button from 'components/button';
-import InputBox from 'components/inputBox';
-import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
-import axios from '../../../node_modules/axios/index';
+import JoinInput from 'pages/Join/components/JoinInput';
+import {useNavigate, useLocation} from '/node_modules/react-router-dom/dist/index';
+import axios from '/node_modules/axios/index';
 import API from 'config';
 
 const Join = () => {
@@ -24,6 +24,13 @@ const Join = () => {
     const [nickName, setNickName] = useState('');
     const [password, setPassword] = useState('');
     const [cfmPassword, setCfmPassword] = useState('');
+
+    //input focus
+    const idFocus = useRef(null);
+    const VerifyIdfocus = useRef(null);
+    const NickNameFocus = useRef(null);
+    const PwFocus = useRef(null);
+    const CfmPwFocus = useRef(null);
 
     // check input value
     const [isIdValid, setIsIdValid] = useState(false); // 인증확인
@@ -96,28 +103,32 @@ const Join = () => {
 
     // 인증번호 확인
     const handleConfirmId = () => {
-        axios
-            .get(`${API.registerCode}`, {
-                params: {
-                    id: id,
-                    code: verifyId,
-                },
-            })
-            .then(response => {
-                if (response.data.state === 200) {
-                    alert(response.data.msg);
-                    setIsIdValid(true);
-                    setIsSendVerifyEmail(true);
-                } else if (response.data.state === 401) {
-                    alert(response.data.msg);
-                } else if (response.data.state === 402) {
-                    alert(response.data.msg);
-                } else if (response.data.state === 403) {
-                    alert(response.data.msg);
-                } else if (response.data.state === 404) {
-                    alert(response.data.msg);
-                }
-            });
+        if (verifyId.length <= 0) {
+            alert('인증번호를 입력 해 주세요');
+        } else {
+            axios
+                .get(`${API.registerCode}`, {
+                    params: {
+                        id: id,
+                        code: verifyId,
+                    },
+                })
+                .then(response => {
+                    if (response.data.state === 200) {
+                        alert(response.data.msg);
+                        setIsIdValid(true);
+                        setIsSendVerifyEmail(true);
+                    } else if (response.data.state === 401) {
+                        alert(response.data.msg);
+                    } else if (response.data.state === 402) {
+                        alert(response.data.msg);
+                    } else if (response.data.state === 403) {
+                        alert(response.data.msg);
+                    } else if (response.data.state === 404) {
+                        alert(response.data.msg);
+                    }
+                });
+        }
     };
 
     // 인증 재요청
@@ -158,11 +169,11 @@ const Join = () => {
     };
 
     // 비밀번호 확인
-    const handlePwMatch = e => {
-        setCfmPassword(e.target.value);
-        if (e.target.value !== password) {
+    const handlePwMatch = value => {
+        setCfmPassword(value);
+        if (value !== password) {
             setIsSamePw(false);
-        } else if (e.target.value === password) {
+        } else if (value === password) {
             setIsSamePw(true);
         }
     };
@@ -172,31 +183,31 @@ const Join = () => {
         const form = document.joinForm;
         if (isSendVerifyEmail === false) {
             alert('아이디 확인 부탁 드립니다.');
-            form.id.focus();
+            idFocus.current?.focus();
             return false;
         } else if (isIdValid === false) {
             alert('인증번호 확인 부탁 드립니다.');
-            form.verifyId.focus();
+            VerifyIdfocus.current?.focus();
             return false;
         } else if (isDoubleChecked === false) {
             alert('닉네임 중복확인 부탁 드립니다.');
-            form.nickName.focus();
+            NickNameFocus.current?.focus();
             return false;
         } else if (password.length < 1) {
             alert('비밀번호 입력 부탁 드립니다.');
-            form.password.focus();
+            PwFocus.current?.focus();
             return false;
         } else if (cfmPassword.length > password.length) {
             alert('비밀번호 입력 부탁 드립니다.');
-            form.password.focus();
+            PwFocus.current?.focus();
             return false;
         } else if (cfmPassword.length < 1) {
             alert('비밀번호 확인 부탁 드립니다.');
-            form.cfmPassword.focus();
+            CfmPwFocus.current?.focus();
             return false;
         } else if (isSamePw === false) {
             alert('비밀번호가 일치하지 않습니다. 확인 부탁 드립니다.');
-            form.cfmPassword.focus();
+            CfmPwFocus.current?.focus();
             return false;
         } else {
             fetch(`${API.register}`, {
@@ -210,47 +221,48 @@ const Join = () => {
                 .then(response => {
                     if (response.state === 200) {
                         alert(response.msg);
-                        form.id.focus();
+                        idFocus.current?.focus();
                         navigate('/login', {state: {pathname: pathname}});
                     } else if (response.state === 400) {
                         alert(response.msg);
+                        idFocus.current?.focus();
                     } else if (response.state === 401) {
                         alert(response.msg);
-                        form.id.focus();
+                        idFocus.current?.focus();
                     } else if (response.state === 402) {
                         alert(response.msg);
-                        form.id.focus();
+                        idFocus.current?.focus();
                     } else if (response.state === 403) {
                         alert(response.msg);
-                        form.id.focus();
+                        idFocus.current?.focus();
                     } else if (response.state === 404) {
                         alert(response.msg);
-                        form.password.focus();
+                        PwFocus.current?.focus();
                     } else if (response.state === 405) {
                         alert(response.msg);
-                        form.cfmPassword.focus();
+                        CfmPwFocus.current?.focus();
                     } else if (response.state === 406) {
                         alert(response.msg);
-                        form.nickName.focus();
+                        NickNameFocus.current?.focus();
                     } else if (response.state === 407) {
                         alert(response.msg);
-                        form.nickName.focus();
+                        NickNameFocus.current?.focus();
                     }
                 });
         }
     };
 
     return (
-        <div className="container-wb flex justify-center items-center h-[calc(100ch-156px)]">
-            <div className="w-full max-w-lg mx-auto overflow-hidden ">
+        <div className="mt-20 flex justify-center items-center  h-[calc(100vh-204px)] sm:h-[calc(100vh-188px)]">
+            <div className="bg-white w-full max-w-lg mx-auto bg-white shadow-lg rounded-lg px-5 py-11">
                 <div className="">
-                    <h2 className="text-3xl font-bold text-center text-orange-600 ">회원가입</h2>
+                    <h2 className="text-3xl font-bold text-center text-orange-600 ">JOIN</h2>
                     <main className="flex mt-2.5">
                         <form className="w-3/4" name="joinForm">
                             <div className="flex ">
                                 {isSendVerifyEmail ? (
-                                    <div className="mt-2 w-full">
-                                        <InputBox
+                                    <div className="mt-2 w-full flex">
+                                        <JoinInput
                                             id="id"
                                             type="email"
                                             value={id}
@@ -261,8 +273,8 @@ const Join = () => {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="mt-2 w-full">
-                                        <InputBox
+                                    <div className="mt-2 w-full flex">
+                                        <JoinInput
                                             id="id"
                                             type="email"
                                             value={id}
@@ -270,13 +282,14 @@ const Join = () => {
                                             placeholder="example@weballin.com"
                                             ariaLabel="user-id"
                                             name="아이디"
+                                            focus={idFocus}
                                         />
                                     </div>
                                 )}
                             </div>
                             {isIdValid ? (
-                                <div className="mt-2 w-full">
-                                    <InputBox
+                                <div className="mt-2 w-full flex">
+                                    <JoinInput
                                         id="verifyId"
                                         type="text"
                                         value={verifyId}
@@ -287,20 +300,21 @@ const Join = () => {
                                     />
                                 </div>
                             ) : (
-                                <div className="mt-2 w-full">
-                                    <InputBox
+                                <div className="mt-2 w-full flex">
+                                    <JoinInput
                                         id="verifyId"
                                         type="text"
                                         value={verifyId}
                                         ariaLabel="verifyId"
                                         name="인증번호"
                                         onChange={setVerifyId}
+                                        focus={VerifyIdfocus}
                                     />
                                 </div>
                             )}
                             {isDoubleChecked ? (
-                                <div className="mt-2 w-full">
-                                    <InputBox
+                                <div className="mt-2 w-full flex">
+                                    <JoinInput
                                         id="nickName"
                                         type="text"
                                         value={nickName}
@@ -311,49 +325,48 @@ const Join = () => {
                                     />
                                 </div>
                             ) : (
-                                <div className="mt-2 w-full">
-                                    <InputBox
+                                <div className="mt-2 w-full flex">
+                                    <JoinInput
                                         id="nickName"
                                         type="text"
                                         value={nickName}
                                         ariaLabel="name"
                                         name="닉네임"
                                         onChange={setNickName}
+                                        focus={NickNameFocus}
                                     />
                                 </div>
                             )}
-                            <div className="mt-2 w-full">
-                                <InputBox
+                            <div className="mt-2 w-full flex">
+                                <JoinInput
                                     id="password"
                                     type="password"
                                     value={password}
                                     ariaLabel="password"
                                     name="비밀번호"
                                     onChange={setPassword}
+                                    focus={PwFocus}
                                 />
                             </div>
-                            <div className="w-full mt-2 flex ">
-                                <label
-                                    htmlFor="비밀번호 확인"
-                                    className="w-2/5 pl-1 py-2 mt-2 text-slate-600 text-sm font-semibold placeholder-gray-500 bg-slate-200 border rounded-md focus:border-blue-400  focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                                >
-                                    비밀번호 확인
-                                </label>
-                                <input
+                            <div className="mt-2 w-full flex">
+                                <JoinInput
                                     id="cfmPassword"
-                                    className={
-                                        'block w-3/5 pl-1 py-2  mt-2 ml-[-5px] text-gray-700 text-xs placeholder-gray-500 bg-white border rounded-md focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300'
-                                    }
-                                    name="비밀번호 확인"
                                     type="password"
-                                    aria-label="confirm-password"
                                     value={cfmPassword}
-                                    onChange={e => handlePwMatch(e)}
+                                    ariaLabel="confirm-password"
+                                    name="비밀번호 확인"
+                                    onChange={handlePwMatch}
+                                    focus={CfmPwFocus}
                                 />
                             </div>
-                            {isSamePw === true ? null : (
-                                <p className="absolute mt-1 text-red-600 text-xs">* 비밀번호가 일치 하지 않습니다.</p>
-                            )}
+                            {cfmPassword.length > 0 ? (
+                                isSamePw === true ? null : (
+                                    <p className="absolute mt-1 text-red-600 text-xs">
+                                        {' '}
+                                        * 비밀번호가 일치 하지 않습니다.
+                                    </p>
+                                )
+                            ) : null}
                         </form>
                         <div className="mt-2 w-1/4">
                             {isSendVerifyEmail ? (
@@ -376,26 +389,26 @@ const Join = () => {
                                 </div>
                             )}
                             {isIdValid ? (
-                                <div className="w-full pl-2.5 mt-2  h-10">
+                                <div className="w-full pl-2.5 mt-1 h-10">
                                     <Button contents="인증 완료" onClick={handleConfirmId} disAbled="disabled" />
                                 </div>
                             ) : (
-                                <div className="w-full pl-2.5 mt-2  h-10">
+                                <div className="w-full pl-2.5 mt-1 h-10">
                                     <Button contents="인증 확인" onClick={handleConfirmId} />
                                 </div>
                             )}
                             {isDoubleChecked ? (
                                 isResetNickName ? (
-                                    <div className="w-full pl-2.5 mt-2 h-10">
+                                    <div className="w-full pl-2.5 mt-1 h-10">
                                         <Button contents="확인 완료" onClick={handleResetName} disAbled="disabled" />
                                     </div>
                                 ) : (
-                                    <div className="w-full pl-2.5 mt-2  h-10">
+                                    <div className="w-full pl-2.5 mt-1 h-10">
                                         <Button contents="재확인" onClick={handleResetName} />
                                     </div>
                                 )
                             ) : (
-                                <div className="w-full pl-2.5 mt-2  h-10">
+                                <div className="w-full pl-2.5 mt-1 h-10">
                                     <Button contents="중복 확인" onClick={handleName} />
                                 </div>
                             )}

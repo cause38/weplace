@@ -1,7 +1,10 @@
 import React, {Fragment, useState} from 'react';
+import {Link} from 'react-router-dom';
 import Pagination from './Pagination';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faStar} from '@fortawesome/free-solid-svg-icons';
 
-const Reviews = ({reviews, goToWrite, handleDeleteReview}) => {
+const Reviews = ({reviews, handleDeleteReview}) => {
     // 화면에 보여줄 티켓 수
     const limit = 3;
 
@@ -10,23 +13,29 @@ const Reviews = ({reviews, goToWrite, handleDeleteReview}) => {
 
     const offset = (page - 1) * limit;
     return (
-        <div className=" mt-5 flex flex-col max-w-[890px] w-fit">
-            <div className="flex h-48 overflow-hidden grow">
+        <div className="mt-[20px] flex flex-col w-full">
+            <div
+                className={
+                    reviews?.length > 0
+                        ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6'
+                        : 'flex justify-center items-center grow '
+                }
+            >
                 {reviews?.slice(offset, offset + limit).map(data => {
-                    const {idx, menu, star, name, comment, wdate} = data;
+                    const {idx, shopIdx, menu, star, name, comment, wdate} = data;
                     return (
                         <Fragment key={idx}>
                             <div
                                 className={
                                     idx > 1
-                                        ? 'h-[170px] w-[280px] min-w-[280px] bg-white ml-2.5  rounded-[20px] shadow-md overflow-hidden'
-                                        : 'h-[170px] w-[280px] min-w-[280px] bg-white rounded-[20px] shadow-md overflow-hidden'
+                                        ? 'flex flex-col w-full min-w-[315px] mb-2.5  bg-white rounded-[20px] shadow-md overflow-hidden'
+                                        : 'flex flex-col min-w-[315px] mb-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
                                 }
                             >
-                                <div className="p-2.5">
-                                    <div className="flex justify-between ">
-                                        <h3 className="w-fit px-1 py-0.5 rounded-[20px] bg-orange-400 text-white text-sm">
-                                            {menu}
+                                <Link to={`/detail/${shopIdx}`} className="p-5">
+                                    <div className="flex justify-between">
+                                        <h3 className="w-fit p-2 rounded-[20px] bg-orange-400 text-white text-sm">
+                                            {name}
                                         </h3>
                                         <p className="flex items-center text-sm">{wdate}</p>
                                     </div>
@@ -38,16 +47,29 @@ const Reviews = ({reviews, goToWrite, handleDeleteReview}) => {
                                             />
                                         ))}
                                     </span>
-                                    <p className="pl-1 font-medium">{name}</p>
-                                    <p className="pl-1 text-2xl font-bold ">{comment}</p>
-                                </div>
-                                <div className="flex justify-between h-2/6 pt-3.5">
-                                    <button
-                                        className="w-1/2 h-full text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:bg-gray-600"
-                                        onClick={goToWrite}
+                                    <div className="flex justify-between">
+                                        <p className="pl-1 font-medium underline underline-offset-2 italic">{menu}</p>
+                                        <div className="flex justify-between">
+                                            <div className="flex gap-2 items-center">
+                                                <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-yellow-100">
+                                                    <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
+                                                </span>
+                                                {star}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="pl-1 text-2xl font-bold h-[64px] line-clamp-2 break-keep">
+                                        {comment}
+                                    </p>
+                                </Link>
+                                <div className="flex justify-between h-10">
+                                    <Link
+                                        to={`/write?idx=${shopIdx}&ridx=${idx}`}
+                                        className="w-1/2 h-full text-center leading-10 text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:bg-gray-600"
+                                        // onClick={() => goToWrite(idx, shopIdx)}
                                     >
                                         수정
-                                    </button>
+                                    </Link>
                                     <button
                                         className="w-1/2 h-full bg-orange-500 text-white hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                         onClick={e => handleDeleteReview(e, idx)}

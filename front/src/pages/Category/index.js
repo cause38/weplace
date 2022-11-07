@@ -5,12 +5,12 @@ import CategoryNav from './components/CategoryNav';
 import Store from './components/Store';
 
 import {EmojiProvider, Emoji} from 'react-apple-emojis';
-import emojiData from '../../lib/data.json';
+import emojiData from 'lib/data.json';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeart} from '@fortawesome/free-solid-svg-icons';
-import dropdown from '../../assets/dropdown.svg';
-import dropdownActive from '../../assets/dropdownActive.svg';
-import selected from '../../assets/selected.svg';
+import dropdown from 'assets/dropdown.svg';
+import dropdownActive from 'assets/dropdownActive.svg';
+import selected from 'assets/selected.svg';
 
 import API from 'config';
 

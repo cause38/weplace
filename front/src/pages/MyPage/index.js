@@ -4,11 +4,11 @@ import UserInfo from './components/UserInfo';
 import Reviews from './components/Reviews';
 import Favorites from './components/Favorites';
 
-import {useNavigate, useLocation} from '../../../node_modules/react-router-dom/dist/index';
-import axios from '../../../node_modules/axios/index';
+import {useNavigate, useLocation} from '/node_modules/react-router-dom/dist/index';
+import axios from '/node_modules/axios/index';
 
 import {profileImgValue, nameValue} from 'atoms/state';
-import {useRecoilState} from '../../../node_modules/recoil/';
+import {useRecoilState} from '/node_modules/recoil/';
 import API from 'config';
 
 const MyPage = () => {
@@ -89,6 +89,7 @@ const MyPage = () => {
 
         if (changedNickName.length <= 0) {
             alert('닉네임을 입력 해 주세요.');
+            nameInput.current?.focus();
         } else {
             fetch(`${API.changeName}`, {
                 method: 'PUT',
@@ -143,9 +144,12 @@ const MyPage = () => {
 
         const ImageUrl = URL.createObjectURL(file);
 
+        console.log('file', file);
         const formData = new FormData();
         formData.append('profileImg', file);
         formData.append('token', token);
+
+        console.log('formData', formData.get('profileImg'));
 
         axios
             .post(`${API.changeProfile}`, formData, {
@@ -256,11 +260,6 @@ const MyPage = () => {
         }
     };
 
-    // 리뷰 수정
-    const goToWrite = () => {
-        navigate('/write');
-    };
-
     // 가게 상세 페이지
     const goToDetail = () => {
         navigate('/detail');
@@ -290,7 +289,7 @@ const MyPage = () => {
                     <section className="mt-14">
                         <h2 className="text-xl font-semibold text-orange-700">내 리뷰✍</h2>
                         {reviews?.length > 0 ? (
-                            <Reviews reviews={reviews} goToWrite={goToWrite} handleDeleteReview={handleDeleteReview} />
+                            <Reviews reviews={reviews} handleDeleteReview={handleDeleteReview} />
                         ) : (
                             <div className="flex items-center h-12 justify-center">
                                 <p>작성한 리뷰가 없습니다.😥</p>

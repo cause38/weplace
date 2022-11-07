@@ -109,14 +109,14 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
 
                 <div className="moreData w-full mt-5 mb-2 hidden">
                     <div className="flex flex-col sm:flex-row gap-2">
-                        <div className="flex gap-3 items-center w-full border border-gray-200 p-2 rounded-full">
-                            <span className="w-[40px] h-[40px] bg-green-100 text-green-400 rounded-full p-2 text-center">
+                        <div className="flex gap-3 items-center w-full border bg-gray-50 p-3 rounded-lg break-keep">
+                            <span className="min-w-[40px] min-h-[40px] bg-green-100 text-green-400 rounded-full p-2 text-center">
                                 <FontAwesomeIcon icon={faThumbsUp} />
                             </span>
                             <p>{data.comment_good}</p>
                         </div>
-                        <div className="flex gap-3 items-center w-full border border-gray-200 p-2 rounded-full">
-                            <span className="w-[40px] h-[40px] bg-red-100 text-red-400 rounded-full p-2 text-center">
+                        <div className="flex gap-3 items-center w-full border bg-gray-50 p-3 rounded-lg break-keep">
+                            <span className="min-w-[40px] min-h-[40px] bg-red-100 text-red-400 rounded-full p-2 text-center">
                                 <FontAwesomeIcon icon={faThumbsDown} />
                             </span>
                             <p>{data.comment_bad}</p>

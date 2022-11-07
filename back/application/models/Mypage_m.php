@@ -10,7 +10,7 @@ class Mypage_m extends CI_Model {
 
     function getReviewsInfo($idx) {
         $q = $this->db->query("
-            SELECT r.idx, r.menu, r.star, s.name, r.comment, DATE(r.wdate) AS wdate
+            SELECT r.idx, r.sidx AS shopIdx, r.menu, r.star, s.name, r.comment, DATE(r.wdate) AS wdate
             FROM T_review AS r
                 LEFT JOIN T_shop AS s
                 ON r.sidx = s.idx
