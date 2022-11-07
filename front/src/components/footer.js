@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 const Footer = () => {
     return (
         <footer className="bg-stone-600">
-            <div className="container-wb pb-9 flex flex-col gap-2 items-center justify-between mt-0 sm:flex-row sm:gap-0">
+            <div className="container-wb pb-5 md:pb-9 flex flex-col gap-2 items-center justify-between mt-0 xl:flex-row xl:gap-0">
                 <Link href="/" className="text-xl font-bold text-white transition-colors duration-300">
                     Weplace
                 </Link>

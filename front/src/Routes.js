@@ -18,7 +18,7 @@ import Footer from './components/footer';
 function Switchs() {
     return (
         <Router>
-            <div className="-mt-[50px] pb-10" style={{minHeight: 'calc(100vh - 74px)'}}>
+            <div className="xl:-mt-[50px] pb-10" style={{minHeight: 'calc(100vh - 74px)'}}>
                 <FloatingBtn />
                 <Header />
                 <Routes>
