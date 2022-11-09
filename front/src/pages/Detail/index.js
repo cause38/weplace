@@ -65,6 +65,16 @@ const Detail = () => {
 
     // 백그라운드 블락처리
     // const [toggleShareLink, setToggleShareLink] = useState(false);
+    // img 모달 / alert 창 구분
+    const [isAlert, setIsAlert] = useState(false);
+    const [alertMsg, setAlertMsg] = useState('삭제 시 복구가 불가능합니다<br>정말 삭제하시겠습니까?');
+    const [alertType, setAlertType] = useState('delete');
+
+    //
+    const [toastVisible, setToastVisible] = useState(false);
+
+    // 리뷰 삭제
+    const [delIdx, setDelIdx] = useState(null);
 
     // 리뷰 데이터
     const getReviewData = isDel => {
@@ -251,6 +261,31 @@ const Detail = () => {
             }
         });
         return imageUrl;
+    };
+
+    const handleDelete = ridx => {
+        setModalVisible(false);
+
+        const url = 'http://place-api.weballin.com/mypage/deleteReview';
+        const data = {token: token, idx: parseInt(ridx)};
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+
+        axios
+            .delete(url, options)
+            .then(response => {
+                if (response.data.state === 200) {
+                    getReviewData(true);
+                } else {
+                    alert(response.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
     };
 
     return (
