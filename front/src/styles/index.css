@@ -1,0 +1,7 @@
+.toggle-background {
+    display: flex;
+    position: fixed;
+    z-index: 980;
+    top: 0;
+    left: 0;
+}

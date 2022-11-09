@@ -3,10 +3,16 @@ import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import Review from './components/review';
 import Modal from 'components/Modal';
-import Toast from 'components/toast';
+import Share from './components/Share';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faHeart, faStar, faLocationDot, faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons';
+import {
+    faHeart,
+    faStar,
+    faLocationDot,
+    faArrowUpRightFromSquare,
+    faShareNodes,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Detail = () => {
     const idx = parseInt(useParams().id);
@@ -42,16 +48,11 @@ const Detail = () => {
     // 찜 관리
     const [isFavorite, setIsFavorite] = useState(false);
 
-    // img 모달 / alert 창 구분
-    const [isAlert, setIsAlert] = useState(false);
-    const [alertMsg, setAlertMsg] = useState('삭제 시 복구가 불가능합니다<br>정말 삭제하시겠습니까?');
-    const [alertType, setAlertType] = useState('delete');
+    // 공유하기 모달
+    const [isShare, setIsShare] = useState(false);
 
-    //
-    const [toastVisible, setToastVisible] = useState(false);
-
-    // 리뷰 삭제
-    const [delIdx, setDelIdx] = useState(null);
+    // 백그라운드 블락처리
+    // const [toggleShareLink, setToggleShareLink] = useState(false);
 
     // 리뷰 데이터
     const getReviewData = isDel => {
@@ -116,48 +117,83 @@ const Detail = () => {
         }
     };
 
-    const handleDelete = ridx => {
-        setModalVisible(false);
-
-        const url = 'http://place-api.weballin.com/mypage/deleteReview';
-        const data = {token: token, idx: parseInt(ridx)};
-        const options = {
-            headers: {'content-type': 'application/x-www-form-urlencoded'},
-            data: qs.stringify(data),
-        };
-
-        axios
-            .delete(url, options)
-            .then(response => {
-                if (response.data.state === 200) {
-                    getReviewData(true);
-                } else {
-                    alert(response.data.msg);
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+    // 공유하기
+    const handleShare = async (e, item) => {
+        setIsShare(!isShare);
+        // setToggleShareLink(true);
+        getReviewImage();
+        const copyUrl = window.location.href;
+        if (item === 'kakao') {
+            console.log('kakao');
+            window.Kakao.Link.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `${store.name}`,
+                    description: `${store.tag}`,
+                    imageUrl: `{}`,
+                    link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
+                },
+                buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
             });
+        } else if (item === 'url') {
+            navigator.clipboard.writeText(copyUrl);
+            alert('URL 복사가 되었습니다.');
+            setIsShare(false);
+        } else if (item === 'slack') {
+            console.log('slack');
+            navigator.clipboard.writeText(copyUrl).then(() => {
+                window.open(`slack://open`);
+            });
+        }
+    };
+
+    useEffect(() => {
+        initKakao();
+    }, []);
+
+    //자바스크립키로 카카오 init
+    const initKakao = () => {
+        if (window.Kakao) {
+            const kakao = window.Kakao;
+            if (!kakao.isInitialized()) {
+                kakao.init(process.env.REACT_APP_KAKAO_KEY);
+            }
+        }
+    };
+
+    //리뷰이미지 축출
+    const getReviewImage = () => {
+        review?.map(data => {
+            return;
+        });
     };
 
     return (
         <div className="container-wb max-w-full p-0">
+            {/* <div className={toggleShareLink ? 'toggle-background' : null} onClick={() => setToggleShareLink(false)} /> */}
             <div className="bg-orange-200 bg-opacity-50">
                 <div className="container-wb py-10 lg:py-16 mt-0">
                     <div className="flex justify-between items-center">
                         <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
                             {store.category}
                         </span>
-                        <button
-                            onClick={handleFavorite}
-                            className={`${token === null ? 'hidden' : ''} w-8 h-8 translate-x-[6px]`}
-                        >
-                            <FontAwesomeIcon
-                                icon={faHeart}
-                                className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
-                            />
-                        </button>
+                        <div>
+                            <button
+                                onClick={handleFavorite}
+                                className={`${token === null ? 'hidden' : ''} w-8 h-8 translate-x-[6px]`}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faHeart}
+                                    className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
+                                />
+                            </button>
+                            <button className="ml-5" onClick={handleShare}>
+                                <FontAwesomeIcon
+                                    icon={faShareNodes}
+                                    className="text-xl text-blue-900 hover:text-red-400"
+                                />
+                            </button>
+                        </div>
                     </div>
                     <div className="text-stone-800">
                         <h3 className="text-2xl font-bold mt-3 mb-1">{store.name}</h3>
@@ -246,7 +282,11 @@ const Detail = () => {
                 </div>
             </div>
 
-            <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
+            {isShare && (
+                <div className="w-[300px] h-[300px] absolute top-2/4 border-1 left-0">
+                    <Share handleShare={handleShare} />
+                </div>
+            )}
 
             <Modal
                 alert={isAlert}
