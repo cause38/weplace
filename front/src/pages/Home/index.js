@@ -16,8 +16,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const Home = () => {
-    const navigate = useNavigate();
-
     // 슬롯머신 버튼
     const [lever, setLever] = useState(false);
 
@@ -242,11 +240,11 @@ const Home = () => {
                     {newReviewData.map((data, idx) => (
                         <SwiperSlide className="main-slide bg-white rounded-lg shadow-md" key={idx}>
                             <Link to={`/detail/${data.idx}`} className="block p-5 py-6">
-                                <div className="flex justify-between items-center mb-3">
-                                    <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full">
+                                <div className="flex justify-between items-center gap-4 mb-3">
+                                    <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full truncate">
                                         {data.menu}
                                     </span>
-                                    <span className="text-sm">{data.wdate}</span>
+                                    <span className="text-sm whitespace-nowrap">{data.wdate}</span>
                                 </div>
                                 <span className="text-[15px] mb-3">
                                     {handleStar(data.star).map((item, idx) => (
