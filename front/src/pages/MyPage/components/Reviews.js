@@ -34,13 +34,13 @@ const Reviews = ({reviews, handleDeleteReview}) => {
                             >
                                 <Link to={`/detail/${shopIdx}`} className="p-5">
                                     <div className="flex justify-between">
-                                        <h3 className="w-fit max-w-[160px] text-ellipsis whitespace-nowrap overflow-hidden break-all p-2 rounded-[20px] bg-orange-400 text-white text-sm">
+                                        <h3 className="w-fit max-w-[160px] p-2 rounded-[20px] bg-orange-400 text-white text-sm truncate">
                                             {name}
                                         </h3>
                                         <p className="flex items-center text-sm">{wdate}</p>
                                     </div>
                                     <div className="flex justify-between mt-1">
-                                        <p className="pl-1 w-fit max-w-[160px] font-medium underline underline-offset-2 italic text-ellipsis whitespace-nowrap overflow-hidden break-all">
+                                        <p className="pl-1 w-fit max-w-[160px] font-medium underline underline-offset-2 italic truncate">
                                             {menu}
                                         </p>
                                         <div className="flex justify-between">
