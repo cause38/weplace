@@ -2,12 +2,16 @@ import React, {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMagnifyingGlassPlus} from '@fortawesome/free-solid-svg-icons';
 
-const ImgBox = ({item, handleImg}) => {
+const ImgBox = ({item, handleImg, setModalImg}) => {
+    // mouse hover :: 돋보기 아이콘 view
     const [visible, setVisible] = useState(false);
     return (
         <div
             className="imgBox relative w-[100px] h-[100px] border p-2 hover:bg-orange-200 cursor-pointer"
-            onClick={() => handleImg(item)}
+            onClick={() => {
+                setModalImg(item);
+                handleImg(item);
+            }}
             onMouseOver={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
             style={{background: `url('${item}') no-repeat center/auto 90%`}}

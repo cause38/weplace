@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import Review from './components/review';
 import Modal from 'components/Modal';
+import Toast from 'components/toast';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeart, faStar, faLocationDot, faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons';
@@ -41,8 +42,19 @@ const Detail = () => {
     // 찜 관리
     const [isFavorite, setIsFavorite] = useState(false);
 
+    // img 모달 / alert 창 구분
+    const [isAlert, setIsAlert] = useState(false);
+    const [alertMsg, setAlertMsg] = useState('삭제 시 복구가 불가능합니다<br>정말 삭제하시겠습니까?');
+    const [alertType, setAlertType] = useState('delete');
+
+    //
+    const [toastVisible, setToastVisible] = useState(false);
+
+    // 리뷰 삭제
+    const [delIdx, setDelIdx] = useState(null);
+
     // 리뷰 데이터
-    const getReviewData = () => {
+    const getReviewData = isDel => {
         axios.get(`http://place-api.weballin.com/review/view`, {params: {idx, token}}).then(res => {
             if (res.status === 200) {
                 setIsFavorite(res.data.data.isFavorite);
@@ -50,10 +62,16 @@ const Detail = () => {
                 setReview(res.data.data.review);
             }
         });
+
+        if (isDel) {
+            setTimeout(() => {
+                setToastVisible(true);
+            }, 300);
+        }
     };
 
     useEffect(() => {
-        getReviewData();
+        getReviewData(false);
     }, []);
 
     // 리뷰 more 버튼 관리
@@ -64,9 +82,9 @@ const Detail = () => {
     };
 
     // 이미지 확대
-    const handleImg = img => {
+    const handleImg = () => {
+        setIsAlert(false);
         setModalVisible(true);
-        setModalImg(img);
     };
 
     // 찜 목록
@@ -90,12 +108,37 @@ const Detail = () => {
     // 찜 목록 추가 / 삭제 공통 함수
     const setFavorite = res => {
         if (res.status === 200) {
-            getReviewData();
+            getReviewData(false);
         } else if (res.data.state === 400 || res.data.state === 401) {
             alert(res.data.msg);
         } else {
             alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
         }
+    };
+
+    const handleDelete = ridx => {
+        setModalVisible(false);
+
+        const url = 'http://place-api.weballin.com/mypage/deleteReview';
+        const data = {token: token, idx: parseInt(ridx)};
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+
+        axios
+            .delete(url, options)
+            .then(response => {
+                if (response.data.state === 200) {
+                    getReviewData(true);
+                } else {
+                    alert(response.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
     };
 
     return (
@@ -187,23 +230,31 @@ const Detail = () => {
                         review.map((item, index) => (
                             <Review
                                 key={index}
-                                idx={idx}
                                 token={token}
                                 sIdx={store.idx}
                                 data={item}
                                 more={moreToggle}
-                                getReviewData={getReviewData}
-                                handleReviewToggle={handleReviewToggle}
-                                handleImg={handleImg}
+                                setIsAlert={setIsAlert}
+                                setModalVisible={setModalVisible}
+                                getReviewData={() => getReviewData()}
+                                handleReviewToggle={e => handleReviewToggle(e)}
+                                handleImg={() => handleImg()}
+                                setModalImg={setModalImg}
+                                setDelIdx={setDelIdx}
                             />
                         ))}
                 </div>
             </div>
 
+            <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
+
             <Modal
+                alert={isAlert}
+                msg={alertMsg}
+                type={alertType}
                 visible={modalVisible}
                 setModalVisible={setModalVisible}
-                title=""
+                handleAlert={() => handleDelete(delIdx)}
                 contents={
                     <>
                         <div className="min-h-[50vh] max-h-[70vh] overflow-auto scrollbar flex flex-col">

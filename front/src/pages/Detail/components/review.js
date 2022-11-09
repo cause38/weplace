@@ -1,48 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import {Link} from 'react-router-dom';
 import ImgBox from './imgBox';
-import Alert from 'components/alert';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import {faImage, faThumbsUp, faThumbsDown, faPenToSquare, faTrashCan} from '@fortawesome/free-regular-svg-icons';
 
-const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, getReviewData}) => {
+const Review = ({
+    sIdx,
+    data,
+    more,
+    handleReviewToggle,
+    handleImg,
+    setModalVisible,
+    setIsAlert,
+    setModalImg,
+    setDelIdx,
+}) => {
     const [star, setStar] = useState([]);
     const qs = require('qs');
-
-    const [visible, setVisible] = useState(false);
-    const [alertMsg, setAlertMsg] = useState('삭제 후 복구가 불가능합니다<br>정말 삭제하시겠습니까?');
-    const [alertType, setAlertType] = useState('confirm');
-
-    const handleDelete = ridx => {
-        setVisible(false);
-
-        const url = 'http://place-api.weballin.com/mypage/deleteReview';
-        const data = {token: token, idx: parseInt(ridx)};
-        const options = {
-            headers: {'content-type': 'application/x-www-form-urlencoded'},
-            data: qs.stringify(data),
-        };
-
-        axios
-            .delete(url, options)
-            .then(response => {
-                if (response.data.state === 200) {
-                    getReviewData();
-                    setAlertMsg('삭제 완료하였습니다');
-                    setAlertType('success');
-                    setVisible(true);
-                } else {
-                    alert(response.data.msg);
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-            });
-    };
 
     // 별점
     useEffect(() => {
@@ -56,13 +32,6 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
 
     return (
         <div className="relative flex flex-col gap-5 p-4 py-5 bg-white shadow-md rounded-lg">
-            <Alert
-                msg={alertMsg}
-                type={alertType}
-                visible={visible}
-                setVisible={setVisible}
-                handleAlert={() => handleDelete(data.idx)}
-            />
             <div className="flex gap-1 justify-between border border-gray-200 rounded-full p-2 py-1 pr-5">
                 <div className="flex gap-3 items-center">
                     <span
@@ -80,7 +49,9 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                         <button
                             type="button"
                             onClick={() => {
-                                setVisible(true);
+                                setDelIdx(data.idx);
+                                setIsAlert(true);
+                                setModalVisible(true);
                             }}
                             className="text-orange-500 bg-orange-100 w-[30px] h-[30px] text-xs p-1 flex justify-center items-center rounded-full transition-colors hover:bg-orange-200 hover:bg-opacity-75"
                         >
@@ -140,12 +111,17 @@ const Review = ({idx, token, sIdx, data, more, handleReviewToggle, handleImg, ge
                     </div>
                     <div className="flex gap-2 mt-4">
                         {data.image.length > 0 &&
-                            data.image.map((item, idx) => <ImgBox key={idx} item={item} handleImg={handleImg} />)}
+                            data.image.map((item, idx) => (
+                                <ImgBox key={idx} item={item} handleImg={() => handleImg()} setModalImg={setModalImg} />
+                            ))}
                     </div>
                 </div>
             </div>
             <span
-                onClick={e => handleReviewToggle(e)}
+                onClick={e => {
+                    setIsAlert(true);
+                    handleReviewToggle(e);
+                }}
                 className="absolute right-5 bottom-5 text-center text-orange-600 cursor-pointer"
             >
                 {more ? <FontAwesomeIcon icon={faChevronUp} /> : <FontAwesomeIcon icon={faChevronDown} />}

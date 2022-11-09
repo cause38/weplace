@@ -3,7 +3,6 @@ import {useLocation, useNavigate} from '../../../node_modules/react-router-dom/d
 import InputBox from './components/InputBox';
 import SelectBox from './components/SelectBox';
 import Modal from 'components/Modal';
-import Alert from 'components/alert';
 import axios from 'axios';
 
 const Write = () => {
@@ -405,14 +404,13 @@ const Write = () => {
 
     return (
         <div className="container-wb">
-            <Alert
-                msg="저장이 완료되었습니다<br>리뷰로 이동하시겠습니까?"
+            <Modal
+                alert={true}
                 type="confirm"
+                msg="저장이 완료되었습니다<br>리뷰로 이동하시겠습니까?"
                 visible={visible}
-                setVisible={setVisible}
-                handleAlert={() => {
-                    handleWriteAlert();
-                }}
+                setModalVisible={setVisible}
+                handleAlert={() => handleWriteAlert()}
             />
 
             <Modal
