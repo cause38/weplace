@@ -87,6 +87,12 @@ const MyPage = () => {
     const handleCheckedName = () => {
         const name = changedNickName.toString();
 
+        // 문자열 사이 다중공백 -> 한개 공백으로 변경
+        let removeMultiSpace = name.replace(/\s+/g, ' ');
+
+        // 문자열 앞 뒤 공백 -> 제거
+        let removeSpace = removeMultiSpace.replace(/^\s+|\s+$/g, '');
+
         if (changedNickName.length <= 0) {
             alert('닉네임을 입력 해 주세요.');
             nameInput.current?.focus();
@@ -94,12 +100,13 @@ const MyPage = () => {
             fetch(`${API.changeName}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({token: token, name: name}),
+                body: JSON.stringify({token: token, name: removeSpace}),
             })
                 .then(res => res.json())
                 .then(response => {
                     if (response.state === 200) {
                         alert(response.msg);
+                        setChangedNickName(removeSpace);
                         setIsChangeNickName(false);
                         axios
                             .get(`${API.myInfo}`, {
