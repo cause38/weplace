@@ -94,11 +94,6 @@ const Home = () => {
         SwiperCore.use([Navigation]);
     }, []);
 
-    // 최신리뷰 클릭 시 상세페이지
-    const handleDetailView = idx => {
-        navigate('/detail', {state: {idx: idx}});
-    };
-
     // 최신리뷰 별점
     const handleStar = star => {
         const arr = [];
@@ -200,6 +195,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
             <div className="container-wb mt-0 pb-8 lg:pb-12">
                 <div className="flex gap-2 items-center my-4 relative -mb-[29px] z-10 max-w-[135px]">
                     <h3 className="text-xl font-bold">최신 리뷰</h3>
