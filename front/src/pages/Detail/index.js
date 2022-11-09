@@ -50,6 +50,16 @@ const Detail = () => {
     // 찜 관리
     const [isFavorite, setIsFavorite] = useState(false);
 
+    // img 모달 / alert 창 구분
+    const [isAlert, setIsAlert] = useState(false);
+    const [alertMsg, setAlertMsg] = useState('삭제 시 복구가 불가능합니다<br>정말 삭제하시겠습니까?');
+    const [alertType, setAlertType] = useState('delete');
+
+    // toast
+    const [toastVisible, setToastVisible] = useState(false);
+
+    // 리뷰 삭제
+    const [delIdx, setDelIdx] = useState(null);
     // 공유하기 모달
     const [isShare, setIsShare] = useState(false);
 
@@ -217,6 +227,31 @@ const Detail = () => {
         return imageUrl;
     };
 
+    const handleDelete = ridx => {
+        setModalVisible(false);
+
+        const url = 'http://place-api.weballin.com/mypage/deleteReview';
+        const data = {token: token, idx: parseInt(ridx)};
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+
+        axios
+            .delete(url, options)
+            .then(response => {
+                if (response.data.state === 200) {
+                    getReviewData(true);
+                } else {
+                    alert(response.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
+    };
+
     return (
         <div className="container-wb max-w-full p-0">
             <div className="bg-orange-200 bg-opacity-50">
@@ -335,6 +370,11 @@ const Detail = () => {
                 </div>
             </div>
 
+            {isShare && (
+                <div className="w-[300px] h-[300px] absolute top-2/4 border-1 left-0">
+                    <Share handleShare={handleShare} />
+                </div>
+            )}
             <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
 
             <Modal
