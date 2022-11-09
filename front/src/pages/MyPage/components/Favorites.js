@@ -53,7 +53,9 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
                                         <span>{wdate}</span>
                                     </div>
                                     <div className="pt-3">
-                                        <span className="text-2xl font-bold">{name}</span>
+                                        <span className="text-2xl font-bold h-[68px] line-clamp-2 break-all">
+                                            {name}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between pt-3">
                                         <div className="flex gap-2 items-center">

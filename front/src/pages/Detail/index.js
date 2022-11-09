@@ -4,9 +4,16 @@ import axios from 'axios';
 import Review from './components/review';
 import Modal from 'components/Modal';
 import Toast from 'components/toast';
+import Share from './components/Share';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faHeart, faStar, faLocationDot, faArrowUpRightFromSquare} from '@fortawesome/free-solid-svg-icons';
+import {
+    faHeart,
+    faStar,
+    faLocationDot,
+    faArrowUpRightFromSquare,
+    faShareNodes,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Detail = () => {
     const idx = parseInt(useParams().id);
@@ -52,6 +59,11 @@ const Detail = () => {
 
     // 리뷰 삭제
     const [delIdx, setDelIdx] = useState(null);
+    // 공유하기 모달
+    const [isShare, setIsShare] = useState(false);
+
+    // 백그라운드 블락처리
+    // const [toggleShareLink, setToggleShareLink] = useState(false);
 
     // 리뷰 데이터
     const getReviewData = isDel => {
@@ -141,23 +153,83 @@ const Detail = () => {
             });
     };
 
+    // 공유하기
+    const handleShare = async (e, item) => {
+        setIsShare(!isShare);
+        // setToggleShareLink(true);
+        getReviewImage();
+        const copyUrl = window.location.href;
+        if (item === 'kakao') {
+            console.log('kakao');
+            window.Kakao.Link.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `${store.name}`,
+                    description: `${store.tag}`,
+                    imageUrl: `{}`,
+                    link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
+                },
+                buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
+            });
+        } else if (item === 'url') {
+            navigator.clipboard.writeText(copyUrl);
+            alert('URL 복사가 되었습니다.');
+            setIsShare(false);
+        } else if (item === 'slack') {
+            console.log('slack');
+            navigator.clipboard.writeText(copyUrl).then(() => {
+                window.open(`slack://open`);
+            });
+        }
+    };
+
+    useEffect(() => {
+        initKakao();
+    }, []);
+
+    //자바스크립키로 카카오 init
+    const initKakao = () => {
+        if (window.Kakao) {
+            const kakao = window.Kakao;
+            if (!kakao.isInitialized()) {
+                kakao.init(process.env.REACT_APP_KAKAO_KEY);
+            }
+        }
+    };
+
+    //리뷰이미지 축출
+    const getReviewImage = () => {
+        review?.map(data => {
+            return;
+        });
+    };
+
     return (
         <div className="container-wb max-w-full p-0">
+            {/* <div className={toggleShareLink ? 'toggle-background' : null} onClick={() => setToggleShareLink(false)} /> */}
             <div className="bg-orange-200 bg-opacity-50">
                 <div className="container-wb py-10 lg:py-16 mt-0">
                     <div className="flex justify-between items-center">
                         <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
                             {store.category}
                         </span>
-                        <button
-                            onClick={handleFavorite}
-                            className={`${token === null ? 'hidden' : ''} w-8 h-8 translate-x-[6px]`}
-                        >
-                            <FontAwesomeIcon
-                                icon={faHeart}
-                                className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
-                            />
-                        </button>
+                        <div>
+                            <button
+                                onClick={handleFavorite}
+                                className={`${token === null ? 'hidden' : ''} w-8 h-8 translate-x-[6px]`}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faHeart}
+                                    className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
+                                />
+                            </button>
+                            <button className="ml-5" onClick={handleShare}>
+                                <FontAwesomeIcon
+                                    icon={faShareNodes}
+                                    className="text-xl text-blue-900 hover:text-red-400"
+                                />
+                            </button>
+                        </div>
                     </div>
                     <div className="text-stone-800">
                         <h3 className="text-2xl font-bold mt-3 mb-1">{store.name}</h3>
@@ -247,6 +319,11 @@ const Detail = () => {
             </div>
 
             <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
+            {isShare && (
+                <div className="w-[300px] h-[300px] absolute top-2/4 border-1 left-0">
+                    <Share handleShare={handleShare} />
+                </div>
+            )}
 
             <Modal
                 alert={isAlert}
