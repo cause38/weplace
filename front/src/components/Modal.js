@@ -64,11 +64,13 @@ const Modal = ({visible, setModalVisible, contents, title, alert, msg, type, han
     return (
         <div
             ref={modalBox}
-            className={`${!visible ? 'hidden' : 'opacity-0'} transition fixed top-0 left-0 w-full h-full z-[1001]`}
+            className={`${
+                !visible ? 'hidden' : 'opacity-0'
+            } transition fixed top-0 left-0 w-full h-full min-w-[360px] z-[1001]`}
         >
             <div className={'bg-gray-400 opacity-70 w-full h-full'} onClick={() => setModalVisible(false)}></div>
             <div
-                className={`fixed z-[101] w-11/12 ${
+                className={`absolute w-11/12 ${
                     alert ? 'max-w-[400px]' : 'max-w-[500px]'
                 } overflow-hidden p-6 md:p-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg z-[1001]`}
             >
