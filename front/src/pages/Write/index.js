@@ -470,7 +470,7 @@ const Write = () => {
                                     searhStoreListMain.map((item, id) => (
                                         <div
                                             key={`main_${item.idx}`}
-                                            className="flex justify-between gap-2 items-center w-full p-4 pr-5 pb-5 bg-white rounded-lg shadow-md"
+                                            className="flex flex-col sm:flex-row sm:justify-between gap-5 sm:gap-2 sm:items-center w-full p-4 pr-5 pb-5 bg-white rounded-lg shadow-md"
                                         >
                                             <div>
                                                 <p className="flex items-center mb-1">⭐ {item.star}</p>
@@ -491,7 +491,7 @@ const Write = () => {
                                             <button
                                                 onClick={() => setStoreData('main', id)}
                                                 type="button"
-                                                className="block h-full min-w-[100px] w-1/5 px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                                className="block h-full min-w-[100px] sm:w-1/5 w-full px-6 md:px-8 py-2 md:py-2.5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                                             >
                                                 선택
                                             </button>
@@ -529,7 +529,7 @@ const Write = () => {
                                 ref={searchBtn}
                                 type="button"
                                 onClick={handleStoreSearch}
-                                className="flex flex-col justify-center items-center min-w-[100px] w-full sm:w-auto px-8 py-2.5 mx-auto leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
+                                className="flex flex-col justify-center items-center min-w-[120px] w-1/4 px-8 py-2.5 mx-auto leading-5 text-white transition-colors duration-300 transform bg-orange-500 rounded-md hover:bg-orange-400 focus:outline-none focus:bg-orange-600"
                             >
                                 검색
                             </button>

@@ -18,7 +18,6 @@ const Review = ({
     setDelIdx,
 }) => {
     const [star, setStar] = useState([]);
-    const qs = require('qs');
 
     // 별점
     useEffect(() => {
@@ -32,7 +31,7 @@ const Review = ({
 
     return (
         <div className="relative flex flex-col gap-5 p-4 py-5 bg-white shadow-md rounded-lg">
-            <div className="flex gap-1 justify-between border border-gray-200 rounded-full p-2 py-1 pr-5">
+            <div className="flex gap-2 justify-between border border-gray-200 rounded-full p-2 py-1 pr-5 overflow-x-auto scrollbar">
                 <div className="flex gap-3 items-center">
                     <span
                         className="w-[50px] h-[50px] bg-orange-300 rounded-full p-2"
@@ -59,7 +58,7 @@ const Review = ({
                         </button>
                     </div>
                 </div>
-                <p className="flex items-center">{data.wdate}</p>
+                <p className="flex items-center whitespace-nowrap">{data.wdate}</p>
             </div>
 
             <div className="w-full mb-6">
