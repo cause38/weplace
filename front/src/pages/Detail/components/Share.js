@@ -2,14 +2,18 @@ import React from 'react';
 
 const Share = ({handleShare}) => {
     return (
-        <div className="flex">
-            <button className="mr-3 p-3 border-2 border-orange-400" onClick={e => handleShare(e, 'kakao')}>
+        <div className="px-3 py-1 bg-white shadow-lg border rounded-md font-medium  text-gray-500 text-base text-center">
+            <button
+                id="kakao-link-btn"
+                className="block w-[100px] p-2 border-b hover:text-orange-500"
+                onClick={e => handleShare(e, 'kakao')}
+            >
                 카카오
             </button>
-            <button className="mr-3 p-3 border-2 border-violet-400" onClick={e => handleShare(e, 'url')}>
-                URL복사
+            <button className="block w-[100px] p-2 border-b hover:text-purple-500" onClick={e => handleShare(e, 'url')}>
+                URL
             </button>
-            <button className="mr-3 p-3 border-2 border-blue-400" onClick={e => handleShare(e, 'slack')}>
+            <button className="block w-[100px] p-2 border-b hover:text-blue-500" onClick={e => handleShare(e, 'slack')}>
                 Slack
             </button>
         </div>
