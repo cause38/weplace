@@ -5,6 +5,7 @@ import Review from './components/review';
 import Modal from 'components/Modal';
 import Toast from 'components/toast';
 import Share from './components/Share';
+import defaultSNSThumb from 'assets/weplace_sns.jpg';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
@@ -14,6 +15,7 @@ import {
     faArrowUpRightFromSquare,
     faShareNodes,
 } from '@fortawesome/free-solid-svg-icons';
+import {isMacOs, isMobile} from 'react-device-detect';
 
 const Detail = () => {
     const idx = parseInt(useParams().id);
@@ -155,31 +157,71 @@ const Detail = () => {
 
     // 공유하기
     const handleShare = async (e, item) => {
+        e.preventDefault();
         setIsShare(!isShare);
         // setToggleShareLink(true);
-        getReviewImage();
-        const copyUrl = window.location.href;
+        const thumbImage = getReviewImage();
+        const {Kakao, location} = window;
+        const copyUrl = location.href;
+
+        // url 미리 복사
+        const MobileCopyUrl = () => {
+            const textArea = document.createElement('textarea');
+            document.body.appendChild(textArea);
+            textArea.value = copyUrl;
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        };
+
+        // 사파리에서 clipboard가 적용되지 않아 분기처리
+        // if(isMacOs){
+        // if(navigator.userAgent.match(/ipad|iphone/i)){
+
         if (item === 'kakao') {
-            console.log('kakao');
-            window.Kakao.Link.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: `${store.name}`,
-                    description: `${store.tag}`,
-                    imageUrl: `{}`,
-                    link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
-                },
-                buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
-            });
+            if (navigator.userAgent.match(/ipad|iphone/i)) {
+                MobileCopyUrl();
+                let _a = document.createElement('a');
+                _a.target = '_blank';
+                _a.href = `kakaotalk://launch`;
+                document.body.appendChild(_a);
+                _a.click();
+            } else {
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: `${store.name}`,
+                        description: `${store.tag}`,
+                        imageUrl: `${thumbImage}`,
+                        link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
+                    },
+                    buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
+                });
+            }
         } else if (item === 'url') {
-            navigator.clipboard.writeText(copyUrl);
-            alert('URL 복사가 되었습니다.');
-            setIsShare(false);
+            if (navigator.userAgent.match(/ipad|iphone/i)) {
+                MobileCopyUrl();
+                alert('URL 복사가 되었습니다.');
+                setIsShare(false);
+            } else {
+                navigator.clipboard.writeText(copyUrl).then(() => {
+                    alert('URL 복사가 되었습니다.');
+                    setIsShare(false);
+                });
+            }
         } else if (item === 'slack') {
-            console.log('slack');
-            navigator.clipboard.writeText(copyUrl).then(() => {
-                window.open(`slack://open`);
-            });
+            if (navigator.userAgent.match(/ipad|iphone/i)) {
+                MobileCopyUrl();
+                let _a = document.createElement('a');
+                _a.target = '_blank';
+                _a.href = `slack://open`;
+                document.body.appendChild(_a);
+                _a.click();
+            } else {
+                navigator.clipboard.writeText(copyUrl).then(() => {
+                    location.href = `slack://open`;
+                });
+            }
         }
     };
 
@@ -199,9 +241,17 @@ const Detail = () => {
 
     //리뷰이미지 축출
     const getReviewImage = () => {
+        let imageUrl = 'defaultSNSThumb';
         review?.map(data => {
-            return;
+            const {image} = data;
+            // console.log('ima', image);
+            if (data.image.length > 1) {
+                return (imageUrl = image[0]);
+            } else {
+                return;
+            }
         });
+        return imageUrl;
     };
 
     return (
@@ -209,7 +259,7 @@ const Detail = () => {
             {/* <div className={toggleShareLink ? 'toggle-background' : null} onClick={() => setToggleShareLink(false)} /> */}
             <div className="bg-orange-200 bg-opacity-50">
                 <div className="container-wb py-10 lg:py-16 mt-0">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center relative">
                         <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
                             {store.category}
                         </span>
@@ -223,12 +273,17 @@ const Detail = () => {
                                     className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
                                 />
                             </button>
-                            <button className="ml-5" onClick={handleShare}>
+                            <button className="ml-5 relative" onClick={handleShare}>
                                 <FontAwesomeIcon
                                     icon={faShareNodes}
-                                    className="text-xl text-blue-900 hover:text-red-400"
+                                    className={`${isShare ? 'text-red-400' : ' text-stone-500'} text-xl`}
                                 />
                             </button>
+                            {isShare && (
+                                <div className="absolute bottom-0 right-0 translate-y-full pt-2 z-30">
+                                    <Share handleShare={handleShare} />
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="text-stone-800">
@@ -319,11 +374,6 @@ const Detail = () => {
             </div>
 
             <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
-            {isShare && (
-                <div className="w-[300px] h-[300px] absolute top-2/4 border-1 left-0">
-                    <Share handleShare={handleShare} />
-                </div>
-            )}
 
             <Modal
                 alert={isAlert}
