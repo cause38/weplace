@@ -220,7 +220,6 @@ const Detail = () => {
 
     return (
         <div className="container-wb max-w-full p-0">
-            {/* <div className={toggleShareLink ? 'toggle-background' : null} onClick={() => setToggleShareLink(false)} /> */}
             <div className="bg-orange-200 bg-opacity-50">
                 <div className="container-wb py-10 lg:py-16 mt-0">
                     <div className="flex justify-between items-center relative">
