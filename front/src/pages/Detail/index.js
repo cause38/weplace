@@ -208,7 +208,6 @@ const Detail = () => {
         let imageUrl = 'defaultSNSThumb';
         review?.map(data => {
             const {image} = data;
-            // console.log('ima', image);
             if (data.image.length > 1) {
                 return (imageUrl = image[0]);
             } else {
