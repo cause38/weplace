@@ -5,7 +5,7 @@ import Review from './components/review';
 import Modal from 'components/Modal';
 import Toast from 'components/toast';
 import Share from './components/Share';
-import defaultSNSThumb from 'assets/weplace_sns.jpg';
+import defaultSNSThumb from '../../assets/weplace_sns.jpg';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
@@ -166,8 +166,8 @@ const Detail = () => {
         e.preventDefault();
         // setToggleShareLink(true);
         const thumbImage = getReviewImage();
-        const {Kakao, location} = window;
-        const copyUrl = location.href;
+        const {Kakao, location, navigator} = window;
+        const copyUrl = `http://place.ballin.com/${location.pathname}`;
 
         // url 미리 복사
         const MobileCopyUrl = () => {
@@ -179,30 +179,19 @@ const Detail = () => {
             document.body.removeChild(textArea);
         };
 
-        // 사파리에서 clipboard가 적용되지 않아 분기처리
-        // if(isMacOs){
-        // if(navigator.userAgent.match(/ipad|iphone/i)){
-
         if (item === 'kakao') {
-            if (navigator.userAgent.match(/ipad|iphone/i)) {
-                MobileCopyUrl();
-                let _a = document.createElement('a');
-                _a.target = '_blank';
-                _a.href = `kakaotalk://launch`;
-                document.body.appendChild(_a);
-                _a.click();
-            } else {
-                Kakao.Share.sendDefault({
-                    objectType: 'feed',
-                    content: {
-                        title: `${store.name}`,
-                        description: `${store.tag}`,
-                        imageUrl: `${thumbImage}`,
-                        link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
-                    },
-                    buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
-                });
-            }
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `${store.name}`,
+                    description: `${store.tag}`,
+                    imageUrl: thumbImage,
+                    imageWidth: 80,
+                    link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
+                },
+                buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
+                installTalk: true,
+            });
         } else if (item === 'url') {
             if (navigator.userAgent.match(/ipad|iphone/i)) {
                 MobileCopyUrl();
@@ -246,13 +235,19 @@ const Detail = () => {
 
     //리뷰이미지 축출
     const getReviewImage = () => {
-        let imageUrl = 'defaultSNSThumb';
+        let imageUrl = defaultSNSThumb;
         review?.map(data => {
             const {image} = data;
-            if (data.image.length > 1) {
-                return (imageUrl = image[0]);
+            if (data.image.length === 0) {
+                return imageUrl;
+                // let defaultThumb = defaultSNSThumb;
+                // let urlSplit = defaultThumb.split('.');
+                // let splice = urlSplit.splice(1, 1);
+
+                // console.log('defa', defaultSNSThumb);
+                // return (imageUrl = urlSplit.join('.'));
             } else {
-                return;
+                return (imageUrl = image[0]);
             }
         });
         return imageUrl;
@@ -282,6 +277,7 @@ const Detail = () => {
                                     className={`${isShare ? 'text-red-400' : ' text-stone-500'} text-xl`}
                                 />
                             </button>
+                            <p id="textTest"></p>
                             {isShare && (
                                 <div className="absolute bottom-0 right-0 translate-y-full pt-2 z-30">
                                     <Share handleShare={handleShare} />
