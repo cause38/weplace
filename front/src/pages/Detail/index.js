@@ -130,10 +130,40 @@ const Detail = () => {
         }
     };
 
+    const handleDelete = ridx => {
+        setModalVisible(false);
+
+        const url = 'http://place-api.weballin.com/mypage/deleteReview';
+        const data = {token: token, idx: parseInt(ridx)};
+        const options = {
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data),
+        };
+
+        axios
+            .delete(url, options)
+            .then(response => {
+                if (response.data.state === 200) {
+                    getReviewData(true);
+                } else {
+                    alert(response.data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
+            });
+    };
+
+    //공유하기 드롭다운
+    const handleShareList = e => {
+        e.preventDefault();
+        setIsShare(!isShare);
+    };
+
     // 공유하기
     const handleShare = async (e, item) => {
         e.preventDefault();
-        setIsShare(!isShare);
         // setToggleShareLink(true);
         const thumbImage = getReviewImage();
         const {Kakao, location} = window;
@@ -228,31 +258,6 @@ const Detail = () => {
         return imageUrl;
     };
 
-    const handleDelete = ridx => {
-        setModalVisible(false);
-
-        const url = 'http://place-api.weballin.com/mypage/deleteReview';
-        const data = {token: token, idx: parseInt(ridx)};
-        const options = {
-            headers: {'content-type': 'application/x-www-form-urlencoded'},
-            data: qs.stringify(data),
-        };
-
-        axios
-            .delete(url, options)
-            .then(response => {
-                if (response.data.state === 200) {
-                    getReviewData(true);
-                } else {
-                    alert(response.data.msg);
-                }
-            })
-            .catch(function (error) {
-                console.error(error);
-                alert('통신 장애가 발생하였습니다\n잠시 후 다시 시도해주세요');
-            });
-    };
-
     return (
         <div className="container-wb max-w-full p-0">
             <div className="bg-orange-200 bg-opacity-50">
@@ -271,7 +276,7 @@ const Detail = () => {
                                     className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
                                 />
                             </button>
-                            <button className="ml-5 relative" onClick={handleShare}>
+                            <button className="ml-5 relative" onClick={e => handleShareList(e)}>
                                 <FontAwesomeIcon
                                     icon={faShareNodes}
                                     className={`${isShare ? 'text-red-400' : ' text-stone-500'} text-xl`}
