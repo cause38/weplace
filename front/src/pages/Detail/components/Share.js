@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Share = ({handleShare}) => {
+const Share = ({handleShare, kakaoSharedEvent}) => {
     return (
         <div className="px-3 py-1 bg-white shadow-lg border rounded-md font-medium  text-gray-500 text-base text-center">
             <button
-                id="kakao-link-btn"
+                id="kakao-shared-btn"
                 className="block w-[100px] p-2 border-b hover:text-orange-500"
                 onClick={e => handleShare(e, 'kakao')}
             >
