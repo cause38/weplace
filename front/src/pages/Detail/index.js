@@ -163,6 +163,7 @@ const Detail = () => {
     // 공유하기
     const handleShare = async (e, item) => {
         e.preventDefault();
+        // setIsShare(!isShare);
         // setToggleShareLink(true);
         const thumbImage = getReviewImage();
         const {Kakao, location, navigator} = window;
@@ -371,11 +372,6 @@ const Detail = () => {
                 </div>
             </div>
 
-            {isShare && (
-                <div className="w-[300px] h-[300px] absolute top-2/4 border-1 left-0">
-                    <Share handleShare={handleShare} />
-                </div>
-            )}
             <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
 
             <Modal
