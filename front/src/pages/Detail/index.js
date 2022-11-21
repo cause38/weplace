@@ -57,6 +57,9 @@ const Detail = () => {
     // toast
     const [toastVisible, setToastVisible] = useState(false);
 
+    // toast msg
+    const [toastMsg, setToastMsg] = useState('');
+
     // 리뷰 삭제
     const [delIdx, setDelIdx] = useState(null);
 
@@ -74,6 +77,7 @@ const Detail = () => {
         });
 
         if (isDel) {
+            setToastMsg('삭제가 완료되었습니다!');
             setTimeout(() => {
                 setToastVisible(true);
             }, 300);
@@ -224,16 +228,9 @@ const Detail = () => {
                 installTalk: true,
             });
         } else if (item === 'url') {
-            if (navigator.userAgent.match(/ipad|iphone/i)) {
-                MobileCopyUrl();
-                alert('URL 복사가 되었습니다.');
-                setIsShare(false);
-            } else {
-                navigator.clipboard.writeText(copyUrl).then(() => {
-                    alert('URL 복사가 되었습니다.');
-                    setIsShare(false);
-                });
-            }
+            setToastMsg('URL 복사가 완료 되었습니다!');
+            MobileCopyUrl();
+            setToastVisible(true);
         } else if (item === 'slack') {
             if (navigator.userAgent.match(/ipad|iphone/i)) {
                 MobileCopyUrl();
@@ -296,8 +293,8 @@ const Detail = () => {
                                     setIsShare(!isShare);
                                 }}
                                 className={`${
-                                    isShare ? 'text-red-400' : 'text-stone-500'
-                                } shareArea relative w-8 h-8 text-xl hover:text-red-400 transition-colors`}
+                                    isShare ? 'text-orange-500' : 'text-orange-400'
+                                } shareArea relative w-8 h-8 text-xl hover:text-orange-500 transition-colors`}
                             >
                                 <FontAwesomeIcon icon={faShareNodes} />
                             </button>
@@ -395,7 +392,7 @@ const Detail = () => {
                 </div>
             </div>
 
-            <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={'삭제 완료되었습니다!'} />
+            <Toast visible={toastVisible} setToastVisible={setToastVisible} msg={toastMsg} />
 
             <Modal
                 alert={isAlert}

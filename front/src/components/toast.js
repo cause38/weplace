@@ -9,9 +9,12 @@ const Toast = ({visible, setToastVisible, msg}) => {
     useEffect(() => {
         if (visible) {
             setTimeout(() => {
+                document.body.classList.add('overflow-y-hidden', 'touch-none', 'overscroll-none');
                 toast.current.classList.remove('opacity-0');
                 toast.current.classList.add('opacity-100');
+
                 setTimeout(() => {
+                    document.body.classList.remove('overflow-y-hidden', 'touch-none', 'overscroll-none');
                     toast.current.classList.add('opacity-0');
                     toast.current.classList.remove('opacity-100');
                     setToastVisible(false);
@@ -25,7 +28,7 @@ const Toast = ({visible, setToastVisible, msg}) => {
             ref={toast}
             className={`${
                 !visible ? 'hidden' : 'opacity-0'
-            } container-wb fixed whitespace-nowrap left-1/2 -translate-x-1/2 bottom-24 text-center sm:bottom-auto sm:top-[90px] m-0 py-0 mt-2 sm:text-right z-[1001] transition`}
+            } container-wb fixed whitespace-nowrap top-[90px] left-1/2 -translate-x-1/2 text-center m-0 py-0 mt-2 sm:text-right z-[1001] transition`}
         >
             <span className="bg-orange-400 text-white rounded-full py-2 px-6 shadow-md sm:rounded-md">
                 <FontAwesomeIcon icon={faCircleCheck} className="mr-2" />
