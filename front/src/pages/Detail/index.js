@@ -5,7 +5,6 @@ import Review from './components/review';
 import Modal from 'components/Modal';
 import Toast from 'components/toast';
 import Share from './components/Share';
-import defaultSNSThumb from '../../assets/weplace_sns.jpg';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
@@ -15,7 +14,6 @@ import {
     faArrowUpRightFromSquare,
     faShareNodes,
 } from '@fortawesome/free-solid-svg-icons';
-import {isMacOs, isMobile} from 'react-device-detect';
 
 const Detail = () => {
     const idx = parseInt(useParams().id);
@@ -61,11 +59,9 @@ const Detail = () => {
 
     // 리뷰 삭제
     const [delIdx, setDelIdx] = useState(null);
+
     // 공유하기 모달
     const [isShare, setIsShare] = useState(false);
-
-    // 백그라운드 블락처리
-    // const [toggleShareLink, setToggleShareLink] = useState(false);
 
     // 리뷰 데이터
     const getReviewData = isDel => {
@@ -86,6 +82,12 @@ const Detail = () => {
 
     useEffect(() => {
         getReviewData(false);
+        initKakao();
+        document.addEventListener('click', e => handleBodyClick(e));
+
+        return () => {
+            document.removeEventListener('click', e => handleBodyClick(e));
+        };
     }, []);
 
     // 리뷰 more 버튼 관리
@@ -155,20 +157,26 @@ const Detail = () => {
             });
     };
 
-    //공유하기 드롭다운
-    const handleShareList = e => {
+    // 공유 메뉴 영역 외 클릭 시 메뉴 숨김
+    const handleBodyClick = e => {
         e.preventDefault();
-        setIsShare(!isShare);
+        e.stopPropagation();
+
+        if (e.target.classList.contains('shareArea') || e.target.closest('.shareArea') !== null) {
+            return;
+        } else {
+            setIsShare(false);
+        }
     };
 
     // 공유하기
     const handleShare = async (e, item) => {
         e.preventDefault();
-        // setIsShare(!isShare);
-        // setToggleShareLink(true);
         const thumbImage = getReviewImage();
         const {Kakao, location, navigator} = window;
-        const copyUrl = `http://place.ballin.com/${location.pathname}`;
+        const copyUrl = `http://place.weballin.com/${location.pathname}`;
+
+        setIsShare(false);
 
         // url 미리 복사
         const MobileCopyUrl = () => {
@@ -181,16 +189,38 @@ const Detail = () => {
         };
 
         if (item === 'kakao') {
+            Kakao.Share.cleanup();
             Kakao.Share.sendDefault({
-                objectType: 'feed',
+                objectType: 'location',
+                address: store.address,
+                addressTitle: store.name,
                 content: {
-                    title: `${store.name}`,
-                    description: `${store.tag}`,
+                    title: store.name,
+                    description: '#' + store.tag.join(', #'),
                     imageUrl: thumbImage,
-                    imageWidth: 80,
+                    imageWidth: 800,
                     link: {mobileWebUrl: copyUrl, webUrl: copyUrl},
                 },
-                buttons: [{title: '웹으로 보기', link: {mobileWebUrl: copyUrl, webUrl: copyUrl}}],
+                social: {
+                    likeCount: parseInt(store.favorite),
+                    commentCount: store.review.length,
+                },
+                buttons: [
+                    {
+                        title: '상세 보기',
+                        link: {
+                            mobileWebUrl: copyUrl,
+                            webUrl: copyUrl,
+                        },
+                    },
+                    {
+                        title: '지도 보기',
+                        link: {
+                            mobileWebUrl: store.url,
+                            webUrl: store.url,
+                        },
+                    },
+                ],
                 installTalk: true,
             });
         } else if (item === 'url') {
@@ -220,11 +250,7 @@ const Detail = () => {
         }
     };
 
-    useEffect(() => {
-        initKakao();
-    }, []);
-
-    //자바스크립키로 카카오 init
+    // 카카오 init
     const initKakao = () => {
         if (window.Kakao) {
             const kakao = window.Kakao;
@@ -234,21 +260,13 @@ const Detail = () => {
         }
     };
 
-    //리뷰이미지 축출
+    // 공유 썸네일 이미지
     const getReviewImage = () => {
-        let imageUrl = defaultSNSThumb;
+        let imageUrl = 'http://place.weballin.com/weplace_sns.jpg';
         review?.map(data => {
             const {image} = data;
-            if (data.image.length === 0) {
-                return imageUrl;
-                // let defaultThumb = defaultSNSThumb;
-                // let urlSplit = defaultThumb.split('.');
-                // let splice = urlSplit.splice(1, 1);
-
-                // console.log('defa', defaultSNSThumb);
-                // return (imageUrl = urlSplit.join('.'));
-            } else {
-                return (imageUrl = image[0]);
+            if (data.image.length !== 0) {
+                imageUrl = image[0];
             }
         });
         return imageUrl;
@@ -262,25 +280,29 @@ const Detail = () => {
                         <span className="rounded-full px-4 py-1 bg-orange-500 text-white font-medium">
                             {store.category}
                         </span>
-                        <div>
+                        <div className="flex gap-2">
                             <button
-                                onClick={handleFavorite}
-                                className={`${token === null ? 'hidden' : ''} w-8 h-8 translate-x-[6px]`}
+                                onClick={() => {
+                                    handleFavorite();
+                                }}
+                                className={`${token === null ? 'hidden ' : ''}${
+                                    isFavorite ? 'text-red-400' : 'text-stone-500'
+                                } w-8 h-8 text-xl transition-colors`}
                             >
-                                <FontAwesomeIcon
-                                    icon={faHeart}
-                                    className={`${isFavorite ? 'text-red-400' : 'text-stone-500'} text-xl`}
-                                />
+                                <FontAwesomeIcon icon={faHeart} />
                             </button>
-                            <button className="ml-5 relative" onClick={e => handleShareList(e)}>
-                                <FontAwesomeIcon
-                                    icon={faShareNodes}
-                                    className={`${isShare ? 'text-red-400' : ' text-stone-500'} text-xl`}
-                                />
+                            <button
+                                onClick={() => {
+                                    setIsShare(!isShare);
+                                }}
+                                className={`${
+                                    isShare ? 'text-red-400' : 'text-stone-500'
+                                } shareArea relative w-8 h-8 text-xl hover:text-red-400 transition-colors`}
+                            >
+                                <FontAwesomeIcon icon={faShareNodes} />
                             </button>
-                            <p id="textTest"></p>
                             {isShare && (
-                                <div className="absolute bottom-0 right-0 translate-y-full pt-2 z-30">
+                                <div className="shareArea absolute bottom-0 right-0 translate-y-full pt-2 z-30">
                                     <Share handleShare={handleShare} />
                                 </div>
                             )}
@@ -339,7 +361,7 @@ const Detail = () => {
                         >
                             <FontAwesomeIcon icon={faLocationDot} />
                             <FontAwesomeIcon
-                                className="absolute text-sm -right-[1px] -top-[1px]"
+                                className="absolute text-xs sm:text-sm -right-[1px] -top-[1px]"
                                 icon={faArrowUpRightFromSquare}
                             />
                         </a>
