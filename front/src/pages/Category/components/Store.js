@@ -55,7 +55,7 @@ const Store = ({idx, category, name, distance, star, review, favorite, isFavorit
                                 tag.map((data, id) => (
                                     <span
                                         key={id}
-                                        className="rounded-full rounded-full p-1 pb-[0.33rem] px-3 bg-white shadow-sm shadow-orange-400 text-orange-500"
+                                        className="rounded-full p-1 pb-[0.33rem] px-3 bg-white shadow-sm shadow-orange-400 text-orange-500"
                                     >
                                         # {data}
                                     </span>
