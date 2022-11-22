@@ -517,7 +517,6 @@ const Category = () => {
                 >
                     {storeList?.length > 0 ? (
                         storeList.map((data, key) => {
-                            console.log('data', data);
                             const {idx, category, name, distance, star, review, favorite, isFavorite, tag} = data;
                             return (
                                 <Store
