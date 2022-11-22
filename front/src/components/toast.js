@@ -1,6 +1,4 @@
 import {React, useEffect, useRef} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCircleCheck} from '@fortawesome/free-solid-svg-icons';
 import {EmojiProvider, Emoji} from 'react-apple-emojis';
 import emojiData from '../lib/data.json';
 
@@ -8,30 +6,25 @@ const Toast = ({visible, setToastVisible, msg}) => {
     const toast = useRef(null);
     useEffect(() => {
         if (visible) {
-            setTimeout(() => {
-                document.body.classList.add('overflow-y-hidden', 'touch-none', 'overscroll-none');
-                toast.current.classList.remove('opacity-0');
-                toast.current.classList.add('opacity-100');
+            toast.current.classList.remove('opacity-0');
+            toast.current.classList.add('opacity-100');
+            toast.current.classList.remove('translate-y-24');
 
-                setTimeout(() => {
-                    document.body.classList.remove('overflow-y-hidden', 'touch-none', 'overscroll-none');
-                    toast.current.classList.add('opacity-0');
-                    toast.current.classList.remove('opacity-100');
-                    setToastVisible(false);
-                }, 1500);
-            }, 150);
+            setTimeout(() => {
+                toast.current.classList.add('translate-y-24');
+                toast.current.classList.add('opacity-0');
+                toast.current.classList.remove('opacity-100');
+                setToastVisible(false);
+            }, 1000);
         }
-    }, [visible]);
+    }, [visible, setToastVisible]);
 
     return (
         <div
             ref={toast}
-            className={`${
-                !visible ? 'hidden' : 'opacity-0'
-            } container-wb fixed whitespace-nowrap top-[90px] left-1/2 -translate-x-1/2 text-center m-0 py-0 mt-2 sm:text-right z-[1001] transition`}
+            className={`opacity-0 translate-y-24 container-wb fixed whitespace-nowrap bottom-[50px] left-1/2 -translate-x-1/2 text-center m-0 py-0 mt-2 z-[1001] transition ease-in delay-200	duration-400`}
         >
-            <span className="bg-orange-400 text-white rounded-full py-2 px-6 shadow-md sm:rounded-md">
-                <FontAwesomeIcon icon={faCircleCheck} className="mr-2" />
+            <span className="bg-stone-500/90 text-white rounded-full py-3 px-7 shadow-md">
                 {msg}
                 <EmojiProvider data={emojiData}>
                     <Emoji

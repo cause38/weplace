@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import Review from './components/review';
@@ -76,6 +76,7 @@ const Detail = () => {
             }
         });
 
+        // 리뷰 데이터 삭제 이후 reload 시
         if (isDel) {
             setToastMsg('삭제가 완료되었습니다!');
             setTimeout(() => {
@@ -87,14 +88,15 @@ const Detail = () => {
     useEffect(() => {
         getReviewData(false);
         initKakao();
-        document.addEventListener('click', e => handleBodyClick(e));
 
+        // body click :: share menu hide
+        document.addEventListener('click', e => handleBodyClick(e));
         return () => {
             document.removeEventListener('click', e => handleBodyClick(e));
         };
     }, []);
 
-    // 리뷰 more 버튼 관리
+    // 리뷰 more 버튼
     const handleReviewToggle = e => {
         const more = e.currentTarget.previousElementSibling.querySelector('.moreData');
         setMoreToggle(!moreToggle);
@@ -136,6 +138,7 @@ const Detail = () => {
         }
     };
 
+    // 리뷰 삭제
     const handleDelete = ridx => {
         setModalVisible(false);
 
@@ -163,9 +166,6 @@ const Detail = () => {
 
     // 공유 메뉴 영역 외 클릭 시 메뉴 숨김
     const handleBodyClick = e => {
-        e.preventDefault();
-        e.stopPropagation();
-
         if (e.target.classList.contains('shareArea') || e.target.closest('.shareArea') !== null) {
             return;
         } else {
@@ -178,7 +178,7 @@ const Detail = () => {
         e.preventDefault();
         const thumbImage = getReviewImage();
         const {Kakao, location, navigator} = window;
-        const copyUrl = `http://place.weballin.com/${location.pathname}`;
+        const copyUrl = `http://place.weballin.com${location.pathname}`;
 
         setIsShare(false);
 
@@ -228,9 +228,15 @@ const Detail = () => {
                 installTalk: true,
             });
         } else if (item === 'url') {
-            setToastMsg('URL 복사가 완료 되었습니다!');
-            MobileCopyUrl();
-            setToastVisible(true);
+            setTimeout(() => {
+                // IOS 주소창 자동 스크롤 이슈로 추가
+                if (navigator.userAgent.match(/ipad|iphone/i)) {
+                    window.scrollTo(0, 0);
+                }
+                setToastMsg('URL 복사가 완료 되었습니다!');
+                MobileCopyUrl();
+                setToastVisible(true);
+            }, 1);
         } else if (item === 'slack') {
             if (navigator.userAgent.match(/ipad|iphone/i)) {
                 MobileCopyUrl();
@@ -260,12 +266,11 @@ const Detail = () => {
     // 공유 썸네일 이미지
     const getReviewImage = () => {
         let imageUrl = 'http://place.weballin.com/weplace_sns.jpg';
-        review?.map(data => {
+        review?.forEach(data => {
             const {image} = data;
-            if (data.image.length !== 0) {
-                imageUrl = image[0];
-            }
+            if (image.length !== 0) imageUrl = image[0];
         });
+
         return imageUrl;
     };
 
