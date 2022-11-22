@@ -4,11 +4,16 @@ import UserInfo from './components/UserInfo';
 import Reviews from './components/Reviews';
 import Favorites from './components/Favorites';
 
-import {useNavigate, useLocation} from '/node_modules/react-router-dom/dist/index';
+import {Link, useNavigate, useLocation} from 'react-router-dom';
 import axios from '/node_modules/axios/index';
 
 import {profileImgValue, nameValue} from 'atoms/state';
 import {useRecoilState} from '/node_modules/recoil/';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faHeart, faUser, faAngleRight} from '@fortawesome/free-solid-svg-icons';
+import {faFileLines} from '@fortawesome/free-regular-svg-icons';
+import {EmojiProvider, Emoji} from 'react-apple-emojis';
+import emojiData from 'lib/data.json';
 import API from 'config';
 
 const MyPage = () => {
@@ -64,6 +69,7 @@ const MyPage = () => {
                 })
                 .then(res => {
                     if (res.data.state === 200) {
+                        console.log(res);
                         setChangedNickName(res.data.data.basic.name);
                         setUserId(res.data.data.basic.uid);
                         setUserImg(res.data.data.basic.thumb);
@@ -273,9 +279,14 @@ const MyPage = () => {
         <Fragment>
             {token !== 0 ? (
                 <main className="container-wb">
-                    <h1 className="text-3xl font-bold text-orange-600">마이페이지</h1>
-                    <section className="mt-9">
-                        <h2 className="text-xl font-semibold text-orange-700">기본 정보</h2>
+                    <h2 className="-indent-[999px] h-[0px]">마이페이지</h2>
+                    <section>
+                        <p className="flex gap-2 items-center text-lg font-semibold text-stone-700">
+                            <span className="w-8 h-8 bg-sky-200 text-sky-500 rounded-full flex justify-center items-center text-center text-xs">
+                                <FontAwesomeIcon icon={faUser} />
+                            </span>
+                            기본 정보
+                        </p>
                         <UserInfo
                             userImg={userImg}
                             imageInput={imageInput}
@@ -290,18 +301,40 @@ const MyPage = () => {
                             handleFocusingName={handleFocusingName}
                         />
                     </section>
-                    <section className="mt-14">
-                        <h2 className="text-xl font-semibold text-orange-700">내 리뷰✍</h2>
+                    <section className="mt-12">
+                        <p className="flex gap-2 items-center text-lg font-semibold text-stone-700">
+                            <span className="w-8 h-8 bg-violet-200 text-violet-500 rounded-full flex justify-center items-center text-center text-xs">
+                                <FontAwesomeIcon icon={faFileLines} />
+                            </span>
+                            내 리뷰
+                        </p>
                         {reviews?.length > 0 ? (
                             <Reviews reviews={reviews} handleDeleteReview={handleDeleteReview} />
                         ) : (
-                            <div className="flex items-center h-12 justify-center">
-                                <p>작성한 리뷰가 없습니다.😥</p>
+                            <div className="flex flex-col gap-3 justify-center items-center mt-4 p-5 bg-stone-200 text-center rounded-lg">
+                                <div className="flex gap-1 justify-center">
+                                    작성한 리뷰가 없습니다
+                                    <EmojiProvider data={emojiData}>
+                                        <Emoji name={'crying-face'} className="w-6 h-6" />
+                                    </EmojiProvider>
+                                </div>
+
+                                <Link
+                                    to="/write"
+                                    className="bg-orange-400 text-white p-5 py-1.5 rounded-full text-sm transition-colors hover:bg-orange-500 focus:outline-none focus:bg-orange-600"
+                                >
+                                    리뷰 작성하기 <FontAwesomeIcon icon={faAngleRight} />
+                                </Link>
                             </div>
                         )}
                     </section>
-                    <section className="mt-14">
-                        <h2 className="text-xl font-semibold text-orange-700">찜 목록&#128150;</h2>
+                    <section className="mt-8">
+                        <p className="flex gap-2 items-center text-lg font-semibold text-stone-700">
+                            <span className="w-8 h-8 bg-red-200 text-red-500 rounded-full flex justify-center items-center text-center text-xs">
+                                <FontAwesomeIcon icon={faHeart} />
+                            </span>
+                            찜 목록
+                        </p>
                         {favoriteList?.length > 0 ? (
                             <Favorites
                                 favoriteList={favoriteList}
@@ -309,8 +342,20 @@ const MyPage = () => {
                                 goToDetail={goToDetail}
                             />
                         ) : (
-                            <div className="flex items-center h-12 justify-center">
-                                <p>찜한 가게가 없습니다.😥</p>
+                            <div className="flex flex-col gap-3 justify-center items-center mt-4 p-5 bg-stone-200 text-center rounded-lg">
+                                <div className="flex gap-1 justify-center">
+                                    찜한 가게가 없습니다
+                                    <EmojiProvider data={emojiData}>
+                                        <Emoji name={'crying-face'} className="w-6 h-6" />
+                                    </EmojiProvider>
+                                </div>
+
+                                <Link
+                                    to={'/category/0'}
+                                    className="bg-orange-400 text-white p-5 py-1.5 rounded-full text-sm transition-colors hover:bg-orange-500 focus:outline-none focus:bg-orange-600"
+                                >
+                                    카테고리 이동 <FontAwesomeIcon icon={faAngleRight} />
+                                </Link>
                             </div>
                         )}
                     </section>

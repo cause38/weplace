@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from 'components/button';
 import InputBox from 'components/inputBox';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faPenToSquare} from '@fortawesome/free-regular-svg-icons';
 
 const UserInfo = ({
     userImg,
@@ -16,75 +18,55 @@ const UserInfo = ({
     handleFocusingName,
 }) => {
     return (
-        <div className="flex flex-col justify-center items-center md:flex-row md:flex md:justify-evenly gap-8 mt-4 bg-white rounded-lg p-5 shadow-md">
-            <div>
-                <div className="w-36 h-36">
-                    <img className="w-full h-full rounded-full overflow-hidden" src={userImg} />
-                </div>
-                <form className="h-8 mt-5" encType="multipart.form-data">
-                    <input
-                        id="file"
-                        type="file"
-                        style={{display: 'none'}}
-                        ref={imageInput}
-                        accept="image/*"
-                        name="file"
-                        onChange={e => onImgChange(e)}
-                        multiple="multiple"
-                    />
-                    <Button contents="프로필 사진 변경" onClick={handleProfileImg} />
-                </form>
+        <div className="flex flex-col justify-center items-center gap-4 mt-24 md:mt-28 bg-white rounded-lg p-8 pt-0 shadow-md">
+            <div
+                onClick={handleProfileImg}
+                className="relative -mt-16 w-32 h-32 md:-mt-[90px] md:w-[180px] md:h-[180px] cursor-pointer"
+            >
+                <img
+                    className="w-full h-full rounded-full overflow-hidden object-cover"
+                    src={userImg}
+                    alt="profile_image"
+                />
+                <span className="absolute right-0 top-0 translate-x-2 translate-y-2 md:translate-x-0 md:translate-y-5 w-8 h-8 bg-orange-400 rounded-full text-white text-xs flex justify-center items-center">
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                </span>
             </div>
-            <div className="flex-col justify-between align-center md:flex-row md:flex md:items-center">
-                <div className=" flex-col mb-10 items-center md:flex-row ">
-                    <div className="flex flex-col justify-center w-4/5 mr-7">
-                        <div className="flex items-center">
-                            <div className="min-w-[70px] w-1/5">아이디</div>
-                            <div className="w-full">
-                                <p className="ml-1.5">{userId}</p>
-                            </div>
-                        </div>
-                        <div className="flex mt-5 items-center">
-                            <div className="min-w-[70px] w-1/5">
-                                <p>닉네임</p>
-                            </div>
-                            {isChangeNickName ? (
-                                <div className="w-full min-w-fit min-w-[180px]">
-                                    <InputBox
-                                        id="nickName"
-                                        type="text"
-                                        value={nickName || ''}
-                                        ariaLabel="name"
-                                        placeholder={nickName}
-                                        onChange={setChangedNickName}
-                                        nameInput={nameInput}
-                                    />
-                                </div>
-                            ) : (
-                                <div className="w-full w-full min-w-[180px]">
-                                    <InputBox
-                                        id="nickName"
-                                        type="text"
-                                        value={nickName || ''}
-                                        ariaLabel="name"
-                                        onChange={setChangedNickName}
-                                        nameInput={nameInput}
-                                        readOnly="readOnly"
-                                    />
-                                </div>
-                            )}
-                        </div>
+            <form encType="multipart.form-data">
+                <input
+                    id="file"
+                    type="file"
+                    style={{display: 'none'}}
+                    ref={imageInput}
+                    accept="image/*"
+                    name="file"
+                    onChange={e => onImgChange(e)}
+                    multiple="multiple"
+                />
+            </form>
+
+            <div className="flex flex-col gap-4 justify-center items-center">
+                <p>{userId}</p>
+                <div className="flex items-center gap-4">
+                    <div className="w-full min-w-fit min-w-[180px]">
+                        <InputBox
+                            id="nickName"
+                            type="text"
+                            value={nickName || ''}
+                            ariaLabel="name"
+                            placeholder={isChangeNickName ? nickName : ''}
+                            onChange={setChangedNickName}
+                            nameInput={nameInput}
+                            readOnly={isChangeNickName ? false : true}
+                        />
+                    </div>
+                    <div className="h-10 w-full min-w-[100px] md:w-5">
+                        <Button
+                            contents="닉네임 변경"
+                            onClick={isChangeNickName ? handleCheckedName : handleFocusingName}
+                        />
                     </div>
                 </div>
-                {isChangeNickName ? (
-                    <div className="h-10 w-full min-w-[100px] md:w-5">
-                        <Button contents="닉네임 변경" onClick={handleCheckedName} />
-                    </div>
-                ) : (
-                    <div className="h-10 w-full min-w-[100px] md:w-5">
-                        <Button contents="닉네임 변경" onClick={handleFocusingName} />
-                    </div>
-                )}
             </div>
         </div>
     );

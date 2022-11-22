@@ -12,6 +12,16 @@ const Reviews = ({reviews, handleDeleteReview}) => {
     const [page, setPage] = useState(1);
 
     const offset = (page - 1) * limit;
+
+    // 최신리뷰 별점
+    const handleStar = star => {
+        const arr = [];
+        for (let i = 0; i < 5; i++) {
+            if (i < star) arr.push(true);
+            else arr.push(false);
+        }
+        return arr;
+    };
     return (
         <div className="mt-[20px] flex flex-col w-full">
             <div
@@ -26,46 +36,36 @@ const Reviews = ({reviews, handleDeleteReview}) => {
                     return (
                         <Fragment key={idx}>
                             <div
-                                className={
-                                    idx > 1
-                                        ? 'flex flex-col w-full min-w-[315px] mb-2.5  bg-white rounded-[20px] shadow-md overflow-hidden'
-                                        : 'flex flex-col min-w-[315px] mb-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
-                                }
+                                className={` ${
+                                    idx > 1 ? 'w-full' : ''
+                                } flex flex-col mb-2.5 bg-white rounded-lg shadow-md overflow-hidden`}
                             >
                                 <Link to={`/detail/${shopIdx}`} className="p-5">
-                                    <div className="flex justify-between">
-                                        <h3 className="w-fit max-w-[160px] p-2 rounded-[20px] bg-orange-400 text-white text-sm truncate">
-                                            {name}
-                                        </h3>
-                                        <p className="flex items-center text-sm">{wdate}</p>
-                                    </div>
-                                    <div className="flex justify-between mt-1">
-                                        <p className="pl-1 w-fit max-w-[160px] font-medium underline underline-offset-2 italic truncate">
+                                    <div className="flex justify-between items-center gap-4 mb-3">
+                                        <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full truncate">
                                             {menu}
-                                        </p>
-                                        <div className="flex justify-between">
-                                            <div className="flex gap-2 items-center">
-                                                <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-yellow-100">
-                                                    <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
-                                                </span>
-                                                {star}
-                                            </div>
-                                        </div>
+                                        </span>
+                                        <span className="text-sm whitespace-nowrap">{wdate}</span>
                                     </div>
-                                    <p className="pl-1 text-1xl font-bold h-[50px] line-clamp-2 break-keep">
-                                        {comment}
-                                    </p>
+                                    <span className="text-[15px] mb-3">
+                                        {handleStar(star).map((item, idx) => (
+                                            <span key={idx} className={`text-${item ? 'yellow' : 'gray'}-400`}>
+                                                <FontAwesomeIcon icon={faStar} />
+                                            </span>
+                                        ))}
+                                    </span>
+                                    <h4 className="text-xl font-bold text-gray-900 truncate w-full mb-2">{name}</h4>
+                                    <p className="truncate w-full text-gray-800">"{comment}"</p>
                                 </Link>
-                                <div className="flex justify-between h-10">
+                                <div className="flex text-center text-white">
                                     <Link
                                         to={`/write?idx=${shopIdx}&ridx=${idx}`}
-                                        className="w-1/2 h-full text-center leading-10 text-white bg-gray-400 shadow-md shadow-gray-300 hover:bg-gray-500 focus:outline-none focus:bg-gray-600"
-                                        // onClick={() => goToWrite(idx, shopIdx)}
+                                        className="w-full py-2 bg-stone-400 transition-colors hover:bg-stone-500 focus:outline-none focus:bg-stone-600"
                                     >
                                         수정
                                     </Link>
                                     <button
-                                        className="w-1/2 h-full bg-orange-400 shadow-md shadow-orange-300 text-white hover:bg-orange-500 focus:outline-none focus:bg-orange-600"
+                                        className="w-full py-2 bg-orange-400 transition-colors hover:bg-orange-500 focus:outline-none focus:bg-orange-600"
                                         onClick={e => handleDeleteReview(e, idx)}
                                     >
                                         삭제

@@ -1,4 +1,5 @@
 import React, {Fragment, useState} from 'react';
+import {Link} from 'react-router-dom';
 import Pagination from './Pagination';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHeart, faStar, faFileLines} from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +14,7 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
     const offset = (page - 1) * limit;
 
     return (
-        <div className=" mt-[20px] flex flex-col w-full">
+        <div className="mt-[20px] flex flex-col w-full">
             <div
                 className={
                     favoriteList?.length > 0
@@ -25,39 +26,23 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
                     const {idx, favorite, category, name, review, star, wdate} = data;
                     return (
                         <Fragment key={idx}>
-                            <div
-                                className={
-                                    idx > 1
-                                        ? ' flex w-full min-w-[315px] mb-2.5  bg-white rounded-[20px] shadow-md overflow-hidden'
-                                        : ' flex min-w-[315px] mb-2.5 bg-white rounded-[20px] shadow-md overflow-hidden'
-                                }
+                            <Link
+                                to={`/detail/${idx}`}
+                                className={` ${
+                                    idx > 1 ? 'w-full' : ''
+                                } flex flex-col mb-2.5 p-4 bg-white rounded-lg shadow-md overflow-hidden`}
                             >
-                                <div
-                                    className={
-                                        favoriteList?.length < 0
-                                            ? 'absolute cursor-pointer mt-4 p-2 hover:opacity-50'
-                                            : 'absolute cursor-pointer mt-10 p-2 hover:opacity-50'
-                                    }
-                                    onClick={e => handleDeleteFavorite(e, idx)}
-                                >
-                                    <FontAwesomeIcon icon={faHeart} className="text-red-400 text-6xl" />
+                                <div className="flex justify-between items-center gap-4 mb-3">
+                                    <span className="inline-block text-xs p-1 px-3 bg-orange-400 text-white rounded-full truncate">
+                                        {category}
+                                    </span>
+                                    <span className={`hover:opacity-50`} onClick={e => handleDeleteFavorite(e, idx)}>
+                                        <FontAwesomeIcon icon={faHeart} className="text-red-400 text-xl" />
+                                    </span>
                                 </div>
-                                <div
-                                    className="w-full ml-20 p-4 cursor-pointer hover:bg-orange-400 hover:text-white"
-                                    onClick={goToDetail}
-                                >
-                                    <div className="flex justify-between ">
-                                        <span className="w-fit px-1.5 py-px rounded-[20px] bg-orange-400 text-white">
-                                            {category}
-                                        </span>
-                                        <span>{wdate}</span>
-                                    </div>
-                                    <div className="pt-3">
-                                        <span className="text-2xl font-bold h-[68px] line-clamp-2 break-all">
-                                            {name}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between pt-3">
+                                <div>
+                                    <h4 className="text-xl font-bold text-gray-900 truncate w-full mb-2">{name}</h4>
+                                    <div className="flex gap-3 justify-between mt-4">
                                         <div className="flex gap-2 items-center">
                                             <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-yellow-100">
                                                 <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
@@ -65,20 +50,20 @@ const Favorites = ({favoriteList, handleDeleteFavorite, goToDetail}) => {
                                             {star}
                                         </div>
                                         <div className="flex gap-2 items-center">
-                                            <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-red-100">
-                                                <FontAwesomeIcon icon={faFileLines} className="text-red-400" />
+                                            <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-orange-100">
+                                                <FontAwesomeIcon icon={faFileLines} className="text-orange-400" />
                                             </span>
                                             {review}
                                         </div>
                                         <div className="flex gap-2 items-center">
-                                            <span className="w-7 h-7 text-ml rounded-full flex justify-center items-center bg-orange-100">
+                                            <span className="w-7 h-7 text-xs rounded-full flex justify-center items-center bg-red-100">
                                                 <FontAwesomeIcon icon={faHeart} className="text-red-400" />
                                             </span>
                                             {favorite}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         </Fragment>
                     );
                 })}
