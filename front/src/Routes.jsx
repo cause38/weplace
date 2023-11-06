@@ -9,7 +9,7 @@ import Join from './pages/Join';
 import MyPage from './pages/MyPage';
 import Detail from './pages/Detail';
 import Write from './pages/Write';
-import FindPassword from 'pages/FindPassword/index';
+import FindPassword from '@/pages/FindPassword/index';
 import FloatingBtn from './components/FloatingBtn';
 
 import Header from './components/header';
